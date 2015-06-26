@@ -68,6 +68,22 @@ input[type="color"] {
 input[type="text"] {
   box-shadow: none;
 }
+.textarea-word-count {
+  margin-top: -25px;
+  margin-right: 8px;
+  color: #686868;
+  font-size: 80%;
+  padding: 3px 0px;
+  text-align: center;
+  width: 20px;
+  height: 20px;
+  float: right;
+}
+.textarea-word-count.bg-danger {
+  background: rgba(255, 0, 0, 0.6);
+  border-radius: 10px;
+  color: white;
+}
 .btn-black {
   -webkit-transition: background 500ms ease-out;
   -moz-transition: background 500ms ease-out;

@@ -124,6 +124,19 @@
 												class="form-control"
 												name="<?=$key;?>"
 												id="<?=$key;?>"><?=$value['VALUE'];?></textarea>
+											<div class="textarea-word-count" id="<?=$key;?>_word_count">≤200</div>
+											<?php ob_start(); ?>
+												var textarea_<?=$key;?> = $("#<?=$key;?>");
+												var word_count_<?=$key;?> = $("#<?=$key;?>_word_count");
+												$(textarea_<?=$key;?>).keyup( function() {
+													update_textarea_word_count(
+														$(textarea_<?=$key;?>),
+														$(word_count_<?=$key;?>)
+													);
+													}
+												);
+												update_textarea_word_count(textarea_<?=$key;?>, word_count_<?=$key;?>);
+											<?php $additionalScripts = $additionalScripts.ob_get_clean(); ?>
 										<?php } else if ($value['DATA_TYPE'] != 'file') { ?>
 											<input
 												type="<?=$value['DATA_TYPE'];?>"
@@ -189,6 +202,21 @@
 				setTimeout(function(){
 					$("i.fa[class^=\"text\"]").remove();
 				}, 8000);
+				
+				function update_textarea_word_count(txt, word_count) {
+					var maxLen = 200;
+					
+					var len = txt.val().length;
+					if (len > maxLen) {
+						$(word_count).addClass("bg-danger");
+					} else {
+						$(word_count).removeClass("bg-danger");
+					}
+					$(word_count).html(maxLen - len);
+				}
+				
+				<?=$additionalScripts;?>
+				
 			});
 		</script>
 
