@@ -129,10 +129,10 @@
 												var textarea_<?=$key;?> = $("#<?=$key;?>");
 												var word_count_<?=$key;?> = $("#<?=$key;?>_word_count");
 												$(textarea_<?=$key;?>).keyup( function() {
-													update_textarea_word_count(
-														$(textarea_<?=$key;?>),
-														$(word_count_<?=$key;?>)
-													);
+														update_textarea_word_count(
+															$(textarea_<?=$key;?>),
+															$(word_count_<?=$key;?>)
+														);
 													}
 												);
 												update_textarea_word_count(textarea_<?=$key;?>, word_count_<?=$key;?>);
