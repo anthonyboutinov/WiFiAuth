@@ -64,7 +64,7 @@
 					</form>
 				</div>
 				
-				<form method="post" enctype="multipart/form-data" action="admin-settings.php">
+				<form method="post" enctype="multipart/form-data" action="admin-settings.php" id="admin-settings-form">
 					<input type="hidden" name="form-name" value="admin-settings">
 								
 					<?php
@@ -207,7 +207,7 @@
 					$("i.fa[class^=\"text\"]").remove();
 				}, 8000);
 				
-				var submitButtons = $("#admin-settings-form button[type=\"submit\"]");
+				var submitButtons = $("#admin-settings-form button[type=\"submit\"]");				
 				
 				function update_textarea_word_count(txt, word_count) {
 					var maxLen = 200;
@@ -225,6 +225,16 @@
 				
 				<?=$additionalScripts;?>
 				
+				
+				var allSubmitButtons = $("button[type=\"submit\"]");
+				
+				$(allSubmitButtons).click(function() {
+					$(this).html("Сохраняется... <i class=\"fa fa-spinner fa-pulse\"></i>");
+					var a = $(this);
+					setTimeout(function() {
+						$(a).attr('disabled', 'disabled');
+						}, 100);
+				});
 				
 			});
 		</script>

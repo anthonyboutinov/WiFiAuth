@@ -241,6 +241,11 @@
 			
 		}
 		
+		public function getLoginCountByLoginOption() {
+			$sql = 'select * from VW_SP$LOGIN_COUNT_BY_LOGIN_OPTION WHERE ID_DB_USER='.$this->id_db_user;
+			return $this->getQueryResultWithErrorNoticing($sql);
+		}
+		
 		
 		
 		// ========= Функции, изменяющие данные в БД =========
