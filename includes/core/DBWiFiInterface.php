@@ -260,7 +260,7 @@
             {
             	$log_opt =2;
             }
-            $sql  = 'select ID_USER from CM$USER where LINK="'.$user_href.'"';
+            $sql  = 'select ID_USER from CM$USER where LINK="'.$user_href.'" and ID_DB_USER_MODIFIED = '.$this->id_db_user;
 
             $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не логировать, если нет результатов в запросе*/);
 
