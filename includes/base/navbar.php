@@ -8,7 +8,14 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#"><?=$companyName;?></a>
+			<a class="navbar-brand" href="admin-dashboard.php"><?php
+// 				$companyLogo = $database->getValueByShortName("LOGO")["BLOB_VALUE"];
+// 				if (!$companyLogo) {
+					echo $companyName;
+// 				} else {
+// 					echo '<img src="data:image/jpeg;base64,'.base64_encode($companyLogo['BLOB_VALUE']).'" title="'.$companyName.'" alt="'.$companyName.'">';
+// 				}
+			?></a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
