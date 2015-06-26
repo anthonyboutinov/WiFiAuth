@@ -78,6 +78,7 @@ input[type="text"] {
   width: 20px;
   height: 20px;
   float: right;
+  z-index: 100;
 }
 .textarea-word-count.bg-danger {
   background: rgba(255, 0, 0, 0.6);
