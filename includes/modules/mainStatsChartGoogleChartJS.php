@@ -42,7 +42,7 @@ include_once('googleChartAPI.html');
 			backgroundColor: { fill:'transparent' },
 			fontName: 'Fontatigo, "Helvetica Nueue", Helvetica, Arial, "Lucida Grande", sans-serif',
 			fontSize: 14,
-			colors: <?php echo ("['$chartColor1', '$chartColor2', '$chartColor3', '$chartColor4']"); ?>,
+			colors: <?=CommonFunctions::arrayToString($chartColors, false, '[', ']', '\'');?>,
 			chartArea: {left:0,top:0,width:'100%',height:'<?=$charthHeight?>'},
 			tooltip: {isHtml: true},
 			hAxis: {

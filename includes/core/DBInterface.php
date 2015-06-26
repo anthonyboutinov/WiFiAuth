@@ -78,6 +78,15 @@
 			return $out;
 		}
 		
+		public function toArray($result) {
+			$out = array();
+			$i = 0;
+			while($row = $result->fetch_assoc()) {
+				$out[$i++] = $row;
+			}
+			return $out;
+		}
+		
 		/*
 public function getMoreOf($function, $from, $to) {
 			return call_user_func($function, $from, $to);

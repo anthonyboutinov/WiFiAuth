@@ -12,19 +12,4 @@
 </div>
 
 
-<?php if (isset($drawTableAndPieChart) && isset($drawAll) && !$drawAll) { ?>
-<ul class="legend nav<?php if (!$drawFullContent) echo " not-draw-full-content"; ?>" id="legend">
-	<?php
-	
-	$chartLegendPercentageValues = [40, 36, 15, 9];
-	
-	for ($i = 0; $i < $numberOfSocialNetworks; $i++) {
-	?>
-	<li>
-		<div class="legend-circle animated zoomIn" style="border-color: <?php echo $chartColors[$i]; ?>;"></div>
-		<div class="legend-title"><? echo $socialNetworksNames[$i];?></div>
-		<div class="legend-last-value" style="color: <?php echo $chartColors[$i]; ?>;"><?php echo $chartLegendPercentageValues[$i]; ?>%</div>
-	</li>
-	<?php } ?>
-</ul>
-<?php } ?>
+<?php if (isset($drawTableAndPieChart) && isset($drawAll) && !$drawAll) { include('includes/modules/chartLegend.php'); } ?>

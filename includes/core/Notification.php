@@ -16,18 +16,24 @@
 				
 		public static function add($msg, $kind = 'info') {
 			
-			// обрамляет SQL код в теги <pre></pre>, если замечает его
-			$lookupForSQL = ['select', 'insert into'];
-			$foundSQL = false;
-			foreach ($lookupForSQL as $value) {
-				if (preg_match('/'.$value.'/i', $msg, $matches)) {
-					$foundSQL = true;
-					break;
+			if (is_array($msg)) {
+				$msg = print_r($msg, true);
+			} else {
+			
+				// обрамляет SQL код в теги <pre></pre>, если замечает его
+				$lookupForSQL = ['select', 'insert into'];
+				$foundSQL = false;
+				foreach ($lookupForSQL as $value) {
+					if (preg_match('/'.$value.'/i', $msg, $matches)) {
+						$foundSQL = true;
+						break;
+					}
 				}
-			}
-			if ($foundSQL) {
-				$msg = preg_replace('/'.$matches[0].'/', '<pre>'.$matches[0], $msg, $count = 1);
-				$msg = $msg.'</pre>';
+				if ($foundSQL) {
+					$msg = preg_replace('/'.$matches[0].'/', '<pre>'.$matches[0], $msg, $count = 1);
+					$msg = $msg.'</pre>';
+				}
+				
 			}
 			
 			Notification::$message[$kind] =

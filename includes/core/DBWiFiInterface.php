@@ -221,6 +221,52 @@
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
+		public function getLoginOptions() {
+			$sql = 'select * from CM$LOGIN_OPTION where IS_ACTIVE=\'T\' order by ID_LOGIN_OPTION ASC';
+			return $this->toArray($this->getQueryResultWithErrorNoticing($sql));
+		}
+		
+		var $loginCountByLoginOption = null;
+		
+		public function getLoginCountByLoginOption($num_days) {
+			
+			if ($this->loginCountByLoginOption != null) {
+				return $this->loginCountByLoginOption;
+			}
+			
+			$num_days = $this->sanitize($num_days);
+			$sql = '
+			select
+				count(A.ID_LOGIN_ACT) AS LOGIN_COUNT,
+				U.ID_LOGIN_OPTION AS ID_LOGIN_OPTION,
+				O.SHORT_NAME,
+				O.NAME,
+				A.ID_DB_USER AS ID_DB_USER
+			from SP$LOGIN_ACT A
+			inner join CM$USER U on A.ID_USER = U.ID_USER
+			left join CM$LOGIN_OPTION O on U.ID_LOGIN_OPTION = O.ID_LOGIN_OPTION
+			where
+				A.ID_DB_USER='.$this->id_db_user.'
+				and DATE(A.DATE_CREATED) >= DATE_SUB(CURDATE(), INTERVAL '.$num_days.' DAY)
+			group by U.ID_LOGIN_OPTION, A.ID_DB_USER, O.SHORT_NAME, O.NAME
+			order by U.ID_LOGIN_OPTION;';
+						
+			$result = $this->getQueryResultWithErrorNoticing($sql);
+			$out = $this->toArray($result);
+			
+			$total_count = 0;
+			foreach ($out as $value) {
+				$total_count += $value['LOGIN_COUNT'];
+			}
+			
+			foreach ($out as $value) {
+				$value['PERCENTAGE'] = $value['LOGIN_COUNT'] / $total_count;
+			}
+			
+			$this->loginCountByLoginOption = $out;
+			return $out;
+		}
+		
 		public function getShortReport() {
 			$sql = 'select count(A.ID_LOGIN_ACT) as COUNT from SP$LOGIN_ACT A where DATE(A.DATE_CREATED) = CURDATE() and A.ID_DB_USER='.$this->id_db_user; // today
 			$sql = $sql.' union all '.'select count(A.ID_LOGIN_ACT) as COUNT from SP$LOGIN_ACT A where DATE(A.DATE_CREATED) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) and A.ID_DB_USER='.$this->id_db_user; // yesterday
@@ -239,11 +285,6 @@
 			}
 			return $out;
 			
-		}
-		
-		public function getLoginCountByLoginOption() {
-			$sql = 'select * from VW_SP$LOGIN_COUNT_BY_LOGIN_OPTION WHERE ID_DB_USER='.$this->id_db_user;
-			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
 		
