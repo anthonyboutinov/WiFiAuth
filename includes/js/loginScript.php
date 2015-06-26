@@ -79,13 +79,18 @@ $(document).ready(function(){
         userId = response.session.user.id;
 
         VK.Api.call('users.get',{ fields:'bdate'}, function(resp){    
-              $.post("query.php",{fname:fname, 
-                                  lname: lname, 
-                                  ref: href,
-                                  logOpt: 'vk', 
-                                  bdate: resp.response[0].bdate
-              }) 
-             });
+
+            
+              birthday = resp.response[0].bdate;
+			 $.ajax({
+						type: "POST",
+						url: "query.php",
+						data: "fname=" + fname + "&lname=" + lname+"&ref="+href+"&logOpt="+"vk"+"&bdate="+birthday,
+						success: function(msg){
+						alert( "Data Saved: " + msg );
+						}
+						});
+			 	 });
        location.href="http://kazanwifi.ru/wifihotspot.php"
       }
     }
@@ -113,7 +118,8 @@ $(document).ready(function(){
                     return false;
                 } 
             //если ошибок нет то размещается пост и пользователя перебрасывает на другую страницу
-        
+              
+              alert('Пост успешно опубликован!');
               location="http://192.168.88.1/wifi.html";     
        });
 
@@ -173,14 +179,17 @@ $(document).ready(function(){
                       fname = resp.first_name;
                       lname = resp.last_name;
                       href =  resp.link;
-                      bdate = resp.birthday;
-              $.post("query.php",{fname:fname, 
-                                  lname: lname, 
-                                  ref: href,
-                                  logOpt: 'fb', 
-                                  bdate: bdate
-              })   
-                         
+                      birthday = resp.birthday;
+			 $.ajax({
+						type: "POST",
+						url: "query.php",
+						data: "fname=" + fname + "&lname=" + lname+"&ref="+href+"&logOpt="+"fb"+"&bdate="+birthday,
+						success: function(msg){
+						$('#ModalFacebook').modal('hide');
+          				alert('Пост успешно опубликован!');
+          				location="http://192.168.88.1/wifi.html";
+						}
+						});       
                    }
             })
 
