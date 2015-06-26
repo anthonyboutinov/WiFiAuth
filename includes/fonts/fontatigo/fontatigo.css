@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Fontatigo 4F';
+    src: url('fontatigo.eot');
+    src: url('fontatigo.eot?#iefix') format('embedded-opentype'),
+         url('fontatigo.woff') format('woff'),
+         url('fontatigo.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

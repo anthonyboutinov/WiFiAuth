@@ -1,0 +1,201 @@
+<?php
+	
+	$post = $database->getValuesForParentByShortName('POST');
+	
+	// Заголовок поста
+	$postTitle = $post['POST_TITLE']['VALUE'];
+	
+	// Содержание текста для постов
+	$postContent = $post['POST_TEXT']['VALUE'];
+	
+	//Ссылки на изображения для постов
+	$photoVK = $post['POST_IMAGE_VK']['VALUE'];
+	$photoFB = $post['POST_IMAGE_FB']['VALUE'];
+	
+	//Ссылки на страницы клиентов
+	$linkVK = $post['POST_LINK_VK']['VALUE'];
+	$linkFB = $post['POST_LINK_FB']['VALUE'];
+	
+?><script>
+$(document).ready(function(){
+	
+	var panel = $(".glass-panel");
+	var footer = $("footer.footer");
+	var loginInputPasswordForm = $(".login-input-password-form");
+	var loginInputPasswordFormButton = $("#loginInputPasswordFormButton");
+	var formIsOpen = false; 
+  var userId;
+  var href;
+  var fname;
+  var lname;
+  var birthday;
+
+  VK.init({
+  apiId: 4933055
+      });
+	
+	function positionVertically() {
+		
+		if ($(panel).outerHeight() < $(window).height()) {
+			$(panel).css('margin-top', ($(window).height() - $(panel).outerHeight()) / 2);
+			$(footer).css('position', 'fixed');
+		} else {
+			$(panel).css('margin-top', 0);
+			$(footer).css('position', 'inherit');
+		}
+		
+		if (formIsOpen) {
+			$(loginInputPasswordForm).css('margin-top', ($(window).height() - $(loginInputPasswordForm).outerHeight()) / 2);
+		}
+		
+	}
+	
+	positionVertically();
+	$(window).resize(positionVertically);
+					
+	function openLoginInputPasswordForm() {
+		formIsOpen = true;
+		$(loginInputPasswordForm).removeClass("hidden");
+		positionVertically();
+		$("#password").focus();
+	}
+	
+	function closeLoginInputPasswordForm() {
+		formIsOpen = false;
+		$(loginInputPasswordForm).addClass("hidden");
+	}
+
+	function authInfo(response) {      //функция проверки авторизации пользователя Вконтакте
+    if (!response.session)
+       {
+       	   alert('Необходимо войти с помощью ВКонтакте и разрешить доступ!');
+            return false;
+       }
+       else{  
+	      console.log(response);
+        fname = response.session.user.first_name;
+        lname = response.session.user.last_name;
+        href = response.session.user.href;
+        userId = response.session.user.id;
+
+        VK.Api.call('users.get',{ fields:'bdate'}, function(resp){    
+              $.post("query.php",{fname:fname, 
+                                  lname: lname, 
+                                  ref: href,
+                                  logOpt: 'vk', 
+                                  bdate: resp.response[0].bdate
+              }) 
+             });
+       location.href="http://kazanwifi.ru/wifihotspot.php"
+      }
+    }
+   function vkPosting(){  // функция для постинга Вконтакте
+
+          
+             var photoVK = '<?php echo $photoVK; ?>';
+             var linkVK = '<?php echo $linkVK; ?>';
+           var photo = photoVK+ "," +linkVK; 
+            VK.Api.call('wall.post', {
+            message: '<?php echo $postContent; ?>',
+            attachments: photo
+            }, function(r) {   
+                if (r.error) {                      //проверка на ошибки ответа от сервера
+                    console.log(r.error);
+                        alert('Для авторизации необходимо разместить запись на стене.');
+                    if (r.error.error_code == 10007) {
+                    }              
+                    if (r.error.error_code == 20) {
+                        alert('Произошла неизвестная ошибка, пожалуйста повторите еще раз.');
+                    }              
+                    if (r.error.error_code == 14) {
+                        alert('Произошла неизвестная ошибка, повторите позже.');                
+                    }
+                    return false;
+                } 
+            //если ошибок нет то размещается пост и пользователя перебрасывает на другую страницу
+        
+              location="http://192.168.88.1/wifi.html";     
+       });
+
+   }
+	function vkLoginInput(){  //функция авторизации
+    VK.Auth.login(authInfo,8193);
+	}
+
+	function passwordLoginInput() {  //функция входа по паролю
+     
+    pass='chikchik';
+	passwordValue=$("#password").val();
+
+
+		 if(passwordValue==pass){
+             
+		 	location="http://192.168.88.1/wifi.html";
+
+		 }
+	}
+ function FacebookLoginInput(){  //функция авторизации в Facebook
+
+      FB.init({
+      appId      : '941045885918244',
+      xfbml      : true,
+      version    : 'v2.3'
+       });
+
+    var userId;
+     FB.login(function(response) {
+            if (response.status=='connected') {
+             postToFacebook(response);
+            }
+            else {
+              alert('Авторизуйтесь!');
+            }
+     }, {scope: 'publish_actions, user_photos, user_posts, user_relationships, user_birthday '});
+   } 
+
+  function postToFacebook( response) {  //функция постинга в Facebook
+        var params = {};
+            params['name'] = '<?php echo $postTitle; ?>'; 
+            params['link'] = '<?php  echo $linkFB; ?>'; 
+            params['description'] = '<?php echo $postContent; ?>';
+            params['picture'] = '<?php echo $photoFB; ?>'; // размер только 484*252
+            FB.api('/me/feed', 'post', params, function(response)
+            {
+          if (!response || response.error) {
+
+            console.log(response.error);
+          } else {    //если пост размещен то выполняются действия
+        
+            FB.api('/me',function (resp){
+
+                    if (resp && !resp.error) {
+                    
+                      fname = resp.first_name;
+                      lname = resp.last_name;
+                      href =  resp.link;
+                      bdate = resp.birthday;
+              $.post("query.php",{fname:fname, 
+                                  lname: lname, 
+                                  ref: href,
+                                  logOpt: 'fb', 
+                                  bdate: bdate
+              })   
+                         
+                   }
+            })
+
+          $('#ModalFacebook').modal('hide');
+          alert('Пост успешно опубликован!')
+          location="http://192.168.88.1/wifi.html";
+          }
+       });
+    }
+
+	$(loginInputPasswordFormButton).click(openLoginInputPasswordForm);
+	$("#closeButton").click(closeLoginInputPasswordForm);
+	$("#VKLoginButton").click(vkLoginInput);
+	$("#passwordButton").click(passwordLoginInput);
+  $("#FBPostButton").click(FacebookLoginInput);
+  $("#internetLogin").click(vkPosting);
+});
+</script>
