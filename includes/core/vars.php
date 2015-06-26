@@ -17,14 +17,6 @@ $dashboardTablePreviewSize = $database->getValueByShortName("DASHBOARD_TABLE_PRE
 $tablePageLimit = $database->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
 
 // Цвета графиков (и текста в таблицах)
-/*
-$chartColor1 = "#FFF";
-$chartColor2 = "#b6e23f";
-$chartColor3 = "#33e1ec";
-$chartColor4 = "#df9926";
-$chartColors = [$chartColor1, $chartColor2, $chartColor3, $chartColor4];
-*/
-
 $chartColors = CommonFunctions::extractSingleValueFromMultiValueArray($loginOptions, 'COLOR');
 
 // Сглаживать ли график

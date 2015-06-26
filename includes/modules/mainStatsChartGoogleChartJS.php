@@ -18,20 +18,10 @@ include_once('googleChartAPI.html');
 	// draws it.
 	function drawChart() {
 		var data = new google.visualization.arrayToDataTable([
-			[{type: 'date', label: 'День'}, {type: 'number', label: 'Вконтакте'}, {type: 'number', label: 'Facebook'}, {type: 'number', label: 'Twitter'}, {type: 'number', label: 'Instagram'}],
-			[new Date(2015, 5, 5),	1000,	400,	200,	13],
-			[new Date(2015, 5, 6),	1170,	460, 0, 4],
-			[new Date(2015, 5, 7),	660,	1120, 200,	13],
-			[new Date(2015, 5, 8),	1030,	540, 200,	131],
-			[new Date(2015, 5, 8),	1030,	540, 200,	131],
-			[new Date(2015, 5, 9),	1170,	461, 50, 40],
-			[new Date(2015, 5, 10),	1000,	408,	220,	13],
-			[new Date(2015, 5, 11),	1000,	460,	200,	83],
-			[new Date(2015, 5, 12),	800,	812,	200,	13],
-			[new Date(2015, 5, 13),	1040,	400,	200,	0],
-			[new Date(2015, 5, 14),	1000,	799,	200,	13],
-			[new Date(2015, 5, 15),	1020,	440,	207,	53],
-			[new Date(2015, 5, 16),	600,	450,	220,	93],
+			[{type: 'date', label: 'День'}, {type: 'number', label: 'Вконтакте'}, {type: 'number', label: 'Facebook'}, {type: 'number', label: 'Twitter'}],			
+			<?=CommonFunctions::arrayToString(
+				$database->getMainStatsTable(30), false, false, false
+			);?>
 		]);
 
 		var options = {
@@ -42,7 +32,7 @@ include_once('googleChartAPI.html');
 			backgroundColor: { fill:'transparent' },
 			fontName: 'Fontatigo, "Helvetica Nueue", Helvetica, Arial, "Lucida Grande", sans-serif',
 			fontSize: 14,
-			colors: <?=CommonFunctions::arrayToString($chartColors, false, '[', ']', '\'');?>,
+			colors: <?=CommonFunctions::arrayToString($chartColors);?>,
 			chartArea: {left:0,top:0,width:'100%',height:'<?=$charthHeight?>'},
 			tooltip: {isHtml: true},
 			hAxis: {

@@ -122,7 +122,6 @@
 		 *	возвращаются все записи, относящиеся к требуемой ветке словаря)
 		 *
 		 *	@author		Anthony Boutinov
-		 *	@last_edit	25/06/15 11:00
 		 *
 		 *	@param ($short_names) (string или array(string))	название ветки или нескольких веток словаря, например 'VARS'
 		 *	@return (array)										сложный массив, где каждая строка результата доступна по ключу SHORT_NAME
@@ -221,9 +220,102 @@
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
+		var $loginOptions = null;
+		
 		public function getLoginOptions() {
+			if ($this->loginOptions != null) {
+				return $this->loginOptions;
+			}
+			
 			$sql = 'select * from CM$LOGIN_OPTION where IS_ACTIVE=\'T\' order by ID_LOGIN_OPTION ASC';
+			$this->loginOptions = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
+			
+			return $this->loginOptions;
+		}
+		
+		public function getMainStatsTable($num_days) {
+			
+			$login_options = $this->getLoginOptions();
+			
+			$sql =
+			'SELECT
+				DATE_FORMAT(D.DATE, "new Date(%Y, %m, %d)") AS JSON_DATE,';			
+			
+			$isFirst = true;
+			foreach ($login_options as $login_option) {
+				$name = $login_option['NAME'];
+				
+				if ($isFirst === true) {
+					$isFirst = false;
+				} else {
+					$sql = $sql.',';
+				}
+				
+				$sql = $sql.
+				'(
+					SELECT COUNT(LA.ID_LOGIN_ACT) AS TOTAL
+					FROM SP$LOGIN_ACT LA
+					INNER JOIN CM$USER U ON U.ID_USER=LA.ID_USER
+					LEFT JOIN CM$LOGIN_OPTION LO ON LO.ID_LOGIN_OPTION=U.ID_LOGIN_OPTION
+					WHERE LA.ID_DB_USER='.$this->id_db_user.'
+					AND LO.ID_LOGIN_OPTION='.$login_option['ID_LOGIN_OPTION'].'
+					AND DATE(LA.DATE_CREATED)=D.DATE
+					) AS \''.$login_option['SHORT_NAME'].'\'';
+				
+			}
+
+			$sql = $sql.
+			'FROM (
+				SELECT A.DATE 
+				FROM (
+					SELECT CURDATE( ) - INTERVAL( A.A + ( 10 * B.A ) + ( 100 * C.A ) ) DAY AS DATE
+					FROM (
+						SELECT 0 AS A
+						UNION ALL SELECT 1 
+						UNION ALL SELECT 2 
+						UNION ALL SELECT 3 
+						UNION ALL SELECT 4 
+						UNION ALL SELECT 5 
+						UNION ALL SELECT 6 
+						UNION ALL SELECT 7 
+						UNION ALL SELECT 8 
+						UNION ALL SELECT 9
+						) AS A
+						CROSS JOIN (
+			
+						SELECT 0 AS A
+						UNION ALL SELECT 1 
+						UNION ALL SELECT 2 
+						UNION ALL SELECT 3 
+						UNION ALL SELECT 4 
+						UNION ALL SELECT 5 
+						UNION ALL SELECT 6 
+						UNION ALL SELECT 7 
+						UNION ALL SELECT 8 
+						UNION ALL SELECT 9
+						) AS B
+						CROSS JOIN (
+			
+						SELECT 0 AS A
+						UNION ALL SELECT 1 
+						UNION ALL SELECT 2 
+						UNION ALL SELECT 3 
+						UNION ALL SELECT 4 
+						UNION ALL SELECT 5 
+						UNION ALL SELECT 6 
+						UNION ALL SELECT 7 
+						UNION ALL SELECT 8 
+						UNION ALL SELECT 9
+						) AS C
+					) A
+				WHERE A.DATE BETWEEN DATE_SUB(CURDATE(), INTERVAL '.$num_days.' DAY) AND CURDATE() 
+			) D
+			ORDER BY D.DATE DESC';
+			
+// 			Notification::add($sql);
+			
 			return $this->toArray($this->getQueryResultWithErrorNoticing($sql));
+			
 		}
 		
 		var $loginCountByLoginOption = null;
@@ -259,8 +351,10 @@
 				$total_count += $value['LOGIN_COUNT'];
 			}
 			
+			$i = 0;
 			foreach ($out as $value) {
-				$value['PERCENTAGE'] = $value['LOGIN_COUNT'] / $total_count;
+				$value['PERCENTAGE'] = (int)($value['LOGIN_COUNT'] / $total_count * 100);
+				$out[$i++] = $value;
 			}
 			
 			$this->loginCountByLoginOption = $out;

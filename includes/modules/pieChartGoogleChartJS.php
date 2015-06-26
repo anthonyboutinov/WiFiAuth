@@ -31,17 +31,12 @@ include_once('googleChartAPI.html');
 	function drawPieChart() {
 		var data = new google.visualization.arrayToDataTable([
 			['Соцсеть', 'Количество посетителей за последние 30 дней'],
-			<?=CommonFunctions::arrayToJSONString(
+			<?=CommonFunctions::arrayToString(
 				CommonFunctions::extractSingleValueFromMultiValueArray(
 					$database->getLoginCountByLoginOption(30), 'LOGIN_COUNT', 'NAME'
-				)
+				),
+				true, false
 			);?>
-			/*
-['ВКонтакте', 10340],
-			['Facebook', 4049],
-			['Twitter', 2945],
-			['Instagram', 1905]
-*/
 		]);
 
 		var options = {
@@ -51,7 +46,7 @@ include_once('googleChartAPI.html');
 			fontName: 'Fontatigo, "Helvetica Nueue", Helvetica, Arial, "Lucida Grande", sans-serif',
 			pieSliceTextStyle: {color: '#333'},
 			fontSize: 14,
-			colors: <?=CommonFunctions::arrayToString($chartColors, false, '[', ']', '\'');?>,
+			colors: <?=CommonFunctions::arrayToString($chartColors);?>,
 			chartArea: {left:10,top:10,width:'90%',height:'<?=$charthHeight?>'},
 			tooltip: {isHtml: true, showColorCode: true},
 			height: <?=$height?>,
