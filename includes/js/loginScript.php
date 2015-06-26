@@ -18,52 +18,63 @@
 	
 ?><script>
 $(document).ready(function(){
-	
-	var panel = $(".glass-panel");
-	var footer = $("footer.footer");
-	var loginInputPasswordForm = $(".login-input-password-form");
-	var loginInputPasswordFormButton = $("#loginInputPasswordFormButton");
-	var formIsOpen = false; 
-  var userId;
-  var href;
-  var fname;
-  var lname;
-  var birthday;
 
-  VK.init({
-  apiId: 4933055
-      });
+
+// Вертикальное позиционирование
+
+	// Поиск ключевых элементов в DOM и переменные
 	
-	function positionVertically() {
-		
-		if ($(panel).outerHeight() < $(window).height()) {
-			$(panel).css('margin-top', ($(window).height() - $(panel).outerHeight()) / 2);
-			$(footer).css('position', 'fixed');
-		} else {
-			$(panel).css('margin-top', 0);
-			$(footer).css('position', 'inherit');
-		}
-		
-		if (formIsOpen) {
+		var panel = $(".glass-panel");
+		var footer = $("footer.footer");
+		var loginInputPasswordForm = $("#modalPassword > .modal-dialog");
+		var loginInputPasswordFormButton = $("#loginInputPasswordFormButton");
+		var loginInputPasswordFormCloseButton = $("#modalPassword .modal-content > .modal-header > button.close");
+		var loginInputPasswordFormClickAwayArea = $("#modalPassword");
+		var formIsOpen = false; 
+			
+	// EOF Поиск ключевых элементов в DOM и переменные
+	
+	// Функции
+	
+		function positionVertically() {
+			if ($(panel).outerHeight() < $(window).height()) {
+				$(panel).css('margin-top', ($(window).height() - $(panel).outerHeight()) / 2);
+				$(footer).css('position', 'fixed');
+			} else {
+				$(panel).css('margin-top', 0);
+				$(footer).css('position', 'inherit');
+			}	
 			$(loginInputPasswordForm).css('margin-top', ($(window).height() - $(loginInputPasswordForm).outerHeight()) / 2);
 		}
-		
-	}
+						
+		function openLoginInputPasswordForm() {
+			setTimeout(positionVertically, 200);
+			$("#password").focus();
+		}
 	
-	positionVertically();
-	$(window).resize(positionVertically);
-					
-	function openLoginInputPasswordForm() {
-		formIsOpen = true;
-		$(loginInputPasswordForm).removeClass("hidden");
+	// EOF Функции
+	
+	// Привязки к дейсвтиям
+
+		$(loginInputPasswordFormButton).click(openLoginInputPasswordForm);
 		positionVertically();
-		$("#password").focus();
-	}
+		$(window).resize(positionVertically);
 	
-	function closeLoginInputPasswordForm() {
-		formIsOpen = false;
-		$(loginInputPasswordForm).addClass("hidden");
-	}
+	// EOF Привязки к дейсвтиям
+	
+// EOF Вертикальное позиционирование
+
+	$("#passwordButton").click(passwordLoginInput);
+	
+// Работа с соцсетями
+	
+	var userId;
+	var href;
+	var fname;
+	var lname;
+	var birthday;
+	
+	VK.init({apiId: 4933055});
 
 	function authInfo(response) {      //функция проверки авторизации пользователя Вконтакте
     if (!response.session)
@@ -191,11 +202,10 @@ $(document).ready(function(){
        });
     }
 
-	$(loginInputPasswordFormButton).click(openLoginInputPasswordForm);
-	$("#closeButton").click(closeLoginInputPasswordForm);
 	$("#VKLoginButton").click(vkLoginInput);
-	$("#passwordButton").click(passwordLoginInput);
-  $("#FBPostButton").click(FacebookLoginInput);
-  $("#internetLogin").click(vkPosting);
+	$("#FBPostButton").click(FacebookLoginInput);
+	$("#internetLogin").click(vkPosting);
+  
+// EOF Работа с соцсетями
 });
 </script>
