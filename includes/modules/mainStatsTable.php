@@ -1,5 +1,5 @@
 <h1>
-	<i class="fa fa-table"></i>
+	<i class="fa fa-calendar-o"></i>
 	Краткий отчет
 </h1>
 <div class="page-wrapper">

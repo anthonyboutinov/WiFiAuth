@@ -2,10 +2,8 @@
 	
 	$dictionary_branches = ['GENERAL_FIELDS', 'ADMIN_DISPLAY_SETTINGS', 'POST'];
 
-/*
 	$updateDBUserPasswordResponce = null;
 	$processSettingsUpdateResponce = null;
-*/
 		
 	if (isset($_POST['form-name'])) {
 		if ($_POST['form-name'] == 'admin-settings') {

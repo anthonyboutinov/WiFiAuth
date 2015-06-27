@@ -21,21 +21,14 @@
 			<?php include 'includes/base/navbar.php'; ?>
 			
 			<div class="row">
-				<div class="col-md-3 col-sm-7">
+				<div class="col-md-3 col-sm-12 col-md-push-9">
 					
 					<!-- Main Stats Table -->
 					<?php include 'includes/modules/mainStatsTable.php'; ?>
 										
 				</div>
 				
-				<div class="col-md-3 col-sm-5 col-md-push-6">
-					
-					<!-- Pie Chart -->
-					<?php include 'includes/modules/pieChart.php'; ?>
-					
-				</div>
-				
-				<div class="col-md-6 col-sm-12 col-md-pull-3">
+				<div class="col-md-9 col-sm-12 col-md-pull-3">
 					
 					<!-- Main Stats Chart -->
 					<?php include 'includes/modules/mainStatsChart.php'; ?>
@@ -81,8 +74,6 @@
 		<script type="text/javascript" src="includes/js/jquery.monthpicker.min.js"></script>
 		<script type="text/javascript" src="includes/js/jquery-scrolltofixed-minmaxheightadded-min.js"></script>
 		<script type="text/javascript" src="includes/js/mainStatsChart.js"></script>
-		<script type="text/javascript" src="includes/js/mainStatsChart.js"></script>
-		<script type="text/javascript" src="includes/js/pieChart.js"></script>
 		
 	</body>
 </html>
