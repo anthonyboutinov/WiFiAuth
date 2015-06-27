@@ -18,10 +18,19 @@ include_once('googleChartAPI.html');
 	// draws it.
 	function drawChart() {
 		var data = new google.visualization.arrayToDataTable([
-			[{type: 'date', label: 'День'}, {type: 'number', label: 'Вконтакте'}, {type: 'number', label: 'Facebook'}, {type: 'number', label: 'Twitter'}],			
-			<?=CommonFunctions::arrayToString(
-				$database->getMainStatsTable(30), false, false, false
-			);?>
+			[{type: 'date', label: 'День'},
+			<?php
+				echo CommonFunctions::arrayToString(
+					CommonFunctions::extractSingleValueFromMultiValueArray(
+						$database->getLoginOptions(), 'NAME'
+					),
+					false, true, true, ' ', '],', "{type: 'number', label: '", "'}"
+				);
+				
+				echo CommonFunctions::arrayToString(
+					$database->getMainStatsTable(30), false, false, false
+				);
+			?>
 		]);
 
 		var options = {
