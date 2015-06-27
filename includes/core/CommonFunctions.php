@@ -2,12 +2,25 @@
 	
 	class CommonFunctions {
 		
-		public static function changeOffsetLink($desktop, $offset) {
-			echo '?';
-			if ($desktop) {
-				echo 'mobile&';
+		/**
+		 *	changeOffsetLink
+		 *
+		 *	Получить окончание ссылки для нового значения offset с учетом
+		 *	того, необходимо ли указывать, что страница загружается в мобильном
+		 *	или десктопном виде.
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param ($is_desktop) (bool)	Загружать десктопную или мобильную версию страницы (добавлять или нет пустую константу mobile)
+		 *	@param ($offset) (number)	Новое значение сдвига таблицы
+		 *	@return (string)			description
+		 */
+		public static function changeOffsetLink($is_desktop, $offset) {
+			$out = '?';
+			if (!$is_desktop) {
+				$out = $out.'mobile&';
 			}
-			echo 'offset='.$offset;
+			return $out.'offset='.$offset;
 		}
 		
 		/**
@@ -43,7 +56,8 @@
 		 *														числовыми. По умолчанию, ДА
 		 *	@param ($wrapperLeft) (string)					(Опционально) Вид левой  скобки, оборачивающей массив
 		 *	@param ($wrapperRight) (string)					(Опционально) Вид правой скобки, оборачивающей массив
-		 *	@param ($valueHuggers) (string)					(Опционально) Вид кавычек, оборачивающих значения
+		 *	@param ($valueHuggerLeft) (string)				(Опционально) Вид левых кавычек, оборачивающих значения
+		 *	@param ($valueHuggerRight) (string)				(Опционально) Вид правых кавычек, оборачивающих значения
 		 *	@param ($keyHuggers) (string)					(Опционально) Вид кавычек, оборачивающих ключи
 		 *	@param ($keyFollowers) (string)					(Опционально) Вид разделителя между ключом и значением, например " => "
 		 *	@param ($keyValuePairWrapperLeft) (string)		(Опционально) Вид левой  скобки, оборачивающей пару ключ-значение
@@ -56,18 +70,46 @@
 		 */
 		public static function arrayToString(
 			$array,
-			$doKeys = false,
-			$wrapTopMostArray = true,
-			$hugValues = true,
-			$wrapperLeft = '[',
-			$wrapperRight = ']',
-			$valueHuggers = '\'',
-			$keyHuggers = '\'', 
-			$keyFollowers = ', ',
-			$keyValuePairWrapperLeft = '[',
-			$keyValuePairWrapperRight = ']',
-			$isTopmost = true
+			$doKeys						= false,
+			$wrapTopMostArray			= true,
+			$hugValues					= true,
+			$wrapperLeft				= null,
+			$wrapperRight				= null,
+			$valueHuggerLeft			= null,
+			$valueHuggerRight			= null,
+			$keyHuggers					= null,
+			$keyFollowers				= null,
+			$keyValuePairWrapperLeft	= null,
+			$keyValuePairWrapperRight	= null,
+			$isTopmost					= true
 		) {
+			
+			// default values
+			if ($wrapperLeft == null) {
+				$wrapperLeft 							= '[';
+			}
+			if ($wrapperRight == null) {
+				$wrapperRight 							= ']';
+			}
+			if ($valueHuggerLeft == null) {
+				$valueHuggerLeft 						= '\'';
+			}
+			if ($valueHuggerRight == null) {
+				$valueHuggerRight 						= '\'';
+			}
+			if ($keyHuggers == null) {
+				$keyHuggers 							= '\'';
+			}
+			if ($keyFollowers == null) {
+				$keyFollowers 							= ',';
+			}
+			if ($keyValuePairWrapperLeft == null) {
+				$keyValuePairWrapperLeft 				= '[';
+			}
+			if ($keyValuePairWrapperRight == null) {
+				$keyValuePairWrapperRight 				= ']';
+			}
+			
 			
 			$out = (
 				($wrapTopMostArray == true || $isTopmost == false) ?
@@ -79,17 +121,17 @@
 				
 				$localValueHuggers = (
 					$hugValues == true ?
-						(is_numeric($value) || is_array($value) ? '' : $valueHuggers)
+						(is_numeric($value) || is_array($value) ? ['', ''] : [$valueHuggerLeft, $valueHuggerRight])
 					:
-						''
+						['', '']
 				);
 				
-				$out = $out.($i++ == 0 ? '' : ', ').(
+				$out = $out.($i++ == 0 ? '' : ',').(
 					$doKeys == true ?
 						$keyValuePairWrapperLeft.$keyHuggers.$key.$keyHuggers.$keyFollowers
 					:
 						''
-				).$localValueHuggers.(
+				).$localValueHuggers[0].(
 					is_array($value) ?
 						CommonFunctions::arrayToString(
 							$value,
@@ -98,7 +140,8 @@
 							$hugValues,
 							$wrapperLeft,
 							$wrapperRight,
-							$valueHuggers,
+							$valueHuggerLeft,
+							$valueHuggerRight,
 							$keyHuggers,
 							$keyFollowers,
 							$keyValuePairWrapperLeft,
@@ -107,7 +150,7 @@
 						)
 					:
 						$value
-				).$localValueHuggers.(
+				).$localValueHuggers[1].(
 					$doKeys ? $keyValuePairWrapperRight : ''
 				);
 			}
