@@ -42,12 +42,10 @@
 						}
 					} else {
 						die("Error #2: Credentials for router with MAC address $macAddress are incorrect. 0");
-						// Íà ñàìîì äåëå, ïàðîëü íå âåðåí (â öåëÿõ áåçîïàñíîñòè, êîíå÷íîìó ïîëüçîâàòåëþ íèêîãäà íå ñîîáùàåòñÿ, ÷òî ïðîáëåìû ñ ÷åì-òî êîíêðåòíûì. Âñåãäà íåîáõîäèìî ïèñàòü, ÷òî íåâåðåíà âñÿ ïàðà ëîãèí/ïàðîëü.)
 					}
 				}
 			} else {
 				die("Error #2: Credentials for router with MAC address $macAddress are incorrect. 1");
-				// Íà ñàìîì äåëå, ëîãèí íå íàéäåí (â öåëÿõ áåçîïàñíîñòè,... ñì. âûøå)
 			}
 		}
 		
@@ -72,12 +70,10 @@
 						}
 					} else {
 						die("Error #4: Credentials for $web_user are incorrect.");
-				// Íà ñàìîì äåëå, ïàðîëü íå âåðåí (â öåëÿõ áåçîïàñíîñòè, êîíå÷íîìó ïîëüçîâàòåëþ íèêîãäà íå ñîîáùàåòñÿ, ÷òî ïðîáëåìû ñ ÷åì-òî êîíêðåòíûì. Âñåãäà íåîáõîäèìî ïèñàòü, ÷òî íåâåðåíà âñÿ ïàðà ëîãèí/ïàðîëü.)
 					}
 				}
 			} else {
 				die("Error #4: Credentials for $web_user are incorrect.");
-				// Íà ñàìîì äåëå, ëîãèí íå íàéäåí (â öåëÿõ áåçîïàñíîñòè,... ñì. âûøå)
 			}
 			
 		}
@@ -85,8 +81,14 @@
 		
 		public function getValueByShortName($short_name) {
 			$short_name = $this->sanitize($short_name);
-			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY IN (SELECT D.ID_DICTIONARY FROM CM$DICTIONARY D WHERE SHORT_NAME="'.$short_name.'") AND V.ID_DB_USER="'.$this->id_db_user.'"';
-			return $this->getQueryFirstRowResultWithErrorNoticing($sql, $short_name);
+			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY IN (SELECT D.ID_DICTIONARY FROM CM$DICTIONARY D WHERE SHORT_NAME="'.$short_name.'") AND V.ID_DB_USER='.$this->id_db_user;
+			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $short_name);
+			if ($result['VALUE'] == 'T' || $result['VALUE'] == 't') {
+				$result['VALUE'] = true;
+			} else if ($result['VALUE'] == 'F' || $result['VALUE'] == 'f') {
+				$result['VALUE'] = false;
+			}
+			return $result;
 		}
 		
 		public function getValueByID($id) {
@@ -198,26 +200,41 @@
 		
 		public function getLoginActs($from = 0, $to = null) {
 			$this->sanitizeFromTo($from, $to);
-			$sql = 'select * from VW_SP$LOGIN_ACT where ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
+			$sql = 'select * from VW_SP$LOGIN_ACT
+			where ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
 		public function getTopUsers($from = 0, $to = null) {
 			$this->sanitizeFromTo($from, $to);
-			$sql = 'select * from VW_SP$USER_LOGIN_COUNT where ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
+			$sql = 'select * from VW_SP$USER_LOGIN_COUNT
+			where ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
 		public function getUsers($from = 0, $to = null) {
 			$this->sanitizeFromTo($from, $to);
-			$sql = 'SELECT DISTINCT LOGIN_OPTION_NAME, LINK, NAME, BIRTHDAY, ID_LOGIN_OPTION FROM VW_SP$LOGIN_ACT WHERE ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
+			$sql = 'SELECT DISTINCT LOGIN_OPTION_NAME, LINK, NAME, BIRTHDAY, ID_LOGIN_OPTION
+			FROM VW_SP$LOGIN_ACT
+			WHERE ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
 		public function getBirthdays($from = 0, $to = null) {
 			$this->sanitizeFromTo($from, $to);			
-			$sql = 'SELECT LINK, NAME, BIRTHDAY FROM VW_SP$USER_BIRTHDAY WHERE ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
+			$sql = 'SELECT LINK, NAME, BIRTHDAY
+			FROM VW_SP$USER_BIRTHDAY
+			WHERE ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
 			return $this->getQueryResultWithErrorNoticing($sql);
+		}
+		
+		public function getLoginOptionsIgnoringDisabledOnes() {
+			$sql = 'select LO.SHORT_NAME
+			from VW_CM$LOGIN_OPTION LO
+			left join SP$VAR V on LO.ID_LOGIN_OPTION=V.ID_DICTIONARY
+			WHERE V.VALUE=\'T\' and V.ID_DB_USER='.$this->id_db_user;
+			$result = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
+			return CommonFunctions::extractSingleValueFromMultiValueArray($result, 'SHORT_NAME');
 		}
 		
 		var $loginOptions = null;
@@ -227,10 +244,16 @@
 				return $this->loginOptions;
 			}
 			
-			$sql = 'select * from CM$LOGIN_OPTION where IS_ACTIVE=\'T\' order by ID_LOGIN_OPTION ASC';
+			$sql = 'select * from VW_CM$LOGIN_OPTION';
 			$this->loginOptions = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
 			
 			return $this->loginOptions;
+		}
+		
+		public function getColors() {
+			$sql = 'select * from VW_CM$COLOR';
+			$result = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
+			return CommonFunctions::extractSingleValueFromMultiValueArray($result, 'COLOR');
 		}
 		
 		public function getMainStatsTable($num_days) {
@@ -256,7 +279,7 @@
 					SELECT COUNT(LA.ID_LOGIN_ACT) AS TOTAL
 					FROM SP$LOGIN_ACT LA
 					INNER JOIN CM$USER U ON U.ID_USER=LA.ID_USER
-					LEFT JOIN CM$LOGIN_OPTION LO ON LO.ID_LOGIN_OPTION=U.ID_LOGIN_OPTION
+					LEFT JOIN VW_CM$LOGIN_OPTION LO ON LO.ID_LOGIN_OPTION=U.ID_LOGIN_OPTION
 					WHERE LA.ID_DB_USER='.$this->id_db_user.'
 					AND LO.ID_LOGIN_OPTION='.$login_option['ID_LOGIN_OPTION'].'
 					AND DATE(LA.DATE_CREATED)=D.DATE
@@ -311,11 +334,8 @@
 				WHERE A.DATE BETWEEN DATE_SUB(CURDATE(), INTERVAL '.$num_days.' DAY) AND CURDATE() 
 			) D
 			ORDER BY D.DATE DESC';
-			
-// 			Notification::add($sql);
-			
+						
 			return $this->toArray($this->getQueryResultWithErrorNoticing($sql));
-			
 		}
 		
 		var $loginCountByLoginOption = null;
@@ -336,13 +356,13 @@
 				A.ID_DB_USER AS ID_DB_USER
 			from SP$LOGIN_ACT A
 			inner join CM$USER U on A.ID_USER = U.ID_USER
-			left join CM$LOGIN_OPTION O on U.ID_LOGIN_OPTION = O.ID_LOGIN_OPTION
+			left join VW_CM$LOGIN_OPTION O on U.ID_LOGIN_OPTION = O.ID_LOGIN_OPTION
 			where
 				A.ID_DB_USER='.$this->id_db_user.'
 				and DATE(A.DATE_CREATED) >= DATE_SUB(CURDATE(), INTERVAL '.$num_days.' DAY)
 			group by U.ID_LOGIN_OPTION, A.ID_DB_USER, O.SHORT_NAME, O.NAME
 			order by U.ID_LOGIN_OPTION;';
-						
+									
 			$result = $this->getQueryResultWithErrorNoticing($sql);
 			$out = $this->toArray($result);
 			
@@ -385,7 +405,7 @@
 		
 		// ========= Функции, изменяющие данные в БД =========
 		
-		public function addUser ($first_name, $last_name, $user_href, $log_opt, $b_date)
+		public function addUser($first_name, $last_name, $user_href, $log_opt, $b_date)
 		{
 			$first_name = $this->sanitize($first_name);
 			$last_name = $this->sanitize($last_name);
@@ -491,6 +511,12 @@
 				if ($value['DATA_TYPE'] == 'file' || $value['DATA_TYPE'] == 'text&file') {
 					if ($_FILES[$key.'_file']['size'] == 0) {
 						$rows[$key]['field_doesnt_need_an_update'] = true;
+					}
+				} else if ($value['DATA_TYPE'] == 'checkbox') {
+					if (isset($_POST[$key])) {
+						$_POST[$key] = "T";
+					} else {
+						$_POST[$key] = "F";
 					}
 				} else if (!isset($_POST[$key])) {
 					Notification::add("POST value for '$key' is not set.", 'danger');

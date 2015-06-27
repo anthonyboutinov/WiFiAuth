@@ -74,29 +74,48 @@
 				<h1>Войти в&nbsp;Интернет с&nbsp;помощью:</h1>
 					
 				<div class="login-options">
-	
+					
+					<?php
+					$enabledLoginOptions = $database->getLoginOptionsIgnoringDisabledOnes();
+					$out = '';
+				
+					foreach ($enabledLoginOptions as $value) {
+						
+						if ($value == 'vk') {
+							ob_start();
+					?>
 			         <a href="#" id="VKLoginButton">
 				        <span class="fa-stack">
 							<i class="fa fa-circle fa-stack-2x" style="color: #5596c9;"></i>
 							<i class="fa fa-vk fa-stack-1x fa-inverse"></i>
 						</span>
 			         </a>
-	
-			
-	
+			         <?php 	$out = $out.ob_get_clean();
+			         	} else if ($value == 'facebook') {
+				         	ob_start();
+			         ?>
 					<a href="#" id="FBLoginButton" data-toggle="modal" data-target="#ModalFacebook">
 						<span class="fa-stack">
 							<i class="fa fa-circle fa-stack-2x" style="color: #3b6199;"></i>
 							<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
 						</span>
 					</a>
-					
+					<?php 	$out = $out.ob_get_clean();
+			         	} else if ($value == 'odnoklassniki') {
+				         	ob_start();
+			         ?>
 					<a href="#" id="odnoklassiniLoginButton" data-toggle="modal" data-target="#modalOdnoklassniki">
 						<span class="fa-stack">
 							<i class="fa fa-circle fa-stack-2x" style="color: #f2720d;"></i>
 							<i class="fa fa-odnoklassniki fa-stack-1x fa-inverse"></i>
 						</span>
 					</a>
+					
+					<?php 	$out = $out.ob_get_clean();
+						}
+					}
+					echo $out;
+					?>
 				
 				</div>
 			

@@ -1,6 +1,6 @@
 <?php	include 'includes/core/vars.php';
 	
-	$dictionary_branches = ['GENERAL_FIELDS', 'ADMIN_DISPLAY_SETTINGS', 'POST'];
+	$dictionary_branches = ['GENERAL_FIELDS', 'ADMIN_DISPLAY_SETTINGS', 'POST', 'LOGIN_OPTIONS'];
 
 	$updateDBUserPasswordResponce = null;
 	$processSettingsUpdateResponce = null;
@@ -94,8 +94,11 @@
 									<label class="col-sm-4 control-label" for="<?=$key;?>"><?=$value['NAME'];?></label>
 									<div class="col-sm-8">
 										<?php
-										if ($value['DATA_TYPE'] == 'text&file' || $value['DATA_TYPE'] == 'file') { 
+											
+											
+										if ($value['DATA_TYPE'] == 'text&file' || $value['DATA_TYPE'] == 'file') { // ЕСЛИ ФАЙЛ
 											$addFileScript = true;
+											
 										?>
 										<small>Изображение, которое используется сейчас:</small>
 										<img src="data:image/jpeg;base64,<?=base64_encode($value['BLOB_VALUE']);?>" class="tiny-image-preview">
@@ -116,13 +119,18 @@
 											<input type="text" class="form-control" readonly>
 										</div>
 										<?php
+											
+											
+											
 										}
-										if ($value['DATA_TYPE'] == 'textarea') { ?>
+										if ($value['DATA_TYPE'] == 'textarea') { // ЕСЛИ TEXTAREA ?>
+										
 											<textarea rows="4"
 												class="form-control"
 												name="<?=$key;?>"
 												id="<?=$key;?>"><?=$value['VALUE'];?></textarea>
 											<div class="textarea-word-count" id="<?=$key;?>_word_count">≤200</div>
+											
 											<?php ob_start(); ?>
 												var textarea_<?=$key;?> = $("#<?=$key;?>");
 												var word_count_<?=$key;?> = $("#<?=$key;?>_word_count");
@@ -134,15 +142,35 @@
 													}
 												);
 												update_textarea_word_count(textarea_<?=$key;?>, word_count_<?=$key;?>);
-											<?php $additionalScripts = $additionalScripts.ob_get_clean(); ?>
-										<?php } else if ($value['DATA_TYPE'] != 'file') { ?>
+											<?php $additionalScripts = $additionalScripts.ob_get_clean(); 
+												
+												
+												
+										} else if ($value['DATA_TYPE'] != 'file') { // ЕСЛИ СТАНДАРТНОЕ
+											
+											if ($value['DATA_TYPE'] == 'checkbox') { // ЕСЛИ CHECKBOX
+												echo '<div class="checkbox">';
+											}
+										?>
 											<input
 												type="<?=$value['DATA_TYPE'];?>"
 												class="form-control"
 												id="<?=$key;?>"
 												name="<?=$key;?>"
-												value="<?=$value['VALUE'];?>">
-										<?php }
+												<?=( // ЕСЛИ CHECKBOX
+													$value['DATA_TYPE'] == 'checkbox' ? (
+														$value['VALUE'] == 'T' ? 'checked' : ''
+													)
+													: ('value="'.$value['VALUE'].'"')
+												);?>><?php
+										
+												
+											if ($value['DATA_TYPE'] == 'checkbox') { // ЕСЛИ CHECKBOX
+												echo '<label></label></div>';
+											}
+											
+										}
+											
 										if ($value['COMMENT']) { ?>
 											<small><?=$value['COMMENT'];?></small>
 										<?php } ?>
