@@ -40,14 +40,16 @@
 						<div class="form-horizontal">
 
 							<div class="form-group">
-									<div class="col-sm-12">
-										<input type="text" class="form-control" name="ompany-name" placeholder="Название">
+									<label class="col-sm-2 col-xs-2 control-label" for="company-name">Название</label>
+									<div class="col-sm-10 col-xs-10col-sm-10 col-xs-10">
+										<input type="text" class="form-control" name="company-name" placeholder="Название">
 									</div>
 
 							</div>
 
 							<div class="form-group">
-									<div class="col-sm-12">
+									<label class="col-sm-2 col-xs-2 control-label" for="email">E-mail</label>							
+									<div class="col-sm-10 col-xs-10">
 										<input type="text" class="form-control" name="email" placeholder="E-mail">
 									</div>
 								</div>
@@ -57,20 +59,22 @@
 							<h1>
 							<div class="form-horizontal">
 								<div class="form-group">
-									<div class="col-sm-10 col-xs-10 col-sm-offset-1 col-xs-offset-1">
-										<input type="text" class="form-control" name="mac-adress" placeholder="MAC-адрес">
+								  <label class="col-sm-3 col-xs-3 control-label" for="mac-adress"><h5>MAC-адрес</h5></label>							
+									<div class="col-sm-8 col-xs-8">
+										<input type="text" class="form-control" name="mac-adress">
 									</div>
 								</div>
 
 								<div class="form-group">
-									<div class="col-sm-10 col-xs-10 col-sm-offset-1 col-xs-offset-1">
+									<div class="col-sm-8 col-xs-8">
+										 <label class="col-sm-3 col-xs-3  col-xs-offset-1 control-label" for="mac-adress"><h5>Пароль</h5></label>	
 										<div class="input-group">
-											<input type="text" class="form-control" name="password" placeholder="Пароль">										
-							                <span class="input-group-btn">
-												<span class="btn btn-black btn-file">
-													Генрировать
-												</span>
-							                </span>
+											<input type="text" class=" form-control" name="password" >										
+								                <span class="input-group-btn">
+													<span class="btn btn-black btn-file">
+														Генрировать
+													</span>
+								                </span>
 										</div>
 									</div>
 								</div>
@@ -78,7 +82,8 @@
 							</div>
 							</h1>
 						<div>	
-						<h1>Личный кабинет</h1>
+						<h1 style="border-top: 2px solid rgba(255, 255, 255, 0.48);
+   						 padding-top: 40px;">Личный кабинет</h1>
 							<h1>
 							<div class="form-horizontal">
 								<div class="form-group">

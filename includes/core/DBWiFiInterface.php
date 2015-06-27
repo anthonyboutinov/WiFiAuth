@@ -50,6 +50,8 @@
 				// Íà ñàìîì äåëå, ëîãèí íå íàéäåí (â öåëÿõ áåçîïàñíîñòè,... ñì. âûøå)
 			}
 		}
+
+
 		
 		private function logInDBUser($web_user, $web_password) {
 			$web_user = $this->sanitize($web_user);
@@ -195,7 +197,16 @@
 			}
 		}
 		
-		
+		public function getMainStatsTable($num_days) {
+
+			$login_options = $this->getLoginOptions();
+
+			foreach ($login_options as $login_option) {
+				//пример:
+				$name = $login_option['NAME'];
+			}
+
+		}
 		
 		public function getLoginActs($from = 0, $to = null) {
 			$this->sanitizeFromTo($from, $to);
