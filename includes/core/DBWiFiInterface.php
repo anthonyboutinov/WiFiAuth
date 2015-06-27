@@ -159,7 +159,7 @@
 					)
 				)
 				AND V.ID_DB_USER="'.$this->id_db_user.'"
-				ORDER BY Y.ID_PARENT ASC';
+				ORDER BY Y.ID_PARENT, Y.ORDER ASC';
 			
 			$result = $this->getQueryResultWithErrorNoticing($sql);
 			return $this->keyRowsByColumn('SHORT_NAME', $result);

@@ -46,7 +46,6 @@ $( document ).ready(function() {
 	
 	
 	$(window).resize(drawChart);
-	$(window).resize(drawPieChart);
 	
 	
 });
