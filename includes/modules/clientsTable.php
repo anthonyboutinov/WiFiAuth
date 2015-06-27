@@ -68,7 +68,8 @@
 		</table>
 	<?php if ($drawBoth) { echo "</div>"; } ?>
 	
-	<?php if ($drawOnlyOne && $paginationOn) { ?>
+	<?php if (false && $drawOnlyOne && $paginationOn) { ?>
+<!--
 	<nav class="text-center">
 		<ul class="pagination pagination-lg">
 			<li class="disabled"><a href="#" aria-label="Предыдущая"><span aria-hidden="true">&laquo;</span></a></li>
@@ -83,5 +84,6 @@
 			</li>
 		</ul>
 	</nav>
+-->
 	<?php } ?>
 </div>

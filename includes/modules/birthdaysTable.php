@@ -63,12 +63,13 @@
 		</table>
 	<?php if ($desktop) { echo "</div>"; } ?>
 	
-	<?php if (!$desktop && $paginationOn) { ?>
+	<?php if (false && !$desktop && $paginationOn) { ?>
+<!--
 	<nav class="text-center">
 		<ul class="pagination pagination-lg">
-			<li class="disabled"><a href="<?=CommonFunctions::changeOffsetLink($desktop, $offset-$limit);?>" aria-label="Предыдущая"><span aria-hidden="true">&laquo;</span></a></li>
+			<li class="disabled"><a href="< ? =CommonFunctions::changeOffsetLink($desktop, $offset-$limit);?>" aria-label="Предыдущая"><span aria-hidden="true">&laquo;</span></a></li>
 			<li class="active"><a href="#">1<span class="sr-only"> (текущая)</span></a></li>
-			<li><a href=""<?=CommonFunctions::changeOffsetLink($desktop, $offset+$limit);?>">2</a></li>
+			<li><a href="< ? =CommonFunctions::changeOffsetLink($desktop, $offset+$limit);?>">2</a></li>
 			<li><a href="#">3</a></li>
 			<li><a href="#">4</a></li>
 			<li>
@@ -78,5 +79,6 @@
 			</li>
 		</ul>
 	</nav>
+-->
 	<?php } ?>
 </div>

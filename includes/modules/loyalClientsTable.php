@@ -56,17 +56,11 @@
 		} else { ?>
 			<tr><td colspan="<?php if ($drawFullContent) echo '3'; else echo '2'; ?>" class="text-center">Пусто</td></tr>
 	<?	} ?>
-<!--
-			<tr><?php if ($drawFullContent) { ?><td>2</td><?php } ?><td class="text-left">Добромысл Мухамедгалиев</td><td>530</td></tr>
-			<tr><?php if ($drawFullContent) { ?><td>3</td><?php } ?><td class="text-left">Саша Петров</td><td>1,639</td></tr>
-			<tr><?php if ($drawFullContent) { ?><td>4</td><?php } ?><td class="text-left">Саша Петров</td><td>129</td></tr>
-			<tr><?php if ($drawFullContent) { ?><td>5</td><?php } ?><td class="text-left">Саша Мухамедгалиев</td><td>640</td></tr>
-			<tr><?php if ($drawFullContent) { ?><td>6</td><?php } ?><td class="text-left">Добромысл Петров</td><td>684</td></tr>
--->
 		</table>
 	<?php if ($drawBoth) { echo "</div>"; } ?>
 	
-	<?php if ($drawOnlyOne && $paginationOn) { ?>
+	<?php if (false && $drawOnlyOne && $paginationOn) { ?>
+<!--
 	<nav class="text-center">
 		<ul class="pagination pagination-lg">
 			<li class="disabled"><a href="#" aria-label="Предыдущая"><span aria-hidden="true">&laquo;</span></a></li>
@@ -81,5 +75,6 @@
 			</li>
 		</ul>
 	</nav>
+-->
 	<?php } ?>
 </div>
