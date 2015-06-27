@@ -161,8 +161,8 @@
 					)
 				)
 				AND V.ID_DB_USER="'.$this->id_db_user.'"
-				ORDER BY Y.ID_PARENT, Y.ORDER ASC';
-			
+				ORDER BY W.ORDER, Y.ORDER ASC';
+
 			$result = $this->getQueryResultWithErrorNoticing($sql);
 			return $this->keyRowsByColumn('SHORT_NAME', $result);
 		}
@@ -181,7 +181,7 @@
 			where D.ID_PARENT IN (
 				SELECT P.ID_DICTIONARY FROM CM$DICTIONARY P where P.SHORT_NAME';
 			$this->appendToSQLIsOrInArrayOfValues($short_name, $sql);
-			$sql = $sql.')';
+			$sql = $sql.') order by D.ORDER ASC';
 						
 			$result = $this->getQueryResultWithErrorNoticing($sql);
 			return $this->keyRowsByColumn('SHORT_NAME', $result);

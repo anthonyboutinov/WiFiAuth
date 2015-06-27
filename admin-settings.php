@@ -1,6 +1,6 @@
 <?php	include 'includes/core/vars.php';
 	
-	$dictionary_branches = ['GENERAL_FIELDS', 'ADMIN_DISPLAY_SETTINGS', 'POST', 'LOGIN_OPTIONS'];
+	$dictionary_branches = ['POST', 'GENERAL_FIELDS', 'ADMIN_DISPLAY_SETTINGS', 'LOGIN_OPTIONS', 'PASSWORD'];
 
 	$updateDBUserPasswordResponce = null;
 	$processSettingsUpdateResponce = null;
@@ -26,47 +26,12 @@
 			<h1><i class="fa fa-cog"></i> Настройки</h1>
 			<div class="page-wrapper text-center">
 				
-				<h2>Сменить пароль</h2>
-				<div class="form-horizontal">
-					<form method="post">
-						<input type="hidden" name="form-name" value="admin-password">
-				
-						<div class="form-group">
-							<label class="col-sm-4 control-label" for="old-password">Старый пароль</label>
-							<div class="col-sm-8">
-								<input type="password" class="form-control" name="old-password">
-							</div>
-						</div>
-				
-						<div class="form-group">
-							<label class="col-sm-4 control-label" for="password">Новый пароль</label>
-							<div class="col-sm-8">
-								<input type="password" class="form-control" name="password">
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label class="col-sm-4 control-label" for="repeat-password">Повторите пароль</label>
-							<div class="col-sm-8">
-								<input type="password" class="form-control" name="repeat-password">
-							</div>
-						</div>
-				
-						<div class="action-buttons-mid-way-panel">
-							<button type="submit" class="btn btn btn-black gradient">Сохранить <i class="fa fa-floppy-o"></i></button>
-							<?php if ($updateDBUserPasswordResponce === true || $updateDBUserPasswordResponce === false) { 
-								echo '<i class="text-'.($updateDBUserPasswordResponce == true ? 'success' : 'danger').' fa fa-'.($updateDBUserPasswordResponce == true ? 'check-circle' : 'times-circle').'"></i>'; 
-							} ?>
-						</div>
-				
-					</form>
-				</div>
-				
 				<form method="post" enctype="multipart/form-data" action="admin-settings.php" id="admin-settings-form">
 					<input type="hidden" name="form-name" value="admin-settings">
 								
 					<?php
 						$prevFieldParent = null;
+						$isFirst = true;
 						foreach ($database->getValuesForParentByShortName($dictionary_branches) as $key => $value) {
 							if ($value['ID_PARENT'] != $prevFieldParent) {
 							
@@ -86,7 +51,13 @@
 							}
 							?>
 							
-							<h2 class="divide-top"><?=$value['PARENT_NAME'];?></h2>
+							<h2 class="<?php
+								if ($isFirst == true) {
+									$isFirst = false;
+								} else {
+									echo 'divide-top';
+								}
+								?>"><?=$value['PARENT_NAME'];?></h2>
 							<div class="form-horizontal">
 							<? } ?>
 							
@@ -181,7 +152,7 @@
 						}
 					?>
 					
-						<div class="action-buttons-mid-way-panel last-child">
+						<div class="action-buttons-mid-way-panel">
 							<button type="submit" class="btn btn btn-black gradient">Сохранить <i class="fa fa-floppy-o"></i></button>
 							<?php if ($processSettingsUpdateResponce === true || $processSettingsUpdateResponce === false) { 
 								echo '<i class="text-'.($processSettingsUpdateResponce === true ? 'success' : 'danger').' fa fa-'.($processSettingsUpdateResponce === true ? 'check-circle' : 'times-circle').'"></i>'; 
@@ -190,6 +161,42 @@
 					</div>
 				
 				</form>
+				
+				<h2 class="divide-top">Сменить пароль</h2>
+				<div class="form-horizontal">
+					<form method="post">
+						<input type="hidden" name="form-name" value="admin-password">
+				
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="old-password">Старый пароль</label>
+							<div class="col-sm-8">
+								<input type="password" class="form-control" name="old-password">
+							</div>
+						</div>
+				
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="password">Новый пароль</label>
+							<div class="col-sm-8">
+								<input type="password" class="form-control" name="password">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="repeat-password">Повторите пароль</label>
+							<div class="col-sm-8">
+								<input type="password" class="form-control" name="repeat-password">
+							</div>
+						</div>
+				
+						<div class="action-buttons-mid-way-panel last-child">
+							<button type="submit" class="btn btn btn-black gradient">Сохранить <i class="fa fa-floppy-o"></i></button>
+							<?php if ($updateDBUserPasswordResponce === true || $updateDBUserPasswordResponce === false) { 
+								echo '<i class="text-'.($updateDBUserPasswordResponce == true ? 'success' : 'danger').' fa fa-'.($updateDBUserPasswordResponce == true ? 'check-circle' : 'times-circle').'"></i>'; 
+							} ?>
+						</div>
+				
+					</form>
+				</div>
 				
 			</div>
 			<?php	include 'includes/base/footer.php'; ?>
