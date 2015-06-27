@@ -2,7 +2,7 @@
 <html lang="ru">
 	<head>
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
-		<title>Панель добавления клиентов></title>
+		<title>Добавить клиента</title>
 	</head>
 
 	<body class="admin-page simple-page">
@@ -10,7 +10,7 @@
 			<?php include 'includes/base/superadmin-navbar.php'; ?>			
 		
 			<div class = "row">
-				<div class = "col-sm-6">
+				<div class = "col-md-4">
 
 					<h1><i class="fa fa-users"></i> Клиенты</h1> 
 					
@@ -32,86 +32,114 @@
 
 				 	</div>
 				</div>
-			<div class = "col-sm-6">
+			<div class="col-md-8">
 
-					<h1><i class="fa fa-user"></i> Профиль</h1> 
+				<h1><i class="fa fa-user-plus"></i> Добавить клиента</h1> 
+				
+				<div class="page-wrapper close-follow">
 					
-					<div class="page-wrapper">
-						<div class="form-horizontal">
+					<h2>Компания</h2>
+					<div class="form-horizontal">
 
-							<div class="form-group">
-									<label class="col-sm-2 col-xs-2 control-label" for="company-name">Название</label>
-									<div class="col-sm-10 col-xs-10col-sm-10 col-xs-10">
-										<input type="text" class="form-control" name="company-name" placeholder="Название">
-									</div>
-
-							</div>
-
-							<div class="form-group">
-									<label class="col-sm-2 col-xs-2 control-label" for="email">E-mail</label>							
-									<div class="col-sm-10 col-xs-10">
-										<input type="text" class="form-control" name="email" placeholder="E-mail">
-									</div>
+						<div class="form-group">
+								<label class="col-sm-3 control-label" for="company-name">Название</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" name="company-name" autocomplete="off" maxlength="255">
 								</div>
+
 						</div>
-						
-						<h1>Роутеры</h1>
-							<h1>
-							<div class="form-horizontal">
-								<div class="form-group">
-								  <label class="col-sm-3 col-xs-3 control-label" for="mac-adress"><h5>MAC-адрес</h5></label>							
-									<div class="col-sm-8 col-xs-8">
-										<input type="text" class="form-control" name="mac-adress">
-									</div>
-								</div>
 
-								<div class="form-group">
-									<div class="col-sm-8 col-xs-8">
-										 <label class="col-sm-3 col-xs-3  col-xs-offset-1 control-label" for="mac-adress"><h5>Пароль</h5></label>	
-										<div class="input-group">
-											<input type="text" class=" form-control" name="password" >										
-								                <span class="input-group-btn">
-													<span class="btn btn-black btn-file">
-														Генрировать
-													</span>
-								                </span>
-										</div>
-									</div>
+						<div class="form-group">
+								<label class="col-sm-3 control-label" for="email">E-mail</label>							
+								<div class="col-sm-9">
+									<input type="text" class="form-control" name="email" autocomplete="off" maxlength="255">
 								</div>
-
 							</div>
-							</h1>
-						<div>	
-						<h1 style="border-top: 2px solid rgba(255, 255, 255, 0.48);
-   						 padding-top: 40px;">Личный кабинет</h1>
-							<h1>
-							<div class="form-horizontal">
-								<div class="form-group">
-									<div class="col-sm-10 col-xs-10 col-sm-offset-1 col-xs-offset-1">
-										<input type="text" class="form-control" name="login" placeholder="Логин">
-									</div>
-								</div>
-
-								<div class="form-group">
-									<div class="col-sm-10 col-xs-10 col-sm-offset-1 col-xs-offset-1">
-										<div class="input-group">
-											<input type="text" class="form-control" name="password" placeholder="Пароль">										
-							                <span class="input-group-btn">
-												<span class="btn btn-black btn-file">
-													Генрировать
-												</span>
-							                </span>
-										</div>
-									</div>
-								</div>
-
-							</div>
-							</h1>
-						</div>								
-				 	</div>
+					</div>
+					
 				</div>
+				<div class="page-wrapper close-follow">
+					
+					<h2>Роутеры</h2>
+					<div class="form-horizontal">
+						
+						<div class="form-group">
+						  <label class="col-sm-3 control-label" for="mac-adress">MAC-адрес</label>							
+							<div class="col-sm-9">
+								<input type="text" class="form-control" name="mac-adress" autocomplete="off" maxlength="1024">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="mac-adress">Токен</label>	
+							<div class="col-sm-9">
+								<div class="input-group">
+									<input type="text" class="form-control default-cursor"
+										name="router-token" id="router-token" autocomplete="off" maxlength="32" disabled>
+					                <span class="input-group-btn">
+										<span class="btn btn-black" id="generate-token">
+											Генерировать <i class="fa fa-key"></i>
+										</span>
+					                </span>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					
+				</div>
+				<div class="page-wrapper close-follow">
+						
+					<h2>Личный кабинет</h2>
+					<div class="form-horizontal">
+						<div class="form-group">
+						  <label class="col-sm-3 control-label" for="mac-adress">Логин</label>							
+							<div class="col-sm-9">
+								<input type="text" class="form-control" name="login" autocomplete="off" maxlength="255">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="password">Пароль</label>	
+							<div class="col-sm-9">
+								<div class="input-group">
+									<input type="text" class="form-control"
+										name="password" id="password" autocomplete="off" maxlength="32">
+					                <span class="input-group-btn">
+										<span class="btn btn-black" id="generate-password">
+											Генерировать <i class="fa fa-key"></i>
+										</span>
+					                </span>
+								</div>
+							</div>
+						</div>
+
+					</div>								
+			 	
+			 	</div>
+				<div class="page-wrapper">
+					<div class="action-buttons-mid-way-panel only-child">
+						<button type="submit" class="btn btn btn-black gradient">Добавить <i class="fa fa-plus"></i></button>
+					</div>
+				</div>
+				
+				<div class="page-wrapper">
+					<div class="action-buttons-mid-way-panel only-child">
+						<button type="button" class="btn btn btn-black gradient">Сохранить <i class="fa fa-floppy-o"></i></button>
+						<button type="button" class="btn btn btn-red gradient">Приостановить обслуживание <i class="fa fa-toggle-off"></i></button>
+					</div>
+				</div>
+				
+				<div class="page-wrapper">
+					<div class="action-buttons-mid-way-panel only-child">
+						<button type="button" class="btn btn btn-black gradient">Сохранить и активировать <i class="fa fa-toggle-on"></i></button>
+					</div>
+				</div>
+				 	
          	</div>
     	</div>
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
-	 	</body>
+		<script src="includes/js/superadmin-clients.js"></script>
+		
+ 	</body>
 </html>
