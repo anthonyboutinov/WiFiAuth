@@ -24,7 +24,7 @@
 		<a href="#" id="intellectual-view-toggle">
 			<i class="fa fa-toggle-<?=$intellectual_view == 1 ? 'on' : 'off';?>"></i> Умная сортировка
 		</a>
-		<i class="fa fa-question button" data-toggle="tooltip" data-placement="left" title="
+		<i class="fa fa-question" id="option-help" data-toggle="tooltip" data-placement="left" title="
 			В таком представлении записи сортируются в&nbsp;соответсвтии с&nbsp;уровнем лояльности клиентов и&nbsp;близости их&nbsp;дня&nbsp;рождения.
 		"></i>
 	</span>

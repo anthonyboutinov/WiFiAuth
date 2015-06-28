@@ -62,9 +62,28 @@ $(document).ready(function () {
 	$('[data-toggle="tooltip"]').tooltip();
 	
 	$("#intellectual-view-toggle").click(function(){
-		$(this).html('<i class=\'fa fa-spinner fa-pulse\'></i> Умная сортировка').removeAttr("id");
+		$(this).html('<i class=\'fa fa-spinner fa-pulse\'></i> Умная сортировка');
 		var ccv = Cookies.get('birthdays-intellectual-view');
 		if (ccv == 1) {ccv = 0;} else {ccv = 1;}
+		setTimeout(function() {
+			
+			$("#option-help").remove();
+			
+			var replacement = '<span id="ntlt" data-toggle="tooltip" data-placement="bottom" title="Скорее всего Вы используете устаревший браузер" style="cursor:help;"><i class=\'fa fa-frown-o\'></i> Ошибка</span>';
+			$("#intellectual-view-toggle").html(replacement);
+			
+			// replace element type to '<span />'
+			var attrs = { };
+			$.each($("#intellectual-view-toggle")[0].attributes, function(idx, attr) {
+			    attrs[attr.nodeName] = attr.nodeValue;
+			});
+			$("#intellectual-view-toggle").replaceWith(function () {
+			    return $("<span />", attrs).append($(this).contents());
+			});
+			
+			$("#ntlt").tooltip();
+			
+		}, 3000);
 		Cookies.set('birthdays-intellectual-view', ccv);
 		setTimeout(function() {location.reload();}, 400);
 	});
