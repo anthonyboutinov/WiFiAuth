@@ -11,6 +11,6 @@
 			<?php include 'includes/base/footer.php'; ?>
 		</div>
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
-		<?php include 'includes/modules/birthdaysScripts.php'; ?>
+		<?php if ($desktop) {?><script type="text/javascript" src="includes/js/birthdays.js"></script><?php } ?>
 	</body>
 </html>

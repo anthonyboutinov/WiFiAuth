@@ -5,6 +5,7 @@
 	class DBWiFiInterface extends DBInterface {
 		
 		var $id_db_user;
+		var $is_superadmin;
 		
 		var $tablePageLimit;
 		var $dashboardTablePreviewLimit;
@@ -12,18 +13,22 @@
 		function __construct($servername, $username, $password, $dbname, $macAddress, $routerPassword) {
 			parent::__construct($servername, $username, $password, $dbname);
 			
+			// session
+			//check login, if exists, then set id db user from it
+			//if session is over, try the code below
+			
 			// Check web user credentials
-			$this->id_db_user = $this->getWebUserByAuthenticatingViaMACAddress($macAddress, $routerPassword);			
+			$this->id_db_user = $this->getWebUserByAuthenticatingViaMACAddress($macAddress, $routerPassword);
 			
 			// Get other data
-			$this->tablePageLimit = getNumberValue($this->getValueByShortName('TABLE_PAGE_LIMIT'));
-			$this->dashboardTablePreviewLimit = getNumberValue($this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT'));
+			$this->tablePageLimit = $this->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
+			$this->dashboardTablePreviewLimit = $this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT')['NUMBER_VALUE'];
 						
 		}
 		
 		private function getWebUserByAuthenticatingViaMACAddress($macAddress, $routerPassword) {
-			$macAddress = $this->sanitize($macAddress);
-			$routerPassword = $this->sanitize($routerPassword);
+			$this->sanitize($macAddress);
+			$this->sanitize($routerPassword);
 			
 			$sql = 'SELECT ID_DB_USER, IS_ACTIVE, ROUTER_PASSWORD FROM CM$DB_USER WHERE'." MAC_ADDRESS='$macAddress'";
 			
@@ -50,8 +55,8 @@
 		}
 		
 		private function logInDBUser($web_user, $web_password) {
-			$web_user = $this->sanitize($web_user);
-			$web_password = $this->sanitize($web_password);
+			$this->sanitize($web_user);
+			$this->sanitize($web_password);
 			
 			$sql = 'SELECT ID_DB_USER, IS_ACTIVE, PASSWORD FROM CM$DB_USER WHERE'." LOGIN='$web_user'";
 			
@@ -80,7 +85,7 @@
 		
 		
 		public function getValueByShortName($short_name) {
-			$short_name = $this->sanitize($short_name);
+			$this->sanitize($short_name);
 			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY IN (SELECT D.ID_DICTIONARY FROM CM$DICTIONARY D WHERE SHORT_NAME="'.$short_name.'") AND V.ID_DB_USER='.$this->id_db_user;
 			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $short_name);
 			if ($result['VALUE'] == 'T' || $result['VALUE'] == 't') {
@@ -92,7 +97,7 @@
 		}
 		
 		public function getValueByID($id) {
-			$id = $this->sanitize($id);
+			$this->sanitize($id);
 			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY='.$id.' AND V.ID_DB_USER = "'.$this->id_db_user.'"';
 			return $this->getQueryFirstRowResultWithErrorNoticing($sql, $id);
 		}
@@ -129,7 +134,7 @@
 		 *	@return (array)										сложный массив, где каждая строка результата доступна по ключу SHORT_NAME
 		 */
 		public function getValuesForParentByShortName($short_names) {
-			$short_names = $this->sanitize($short_names);
+			$this->sanitize($short_names);
 			$short_name = $short_names;
 			
 			$sql =
@@ -168,7 +173,7 @@
 		}
 		
 		public function getDataTypesForParentByShortName($short_names) {
-			$short_names = $this->sanitize($short_names);
+			$this->sanitize($short_names);
 			$short_name = $short_names;
 			
 			$sql = '
@@ -188,11 +193,11 @@
 		}	
 		
 		private function sanitizeFromTo(&$from, &$to) {
-			$from = $this->sanitize($from);
+			$this->sanitize($from);
 			if ($to == null) {
 				$to = $this->tablePageLimit;
 			} else {
-				$to = $this->sanitize($to);
+				$this->sanitize($to);
 			}
 		}
 		
@@ -220,11 +225,69 @@
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
-		public function getBirthdays($from = 0, $to = null) {
-			$this->sanitizeFromTo($from, $to);			
-			$sql = 'SELECT LINK, NAME, BIRTHDAY
-			FROM VW_SP$USER_BIRTHDAY
-			WHERE ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
+		public function getBirthdays($from = 0, $to = null, $intellectual_view = 1) {
+			$this->sanitizeFromTo($from, $to);
+			$intellectual_view = $intellectual_view == 1 ? true : false;
+			
+			if (!$intellectual_view) {
+				$sql = 'SELECT * FROM VW_SP$USER_BIRTHDAY WHERE ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
+			} else {
+				$sql = 
+				'select 
+					Z.LINK,
+					Z.NAME,
+					Z.BIRTHDAY,
+					Z.DAYS_UNTIL,
+					Z.WILL_TURN,
+					Z.LOGIN_OPTION_NAME,
+					Z.LOGIN_OPTION_SHORT_NAME,
+					Z.LOGIN_COUNT,
+					Z.LOGIN_COUNT_INV + DAYS_UNTIL as COEF
+				from (
+					SELECT
+						Y.LINK,
+						Y.NAME,
+						Y.BIRTHDAY,
+						CASE
+							WHEN DATEDIFF(Y.CURRBIRTHDAY, CURDATE()) < 0 THEN
+								DATEDIFF(Y.NEXTBIRTHDAY, CURDATE())
+							ELSE 
+								DATEDIFF(Y.CURRBIRTHDAY, CURDATE())
+						END AS DAYS_UNTIL,
+						TIMESTAMPDIFF(YEAR, Y.B_DATE, CURDATE()) AS WILL_TURN,
+						Y.LOGIN_OPTION_NAME,
+						Y.LOGIN_OPTION_SHORT_NAME,
+						CAST(1 / Y.LOGIN_COUNT * 30'./*коэффициент*/' AS UNSIGNED) as LOGIN_COUNT_INV,
+						Y.LOGIN_COUNT
+						
+					from (
+				
+						SELECT DISTINCT
+							W.LINK,
+							W.NAME,
+							W.BIRTHDAY AS B_DATE,
+							DATE_FORMAT(W.BIRTHDAY, "%d.%m.%Y") AS BIRTHDAY,
+							W.BIRTHDAY + INTERVAL(YEAR(CURRENT_TIMESTAMP) - YEAR(W.BIRTHDAY)) + 0 YEAR AS CURRBIRTHDAY,
+							W.BIRTHDAY + INTERVAL(YEAR(CURRENT_TIMESTAMP) - YEAR(W.BIRTHDAY)) + 1 YEAR AS NEXTBIRTHDAY,
+							W.LOGIN_OPTION_NAME,
+							W.LOGIN_OPTION_SHORT_NAME,
+							(
+								select COUNT(E.ID_USER)
+								from SP$LOGIN_ACT E
+								where E.ID_DB_USER=W.ID_DB_USER
+								and E.ID_USER=W.ID_USER
+								and DATEDIFF(E.DATE_CREATED, CURDATE()) < 81'./*количество дней захода, которые учитываются*/'
+							) AS LOGIN_COUNT
+						FROM VW_SP$LOGIN_ACT W
+						WHERE W.BIRTHDAY IS NOT NULL
+						AND W.ID_DB_USER='.$this->id_db_user.'
+				
+					) Y
+					order by DAYS_UNTIL = 0 desc, DAYS_UNTIL asc
+				) Z
+				where Z.DAYS_UNTIL < 32'./*максимальное количество дней до дня рождения*/'
+				ORDER BY COEF = 0 ASC, COEF ASC;';
+			}
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
@@ -243,10 +306,8 @@
 			if ($this->loginOptions != null) {
 				return $this->loginOptions;
 			}
-			
 			$sql = 'select * from VW_CM$LOGIN_OPTION';
 			$this->loginOptions = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
-			
 			return $this->loginOptions;
 		}
 		
@@ -346,7 +407,8 @@
 				return $this->loginCountByLoginOption;
 			}
 			
-			$num_days = $this->sanitize($num_days);
+			$this->sanitize($num_days);
+			
 			$sql = '
 			select
 				count(A.ID_LOGIN_ACT) AS LOGIN_COUNT,
@@ -407,11 +469,12 @@
 		
 		public function addUser($first_name, $last_name, $user_href, $log_opt, $b_date)
 		{
-			$first_name = $this->sanitize($first_name);
-			$last_name = $this->sanitize($last_name);
-			$user_href =$this->sanitize($user_href);
-			$log_opt = $this->sanitize($log_opt);
-			$b_date =  $this->sanitize($b_date);
+			$this->sanitize($first_name);
+			$this->sanitize($last_name);
+			$this->sanitize($user_href);
+			$this->sanitize($log_opt);
+			$this->sanitize($b_date);
+			
             if($log_opt=='vk')
             	{
             		$log_opt = 1;
@@ -503,7 +566,7 @@
 				$sql = $sql.'BLOB_VALUE="'.$content.'"';
 			}
 			
-			$rows = $this->getDataTypesForParentByShortName($short_names);
+			$rows = $this->getDataTypesForParentByShortName($short_names); // sanitized inside
 			
 			$post_is_fine = true;
 			foreach ($rows as $key => $value) {
@@ -592,18 +655,6 @@
 		
 		// ========= EOF Функции, изменяющие данные в БД =========
 		
-	}
-
-	function getNumberValue($row) {
-		return $row['NUMBER_VALUE'];
-	}
-	
-	function getTextValue($row) {
-		return $row['VALUE'];
-	}
-	
-	function getBlobValue($row) {
-		return $row['BLOB_VALUE'];
 	}
 
 ?>

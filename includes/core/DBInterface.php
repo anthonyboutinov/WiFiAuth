@@ -23,14 +23,23 @@
 			
 		}
 		
-		protected function sanitize($sql) {
+		protected function sanitize(&$sql) {
 			if (is_array($sql)) {
+				$maxLength = 2048;
 				foreach ($sql as $key => $value) {
-					$sql[$key] = $this->conn->real_escape_string($value);
+					$val = $this->conn->real_escape_string($value);
+					if (length($val) > $maxLength) {
+						Notification::add(
+							'<b>Warning</b>: trying to sanitize data which is '.
+							length($val).' characters long! Data truncated', 'warning'
+						);
+						$val = substr($val, 0, $maxLength);
+					}
+					$sql[$key] = $val;
 				}
-				return $sql;
+// 				return $sql;
 			} else {
-				return $this->conn->real_escape_string($sql);
+				$sql = $this->conn->real_escape_string($sql);
 			}
 		}
 		

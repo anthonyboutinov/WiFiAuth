@@ -5,42 +5,46 @@
 		$desktop = false;
 	}
 	
-	if (!isset($paginationOn)) {
-		$paginationOn = true;
-	}
-	
-	
-	if ($paginationOn || !$desktop) {
-		if (!isset($_GET['offset'])) {
-			$offset = 0;
-		} else {
-			$offset = $_GET['offset'];
-		}
+	$intellectual_view = 1;
+	if (isset($_COOKIE['birthdays-intellectual-view'])) {
+		$intellectual_view = $_COOKIE['birthdays-intellectual-view'];
 	} else {
-		$offset = 0;
+		$_COOKIE['birthdays-intellectual-view'] = $intellectual_view;
 	}
 	
 	$limit = $drawFullContent ? $database->tablePageLimit : $database->dashboardTablePreviewLimit;
-	
-	$birthdays = $database->getBirthdays($offset, $limit);
+	$birthdays = $database->getBirthdays(0, $limit, $intellectual_view);
 	
 
 ?>
-<h1><i class="fa fa-birthday-cake"></i> Дни рождения</h1>
+<!-- <script>var intellectual_view = < ?=$intellectual_view;?>;</script> -->
+<h1>
+	<i class="fa fa-birthday-cake"></i> Дни рождения
+	<span class="options">
+		<a href="#" id="intellectual-view-toggle">
+			<i class="fa fa-toggle-<?=$intellectual_view == 1 ? 'on' : 'off';?>"></i> Умная сортировка
+		</a>
+		<i class="fa fa-question button" data-toggle="tooltip" data-placement="left" title="
+			В таком представлении записи сортируются в&nbsp;соответсвтии с&nbsp;уровнем лояльности клиентов и&nbsp;близости их&nbsp;дня&nbsp;рождения.
+		"></i>
+	</span>
+</h1>
 <div class="page-wrapper">
 	
-	<?php if ($desktop) { 	?><table class="table table-head-row text-center"><?php } 
-		  else { 			?><table class="table text-center"><?php } ?>
+	<?php if ($desktop) { 	?><table class="table table-head-row text-center" id="birthdays-header"><?php } 
+		  else { 			?><table class="table text-center contains-fas"><?php } ?>
 		<?php if ($drawFullContent) { ?><tr class="head-row">
-			<td>№</td>
+			<td><span class="sr-only">Логин</span></td>
 			<td>Клиент</td>
-			<td>День рождения</td>
+			<?php if ($drawFullContent) { ?><td>День рождения</td><?php } ?>
+			<td>Через <span class="hidden-xs hidden-sm">(дней)</span></td>
+			<td>Исполнится</td>
 		</tr>
 	<?php }
 		if ($desktop) { ?>
 	</table>
-	<div class="scrollable gradient">
-		<table class="table text-center">
+	<div class="scrollable gradient" id="birthdays-scrollable">
+		<table class="table text-center contains-fas">
 	<?php
 		}
 		
@@ -48,17 +52,56 @@
 			$i = 0;
 			while($row = $birthdays->fetch_assoc()) {
 				$i++;
+				
+				
+				$years_leftover = $row['DAYS_UNTIL'] % 10;
+				$russian_days_ending = (
+					$years_leftover == 1 ? 'день' : (
+						$years_leftover > 1 && $years_leftover < 5 ? 'дня' : 'дней'
+					)
+				);
+				
+				$will_turn_leftover = $row['WILL_TURN'] % 10;
+				$russian_years_ending = (
+					$will_turn_leftover == 1 ? 'год' : (
+						$will_turn_leftover > 1 && $will_turn_leftover < 5 ? 'года' : 'лет'
+					)
+				);
+				
+				
+				$days_until = (
+					$row['DAYS_UNTIL'] == 0 ? 'сегодня' : (
+						$row['DAYS_UNTIL'] == 1 ? 'завтра' :  $row['DAYS_UNTIL']
+					)
+				);
+				
+				$days_until_tooltip = (
+					$row['DAYS_UNTIL'] == 0 ? 'сегодня' : (
+						$row['DAYS_UNTIL'] == 1 ? 'завтра' :  'через '.$row['DAYS_UNTIL'].' '.$russian_days_ending
+					)
+				);
+				
+				
 	?>
 
 			<tr>
-				<?php if ($drawFullContent) { ?><td id="table-scrollable-part-col-1" class="text-right"><?=$i;?></td><?php } ?>
-				<td id="table-scrollable-part-col-2" class="text-left"><a href="<?=$row['LINK'];?>" target="blank"><?=$row['NAME'];?></a></td>
-				<td id="table-scrollable-part-col-3"><?=$row['BIRTHDAY'];?></td>
+				<td class="text-center">
+					<span class="fa-stack"><i class="fa fa-<?=$row['LOGIN_OPTION_SHORT_NAME'];?>"></i></span>
+					<span class="sr-only"><?=$row['LOGIN_OPTION_NAME'];?></span>
+				</td>
+				<td class="text-left"><a href="<?=$row['LINK'];?>" target="blank"><?=$row['NAME'];?></a></td>
+				<?php if ($drawFullContent) { ?><td class="text-right"><?=$row['BIRTHDAY'];?></td><?php } ?>
+				<td class="text-right"><span data-toggle="tooltip" data-placement="left" title="День рождения <?=$days_until_tooltip;?>"<?php //<?=(($row['DAYS_UNTIL'] == 0) ? 'text-center' : 'text-right');
+					if ($row['DAYS_UNTIL'] < 5) {
+						echo ' class="alert-value alert-value-'.$row['DAYS_UNTIL'].'"';
+					}
+				?>><?=$days_until;?></span></td>
+				<td class="text-right"><span data-toggle="tooltip" data-placement="left" title="Исполнится <?=$row['WILL_TURN'].' '.$russian_years_ending;?>"><?=$row['WILL_TURN'];?></span></td>
 			</tr>
 	<?php 
 			}
 		} else { ?>
-			<tr><td colspan="<?php if ($drawFullContent) echo '3'; else echo '2'; ?>" class="text-center">Пусто</td></tr>
+			<tr><td colspan="<?php if ($drawFullContent) echo '4'; else echo '3'; ?>" class="text-center">Пусто</td></tr>
 	<?	} ?>
 		</table>
 	<?php if ($desktop) { echo "</div>"; } ?>

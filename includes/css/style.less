@@ -32,6 +32,7 @@ body {
 	font-family: Fontatigo, 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	overflow-y: hidden;
 }
 
 .simple-font {
@@ -89,8 +90,30 @@ input[type="text"] {
 	
 	&.bg-danger {
 		background: rgba(255, 0, 0, 0.60);
-		border-radius: 10px;
+		border-radius: 50%;
 		color: white;
+	}
+}
+
+.alert-value {
+	border-radius: 10px;
+	display: inline-block;
+	padding: 0 6px;
+	
+	&.alert-value-0 {
+		background-color: rgba(77, 231, 255, 0.50);
+	}
+	&.alert-value-1 {
+		background-color: rgba(77, 231, 255, 0.40);
+	}
+	&.alert-value-2 {
+		background-color: rgba(77, 231, 255, 0.30);
+	}
+	&.alert-value-3 {
+		background-color: rgba(77, 231, 255, 0.20);
+	}
+	&.alert-value-4 {
+		background-color: rgba(77, 231, 255, 0.10);
 	}
 }
 
@@ -101,6 +124,28 @@ input[type="text"] {
 
 .fa-spin, .fa-pulse {
 	text-shadow: none;
+}
+
+h1 {
+	position: relative;
+}
+
+h1 .options {
+	font-size: 16px;
+	margin-top: 4px;
+	vertical-align: middle;
+	
+	position: absolute;
+	right: 15px;
+	
+	& i.fa {
+		font-size: inherit !important;
+		margin-top: 0 !important;
+		margin-bottom: 0 !important;
+		margin-right: 5px !important;
+		position: relative !important;
+		top: 0 !important;
+	}
 }
 
 .btn-black { 
