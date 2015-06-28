@@ -14,14 +14,15 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="admin-dashboard.php"><i class="fa fa-fw fa-dashboard"></i> Главная</a></li>
+				
+				<li><a href="superadmin-dashboard.php"><i class="fa fa-fw fa-dashboard"></i> Главная</a></li>
+				<li><a href="superadmin-clients.php"><i class="fa fa-fw fa-dashboard"></i> Клиенты</a></li>
 	            
 				<li class="divider visible-xs-block"></li>
 
-
 						<li><a href="superadmin-settings.php"><i class="fa fa-fw fa-cog"></i> Настройки</a></li>
 						<li><a href="superadmin-help.php"><i class="fa fa-fw fa-support"></i> Помощь</a></li>
-						<li><a href="superadmin-logout.php"><i class="fa fa-fw fa-sign-out"></i> Выход</a></li>
+						<li><a href="superadmin-logout.php"><i class="fa fa-fw fa-sign-out"></i> Выйти</a></li>
         
 			</ul>
 		</div><!-- /.navbar-collapse -->

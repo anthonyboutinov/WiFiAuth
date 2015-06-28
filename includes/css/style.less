@@ -67,7 +67,7 @@ a:hover, a:focus, a:active,
 	margin: auto;
 }
 
-input[type="text"], input[type="number"], input[type="url"], input[type="color"] {
+input[type="text"], input[type="number"], input[type="url"], input[type="color"], input[type="password"] {
 	font-family: 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
@@ -661,6 +661,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#26ffffff', e
 
 body.admin-page-login {
 	text-align: center;
+	
+	& .checkbox {
+		float: none;
+	}
 
 	& h1 {
 		margin-bottom: 30px;

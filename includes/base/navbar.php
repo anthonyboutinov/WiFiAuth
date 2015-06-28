@@ -38,7 +38,7 @@
 
 						<li><a href="admin-settings.php"><i class="fa fa-fw fa-cog"></i> Настройки</a></li>
 						<li><a href="admin-help.php"><i class="fa fa-fw fa-support"></i> Помощь</a></li>
-						<li><a href="admin-logout.php"><i class="fa fa-fw fa-sign-out"></i> Выход</a></li>
+						<li><a href="admin-logout.php"><i class="fa fa-fw fa-sign-out"></i> Выйти</a></li>
 								
 					</ul>
 		        </li>
