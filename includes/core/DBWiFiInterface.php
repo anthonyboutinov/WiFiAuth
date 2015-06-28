@@ -4,33 +4,69 @@
 
 	class DBWiFiInterface extends DBInterface {
 		
-		var $id_db_user;
-		var $is_superadmin;
+		var $id_db_user = null;
+		var $id_db_user_editor = null;
+		var $user_access_level = null;
 		
-		var $tablePageLimit;
-		var $dashboardTablePreviewLimit;
+		var $superadmin_name = null;
 		
-		function __construct($servername, $username, $password, $dbname, $macAddress, $routerPassword) {
+		var $tablePageLimit = null;
+		var $dashboardTablePreviewLimit = null;
+		
+		function    __construct($servername, $username, $password, $dbname, $mac_address, $router_pasword, $cli_login, $cli_password, $id_cli) {
 			parent::__construct($servername, $username, $password, $dbname);
 			
 			// session
 			//check login, if exists, then set id db user from it
 			//if session is over, try the code below
 			
-			// Check web user credentials
-			$this->id_db_user = $this->getWebUserByAuthenticatingViaMACAddress($macAddress, $routerPassword);
+			$this->superadmin_name = $cli_login;
 			
-			// Get other data
-			$this->tablePageLimit = $this->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
-			$this->dashboardTablePreviewLimit = $this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT')['NUMBER_VALUE'];
+			if ($mac_address && $router_pasword && !$cli_login && !$cli_password && !$id_cli) {
+				
+				// Get web user credentials (from router)
+				$this->id_db_user = $this->getWebUserByAuthenticatingViaMACAddress($mac_address, $router_pasword);
+				
+			} else if (!$mac_address && !$router_pasword && $cli_login && $cli_password && !$id_cli) {
+				
+				// Get web user credentials (from live user) (login act)
+				$this->id_db_user_editor = $this->getWebUser($cli_login, $cli_password);
+				
+			} else if (!$mac_address && !$router_pasword && !$cli_login && !$cli_password && $id_cli) {
+				
+				// Set id		
+				$this->id_db_user_editor = $id_cli;
+				$this->setAccessLevelForUser($id_cli);
+			
+			} else if (!$mac_address && !$router_pasword && !$cli_login && !$cli_password && !$id_cli) {
+				// Ничего не делать, база данных подключена.
+			} else {
+				die('Error: DBWiFiTinterface constructor received bad parameters');
+			}
+			
+			if($this->is_valid()) {			
+				// Get other data
+				$this->tablePageLimit = $this->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
+				$this->dashboardTablePreviewLimit = $this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT')['NUMBER_VALUE'];
+			}
 						
+		}
+		
+		public function is_valid() {
+			return ($this->id_db_user_editor || $this->id_db_user);
+		}
+		
+		private function setAccessLevelForUser($id_cli) {
+			$sql = 'select AL.SHORT_NAME AS AL from CM$DB_USER U LEFT JOIN CM$ACCESS_LEVEL AL ON AL.ID_ACCESS_LEVEL=U.ID_ACCESS_LEVEL where U.ID_DB_USER='.$id_cli;
+			$this->user_access_level = $this->getQueryFirstRowResultWithErrorNoticing($sql, $id_cli)['AL'];
+
 		}
 		
 		private function getWebUserByAuthenticatingViaMACAddress($macAddress, $routerPassword) {
 			$this->sanitize($macAddress);
 			$this->sanitize($routerPassword);
 			
-			$sql = 'SELECT ID_DB_USER, IS_ACTIVE, ROUTER_PASSWORD FROM CM$DB_USER WHERE'." MAC_ADDRESS='$macAddress'";
+			$sql = 'SELECT ID_DB_USER, IS_ACTIVE, ROUTER_PASSWORD FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' AND MAC_ADDRESS=\''.$macAddress.'\'';
 			
 			$result = $this->conn->query($sql);
 			if ($result === false) {
@@ -56,39 +92,57 @@
 
 
 		
-		private function logInDBUser($web_user, $web_password) {
+		private function getWebUser($web_user, $web_password) {
 			$this->sanitize($web_user);
 			$this->sanitize($web_password);
 			
-			$sql = 'SELECT ID_DB_USER, IS_ACTIVE, PASSWORD FROM CM$DB_USER WHERE'." LOGIN='$web_user'";
-			
+			$sql = 
+			'SELECT
+				U.ID_DB_USER, U.IS_ACTIVE, U.PASSWORD, AL.SHORT_NAME AS ACCESS_LEVEL
+			from CM$DB_USER U
+			LEFT JOIN CM$ACCESS_LEVEL AL ON AL.ID_ACCESS_LEVEL=U.ID_ACCESS_LEVEL
+			WHERE IS_SUPERADMIN=\'T\' AND LOGIN=\''.$web_user.'\'';
+						
 			$result = $this->conn->query($sql);
 			if ($result === false) {
-				die("Error with query $sql");
+				Notification::add("Error with query $sql", 'danger');
+				return false;
 			}
 			
-			if ($result->num_rows > 0) {
+			if ($result->num_rows == 1) {
 				while($row = $result->fetch_assoc()) {
 					if (password_verify($web_password, $row['PASSWORD'])) {
 						if ($row["IS_ACTIVE"] == 'F') {
-							die("Error #3: Account $web_user is disabled.");
+							Notification::add("Обслуживание аккаунта $web_user приостановлено", 'danger');
+							return false;
 						} else {
+							$this->user_access_level = $row['ID_ACCESS_LEVEL'];
 							return $row['ID_DB_USER'];
 						}
 					} else {
-						die("Error #4: Credentials for $web_user are incorrect.");
+						Notification::add("Логин и(или) пароль неверны", 'danger');
+						return false;
 					}
 				}
 			} else {
-				die("Error #4: Credentials for $web_user are incorrect.");
+				Notification::add("Логин и(или) пароль неверны", 'danger');
+				return false;
 			}
 			
+		}
+		
+		protected function getAlternateDBUser() {
+			if ($this->id_db_user_editor) {
+				return $this->id_db_user_editor;
+			} else {
+				return $this->id_db_user;
+			}
 		}
 		
 		
 		public function getValueByShortName($short_name) {
 			$this->sanitize($short_name);
-			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY IN (SELECT D.ID_DICTIONARY FROM CM$DICTIONARY D WHERE SHORT_NAME="'.$short_name.'") AND V.ID_DB_USER='.$this->id_db_user;
+			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY IN (SELECT D.ID_DICTIONARY FROM CM$DICTIONARY D WHERE SHORT_NAME="'.$short_name.'") AND V.ID_DB_USER='.$this->getAlternateDBUser();
 			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $short_name);
 			if ($result['VALUE'] == 'T' || $result['VALUE'] == 't') {
 				$result['VALUE'] = true;
@@ -100,7 +154,7 @@
 		
 		public function getValueByID($id) {
 			$this->sanitize($id);
-			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY='.$id.' AND V.ID_DB_USER = "'.$this->id_db_user.'"';
+			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY='.$id.' AND V.ID_DB_USER='.$this->getAlternateDBUser();
 			return $this->getQueryFirstRowResultWithErrorNoticing($sql, $id);
 		}
 		
@@ -656,5 +710,4 @@
 		// ========= EOF Функции, изменяющие данные в БД =========
 		
 	}
-
 ?>

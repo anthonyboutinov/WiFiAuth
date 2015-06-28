@@ -1,4 +1,7 @@
-<?php include 'includes/core/vars.php';
+<?php
+	$superadmin_page_access_level='MANAGER';
+	
+	include 'includes/core/vars.php';
 
 	$drawClients = true;
 	$drawLoyals = true;
