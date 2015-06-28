@@ -17,16 +17,28 @@
 	
 
 ?>
-<!-- <script>var intellectual_view = < ?=$intellectual_view;?>;</script> -->
+
+<?php if (!$drawFullContent) { ?>
+<section class="card-container">
+  <div id="birthdays-card">
+    <figure class="front">
+<?php } ?>
+
 <h1>
 	<i class="fa fa-birthday-cake"></i> Дни рождения
 	<span class="options">
+		<?php if ($drawFullContent) { ?>
 		<a href="#" id="intellectual-view-toggle">
-			<i class="fa fa-toggle-<?=$intellectual_view == 1 ? 'on' : 'off';?>"></i> Умная сортировка
+			<i class="fa fa-toggle-<?=$intellectual_view == 1 ? 'on' : 'off';?>"></i><span class="hidden-xs"> Умная сортировка</span>
 		</a>
 		<i class="fa fa-question" id="option-help" data-toggle="tooltip" data-placement="left" title="
-			В таком представлении записи сортируются в&nbsp;соответсвтии с&nbsp;уровнем лояльности клиентов и&nbsp;близости их&nbsp;дня&nbsp;рождения.
+			В&nbsp;таком представлении записи сортируются в&nbsp;соответсвтии с&nbsp;уровнем лояльности клиентов и&nbsp;близости их&nbsp;дня&nbsp;рождения.
 		"></i>
+		<?php } else { ?>
+		<a href="#" class="flip-birthdays-card">
+			<i class="fa fa-cogs"></i>
+		</a>
+		<?php } ?>
 	</span>
 </h1>
 <div class="page-wrapper">
@@ -125,3 +137,28 @@
 -->
 	<?php } ?>
 </div>
+
+
+<?php if (!$drawFullContent) { ?>
+	</figure>
+    <figure class="back">
+	    <h1>
+			<i class="fa fa-birthday-cake"></i> Дни рождения
+			<span class="options">
+				<a href="#" class="flip-birthdays-card">
+					<i class="fa fa-chevron-circle-left"></i>
+				</a>
+			</span>
+		</h1>
+		<div class="page-wrapper">
+			<div class="margin-bottom margin-top text-center lead">
+				<a href="#" id="intellectual-view-toggle">
+			    	<i class="fa fa-toggle-<?=$intellectual_view == 1 ? 'on' : 'off';?>"></i> Умная сортировка
+				</a>
+			</div>
+	    	<p>В&nbsp;представлении «Умная сортировка» записи сортируются в&nbsp;соответсвтии с&nbsp;уровнем лояльности клиентов и&nbsp;близости их&nbsp;дня&nbsp;рождения.</p>
+		</div>
+    </figure>
+  </div>
+</section>
+<?php } ?>

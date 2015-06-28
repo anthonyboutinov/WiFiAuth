@@ -42,8 +42,8 @@
 					
 					<!-- Loyal Clients Table -->	
 					<?php include 'includes/modules/loyalClientsTable.php'; ?>
-					<a class="hidden-xs hidden-sm dashboard-more-info" href="admin-users-combined-list.php">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
-					<a class="visible-xs-block visible-sm-block dashboard-more-info" href="admin-users-combined-list.php?onlyloyals">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
+					<a class="hidden-xs hidden-sm dashboard-more-info animated fadeInUp" href="admin-users-combined-list.php">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
+					<a class="visible-xs-block visible-sm-block dashboard-more-info animated fadeInUp" href="admin-users-combined-list.php?onlyloyals">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
 					
 				</div>
 				
@@ -51,15 +51,15 @@
 					
 					<!-- Birthdays Table -->
 					<?php include 'includes/modules/birthdaysTable.php'; ?>
-					<a class="dashboard-more-info" href="admin-birthdays-list.php">Подробнее <i class="fa fa-chevron-circle-right"></i></a>					
+					<a class="dashboard-more-info animated fadeInUp" href="admin-birthdays-list.php">Подробнее <i class="fa fa-chevron-circle-right"></i></a>					
 				</div>
 				
 				<div class="col-md-4 col-sm-12">
 					
 					<!-- Clients Table -->
 					<?php include 'includes/modules/clientsTable.php'; ?>
-					<a class="hidden-xs hidden-sm dashboard-more-info" href="admin-users-combined-list.php">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
-					<a class="visible-xs-block visible-sm-block dashboard-more-info" href="admin-users-combined-list.php?onlyclients">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
+					<a class="hidden-xs hidden-sm dashboard-more-info animated fadeInUp" href="admin-users-combined-list.php">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
+					<a class="visible-xs-block visible-sm-block dashboard-more-info animated fadeInUp" href="admin-users-combined-list.php?onlyclients">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
 					
 				</div>
 				
@@ -74,11 +74,7 @@
 		<script type="text/javascript" src="includes/js/jquery.monthpicker.min.js"></script>
 		<script type="text/javascript" src="includes/js/jquery-scrolltofixed-minmaxheightadded-min.js"></script>
 		<script type="text/javascript" src="includes/js/mainStatsChart.js"></script>
-		<script>
-			$(document).ready(function () {
-				$('[data-toggle="tooltip"]').tooltip();
-			})
-		</script>
+		<script type="text/javascript" src="includes/js/birthdays-settings.js"></script>
 		
 	</body>
 </html>
