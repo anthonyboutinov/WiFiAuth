@@ -1,4 +1,4 @@
-<?php	include 'includes/core/vars.php';
+<?php	include 'includes/core/db_config.php';
 	
 	$dictionary_branches = ['POST', 'GENERAL_FIELDS', 'ADMIN_DISPLAY_SETTINGS', 'LOGIN_OPTIONS', 'PASSWORD'];
 
@@ -12,6 +12,10 @@
 			$updateDBUserPasswordResponce = $database->updateDBUserPassowrd();
 		}
 	}
+	
+	
+	
+	include 'includes/core/vars.php';
 	
 ?><!DOCTYPE html>
 <html lang="ru">

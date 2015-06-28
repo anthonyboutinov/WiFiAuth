@@ -1,7 +1,7 @@
 <?php
 
-require 'db_config.php';
-include 'CommonFunctions.php';
+include_once 'db_config.php';
+include_once 'CommonFunctions.php';
 
 // Название компании
 $companyName = $database->getValueByShortName('COMPANY_NAME')['VALUE'];

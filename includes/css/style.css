@@ -66,7 +66,8 @@ a:active,
 input[type="text"],
 input[type="number"],
 input[type="url"],
-input[type="color"] {
+input[type="color"],
+input[type="password"] {
   font-family: 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 input[type="text"] {
@@ -618,6 +619,9 @@ table.contains-fas .fa {
 body.admin-page-login {
   text-align: center;
   /* specific to non-admin login */
+}
+body.admin-page-login .checkbox {
+  float: none;
 }
 body.admin-page-login h1 {
   margin-bottom: 30px;
