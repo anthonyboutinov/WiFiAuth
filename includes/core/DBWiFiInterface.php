@@ -53,6 +53,8 @@
 				die("Error #2: Credentials for router with MAC address $macAddress are incorrect. 1");
 			}
 		}
+
+
 		
 		private function logInDBUser($web_user, $web_password) {
 			$this->sanitize($web_user);
@@ -200,8 +202,6 @@
 				$this->sanitize($to);
 			}
 		}
-		
-		
 		
 		public function getLoginActs($from = 0, $to = null) {
 			$this->sanitizeFromTo($from, $to);

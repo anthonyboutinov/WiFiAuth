@@ -75,6 +75,7 @@ input[type="text"] {
 	box-shadow: none;
 }
 
+<<<<<<< HEAD
 .textarea-word-count {
 	margin-top: -25px;
 	margin-right: 8px;
@@ -155,7 +156,10 @@ i.fa[data-toggle="tooltip"] {
 	max-width: 300px;
 }
 
+.btn-black { 
+=======
 .btn-black, .btn-red {
+>>>>>>> Norm_worked_1
 	-webkit-transition: background 500ms ease-out;
 	-moz-transition: background 500ms ease-out;
 	-o-transition: background 500ms ease-out;
@@ -1041,16 +1045,6 @@ body.admin-page.simple-page .chart-wrapper {
 	}
 }
 
-.legend.not-draw-full-content {
-	padding-top: 10px;
-	padding-bottom: 10px;
-}
-
-.legend li {
-	float: left;
-	width: 25%;
-}
-
 .legend-tip {
 	width: 70%;
 
@@ -1073,25 +1067,8 @@ body.admin-page.simple-page .chart-wrapper {
 	}
 }
 
-.legend-tip-active {
-	background: rgba(0,0,0,0.3);
-}
-
 .zero-opacity {
 	opacity: 0;
-}
-
-.legend .legend-circle {
-	border-radius: 16px;
-	width: 32px;
-	height: 32px;
-	border-style: solid;
-	display: inline-block;
-}
-
-.legend .legend-title {
-	margin-top: 6px;
-	margin-bottom: 6px;
 }
 
 /* eof CHART LEGEND */

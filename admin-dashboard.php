@@ -11,10 +11,7 @@
 	<head>
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
 		<title>Главная <?php echo $adminPanelTitle; ?></title>
-		<?php
-			include 'includes/modules/mainStatsChartGoogleChartJS.php';
-			include 'includes/modules/pieChartGoogleChartJS.php';
-		?>
+		<?php include 'includes/modules/mainStatsChartGoogleChartJS.php'; ?>
 	</head>
 	<body class="admin-page simple-page dashboard">
 		<div class="container glass-panel">
