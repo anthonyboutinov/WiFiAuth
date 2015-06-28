@@ -42,7 +42,7 @@ $(document).ready(function () {
 		// задать обратное значение в куки
 		Cookies.set('birthdays-intellectual-view', ccv);
 		// подождать пока выполнится предыдущая строчка кода и перезагрузить страницу
-		setTimeout(function() {location.reload();}, 400);
+		setTimeout(function() {location.reload();}, 500); // из-за iPhone увеличино с 400 до 500
 	});
 	
 	
@@ -53,7 +53,7 @@ $(document).ready(function () {
 	});
 	
 	// коррекция высот (задержка нужна, потому что иначе высота неправильно высчитывается)
-	setTimeout(function () {
+	function correctHeight() {
 		var fheight = 0;
 		$("#birthdays-card > figure.front").children().each(function() {
 			fheight += $(this).outerHeight() + parseInt($(this).css('margin-bottom'));
@@ -61,6 +61,9 @@ $(document).ready(function () {
 		$("#birthdays-card > figure > .back").css('height', fheight);
 		$("#birthdays-card > figure.back .page-wrapper").css('height', $("#birthdays-card > figure.front .page-wrapper").outerHeight());
 		$("#birthdays-card").parent().css('height', fheight);
-	}, 250);
+	}
+	
+	setTimeout(correctHeight, 350);
+	$(window).resize(correctHeight);
 	
 });

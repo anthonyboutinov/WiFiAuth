@@ -12,7 +12,7 @@
 	$drawOnlyOne = !$drawBoth;
 
 ?><!DOCTYPE html>
-<html lang="ru">
+<html lang="ru"<?php if ($drawBoth) {echo ' style="overflow-y:hidden;"';} ?>>
 	<head>
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
 		<title><?php

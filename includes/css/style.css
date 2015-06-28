@@ -23,7 +23,6 @@ body {
   font-family: Fontatigo, 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-y: hidden;
 }
 .simple-font {
   font-family: 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;

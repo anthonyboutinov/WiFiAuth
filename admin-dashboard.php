@@ -38,7 +38,7 @@
 			</div>
 			<div class="row">
 				
-				<div class="col-md-4 col-sm-6">
+				<div class="col-md-4 col-sm-12">
 					
 					<!-- Loyal Clients Table -->	
 					<?php include 'includes/modules/loyalClientsTable.php'; ?>
@@ -47,7 +47,7 @@
 					
 				</div>
 				
-				<div class="col-md-4 col-sm-6">
+				<div class="col-md-4 col-sm-12">
 					
 					<!-- Birthdays Table -->
 					<?php include 'includes/modules/birthdaysTable.php'; ?>

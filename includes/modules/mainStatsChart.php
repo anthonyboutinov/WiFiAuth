@@ -1,6 +1,6 @@
 <div class="complex-h1">
 	<i class="fa fa-line-chart hidden-xs"></i>
-	<h1>График авторизаций в сети</h1>
+	<h1>График авторизаций<span class="hidden-xs"> в&nbsp;сети</span></h1>
 	<h2>Количество пользователей за&nbsp;последние 30&nbsp;дней</h2>					
 </div>
 <div class="page-wrapper chart-wrapper">

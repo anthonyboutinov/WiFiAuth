@@ -28,7 +28,7 @@
 				$maxLength = 2048;
 				foreach ($sql as $key => $value) {
 					$val = $this->conn->real_escape_string($value);
-					if (length($val) > $maxLength) {
+					if (strlen($val) > $maxLength) {
 						Notification::add(
 							'<b>Warning</b>: trying to sanitize data which is '.
 							length($val).' characters long! Data truncated', 'warning'
