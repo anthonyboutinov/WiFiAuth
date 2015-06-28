@@ -76,37 +76,6 @@ $(document).ready(function(){
 	
 	VK.init({apiId: 4933055});
 
-	function positionVertically() {
-		
-		if ($(panel).outerHeight() < $(window).height()) {
-			$(panel).css('margin-top', ($(window).height() - $(panel).outerHeight()) / 2);
-			$(footer).css('position', 'fixed');
-		} else {
-			$(panel).css('margin-top', 0);
-			$(footer).css('position', 'inherit');
-		}
-		
-		if (formIsOpen) {
-			$(loginInputPasswordForm).css('margin-top', ($(window).height() - $(loginInputPasswordForm).outerHeight()) / 2);
-		}
-		
-	}
-	
-	positionVertically();
-	$(window).resize(positionVertically);
-					
-	function openLoginInputPasswordForm() {
-		formIsOpen = true;
-		$(loginInputPasswordForm).removeClass("hidden");
-		positionVertically();
-		$("#password").focus();
-	}
-	
-	function closeLoginInputPasswordForm() {
-		formIsOpen = false;
-		$(loginInputPasswordForm).addClass("hidden");
-	}
-
 	function authInfo(response) {      //функция проверки авторизации пользователя Вконтакте
     if (!response.session)
        {
