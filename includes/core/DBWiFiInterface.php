@@ -30,26 +30,29 @@
 			} else if (!$mac_address && !$router_pasword && $cli_login && $cli_password && !$id_cli) {
 				
 				// Get web user credentials (from live user) (login act)
-				$this->id_db_user_editor = $this->getWebUser($cli_login, $cli_password);
+				$this->setWebUser($cli_login, $cli_password);
 				
 			} else if (!$mac_address && !$router_pasword && !$cli_login && !$cli_password && $id_cli) {
 				
-				// Set id		
-				$this->id_db_user_editor = $id_cli;
-				$this->setAccessLevelForUser($id_cli);
+				// Set id
+				$this->setWebUserByID($id_cli);
 			
 			} else if (!$mac_address && !$router_pasword && !$cli_login && !$cli_password && !$id_cli) {
 				// Ничего не делать, база данных подключена.
 			} else {
 				die('Error: DBWiFiTinterface constructor received bad parameters');
 			}
-			
+						
 			if($this->is_valid()) {			
 				// Get other data
 				$this->tablePageLimit = $this->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
 				$this->dashboardTablePreviewLimit = $this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT')['NUMBER_VALUE'];
 			}
 						
+		}
+		
+		public function is_superadmin() {
+			return !($this->id_db_user_editor == null);
 		}
 		
 		public function is_valid() {
@@ -91,17 +94,51 @@
 		}
 
 
+		private function setWebUserByID($id) {
+			$this->sanitize($id);
+			
+			$sql = 
+			'SELECT
+				U.ID_DB_USER, U.IS_ACTIVE, U.PASSWORD, AL.SHORT_NAME AS ACCESS_LEVEL, U.IS_SUPERADMIN
+			from CM$DB_USER U
+			LEFT JOIN CM$ACCESS_LEVEL AL ON AL.ID_ACCESS_LEVEL=U.ID_ACCESS_LEVEL
+			WHERE U.ID_DB_USER='.$id;
+			
+			$result = $this->conn->query($sql);
+			if ($result === false) {
+				Notification::add("Error with query $sql", 'danger');
+				return false;
+			}
+			
+			if ($result->num_rows == 1) {
+				while($row = $result->fetch_assoc()) {
+					if ($row["IS_ACTIVE"] == 'F') {
+						Notification::add("Обслуживание аккаунта $web_user приостановлено", 'danger');
+						return false;
+					} else {
+						if ($row['IS_SUPERADMIN'] == 'T') {
+							$this->id_db_user_editor = $row['ID_DB_USER'];
+							$this->user_access_level = $row['ID_ACCESS_LEVEL'];
+						} else {
+							$this->id_db_user = $row['ID_DB_USER'];
+							return true;
+						}
+					}
+				}
+			}
+			
+		}
 		
-		private function getWebUser($web_user, $web_password) {
+		private function setWebUser($web_user, $web_password) {
 			$this->sanitize($web_user);
 			$this->sanitize($web_password);
 			
 			$sql = 
 			'SELECT
-				U.ID_DB_USER, U.IS_ACTIVE, U.PASSWORD, AL.SHORT_NAME AS ACCESS_LEVEL
+				U.ID_DB_USER, U.IS_ACTIVE, U.PASSWORD, AL.SHORT_NAME AS ACCESS_LEVEL, U.IS_SUPERADMIN
 			from CM$DB_USER U
 			LEFT JOIN CM$ACCESS_LEVEL AL ON AL.ID_ACCESS_LEVEL=U.ID_ACCESS_LEVEL
-			WHERE IS_SUPERADMIN=\'T\' AND LOGIN=\''.$web_user.'\'';
+			WHERE U.LOGIN=\''.$web_user.'\'';
 						
 			$result = $this->conn->query($sql);
 			if ($result === false) {
@@ -116,8 +153,13 @@
 							Notification::add("Обслуживание аккаунта $web_user приостановлено", 'danger');
 							return false;
 						} else {
-							$this->user_access_level = $row['ID_ACCESS_LEVEL'];
-							return $row['ID_DB_USER'];
+							if ($row['IS_SUPERADMIN'] == 'T') {
+								$this->id_db_user_editor = $row['ID_DB_USER'];
+								$this->user_access_level = $row['ID_ACCESS_LEVEL'];
+							} else {
+								$this->id_db_user = $row['ID_DB_USER'];
+							}
+							return true;
 						}
 					} else {
 						Notification::add("Логин и(или) пароль неверны", 'danger');
@@ -131,7 +173,7 @@
 			
 		}
 		
-		protected function getAlternateDBUser() {
+		public function getBDUserID() {
 			if ($this->id_db_user_editor) {
 				return $this->id_db_user_editor;
 			} else {
@@ -142,7 +184,7 @@
 		
 		public function getValueByShortName($short_name) {
 			$this->sanitize($short_name);
-			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY IN (SELECT D.ID_DICTIONARY FROM CM$DICTIONARY D WHERE SHORT_NAME="'.$short_name.'") AND V.ID_DB_USER='.$this->getAlternateDBUser();
+			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY IN (SELECT D.ID_DICTIONARY FROM CM$DICTIONARY D WHERE SHORT_NAME="'.$short_name.'") AND V.ID_DB_USER='.$this->getBDUserID();
 			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $short_name);
 			if ($result['VALUE'] == 'T' || $result['VALUE'] == 't') {
 				$result['VALUE'] = true;
@@ -154,7 +196,7 @@
 		
 		public function getValueByID($id) {
 			$this->sanitize($id);
-			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY='.$id.' AND V.ID_DB_USER='.$this->getAlternateDBUser();
+			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY='.$id.' AND V.ID_DB_USER='.$this->getBDUserID();
 			return $this->getQueryFirstRowResultWithErrorNoticing($sql, $id);
 		}
 		
@@ -372,9 +414,9 @@
 		}
 		
 		public function getMainStatsTable($num_days) {
-			
+
 			$login_options = $this->getLoginOptions();
-			
+
 			$sql =
 			'SELECT
 				DATE_FORMAT(D.DATE, "new Date(%Y, %m, %d)") AS JSON_DATE,';			
@@ -542,8 +584,6 @@
             $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не логировать, если нет результатов в запросе*/);
 
             if($result == null) {
-
-            	if($log_opt==1) {																																															
             	
             	$sql = 'insert into CM$USER 
             	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,ID_DB_USER_MODIFIED)  values( '
@@ -554,18 +594,6 @@
                          .$user_href.'", '
                          .$this->id_db_user.')';
 
-                echo $sql;
-
-  				} else {
-            	$sql = 'insert into CM$USER 
-            	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,ID_DB_USER_MODIFIED)  values( '
-            		     .$log_opt.', STR_TO_DATE("'
-            			 .$b_date.'","%m/%d/%Y "),"'
-                         .$first_name.' '
-                         .$last_name.'","'
-                         .$user_href.'", '
-                         .$this->id_db_user.')';	
-  				}
             	$this->getQueryResultWithErrorNoticing($sql);
 
             	$sql = 'select ID_USER from CM$USER order by ID_USER desc limit 0, 1';

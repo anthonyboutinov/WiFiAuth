@@ -1,4 +1,4 @@
-<?php	include 'includes/core/db_config.php';
+<?php	include 'includes/core/session.php';
 	
 	$dictionary_branches = ['POST', 'GENERAL_FIELDS', 'ADMIN_DISPLAY_SETTINGS', 'LOGIN_OPTIONS', 'PASSWORD'];
 
