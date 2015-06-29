@@ -1,7 +1,6 @@
 <?php
-	$superadmin_page_access_level='MANAGER';
-	
 	include 'includes/core/vars.php';
+	$protector->protectPageAdminPage();
 
 	$drawClients = true;
 	$drawLoyals = true;

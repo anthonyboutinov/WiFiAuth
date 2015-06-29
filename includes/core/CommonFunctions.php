@@ -189,6 +189,12 @@
 			return $out;
 		}
 		
+		public static function redirect($page) {
+			$base_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+			header("Location: $base_url/$page");
+			exit();
+		}
+		
 		
 	}
 

@@ -1,6 +1,7 @@
 <?php
 	
-	include 'includes/core/Notification.php';
+	include 'Notification.php';
+	include_once 'CommonFunctions.php';
 
 	class DBInterface {
 		

@@ -1,4 +1,7 @@
-<?php	include 'includes/core/vars.php'; ?>
+<?php
+	include 'includes/core/vars.php';
+	$protector->protectPageSetMinAccessLevel('MANAGER');
+?>
 <html lang="ru">
 	<head>
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>

@@ -1,17 +1,19 @@
 <?php
 	
-	include 'includes/core/DBInterface.php';
+	include 'DBInterface.php';
 
 	class DBWiFiInterface extends DBInterface {
 		
 		var $id_db_user = null;
 		var $id_db_user_editor = null;
-		var $user_access_level = null;
+		var $id_min_access_level = null;
 		
 		var $superadmin_name = null;
 		
 		var $tablePageLimit = null;
 		var $dashboardTablePreviewLimit = null;
+		
+		var $access_level_accepted = null;
 		
 		function    __construct($servername, $username, $password, $dbname, $mac_address, $router_pasword, $cli_login, $cli_password, $id_cli) {
 			parent::__construct($servername, $username, $password, $dbname);
@@ -51,6 +53,11 @@
 						
 		}
 		
+		# ======================================================================== #
+		# ==== ПЕРВИЧНАЯ ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ (АВТОРИЗАЦИЯ)                 ==== #
+		# ======================================================================== #
+
+		
 		public function is_superadmin() {
 			return !($this->id_db_user_editor == null);
 		}
@@ -59,9 +66,37 @@
 			return ($this->id_db_user_editor || $this->id_db_user);
 		}
 		
+		public function is_db_user() {
+			return $this->is_db_user != null;
+		}
+		
+		private function setAcceccLevelAcceptedArray() {
+			$sql = 'SELECT AL.ID_ACCESS_LEVEL, AL.SHORT_NAME FROM CM$ACCESS_LEVEL AL';
+			$result = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
+			$result = CommonFunctions::extractSingleValueFromMultiValueArray($result, 'SHORT_NAME', 'ID_ACCESS_LEVEL');
+			
+			$out = array();
+			foreach ($result as $key => $value) {
+				if ($key <= $this->id_min_access_level) {
+					$out[] = $value;
+				}
+			}
+			
+			$this->access_level_accepted = $out;
+		}
+		
+		public function meetsAccessLevel($accl_short_name) {
+			foreach ($this->access_level_accepted as $value) {
+				if ($accl_short_name == $value) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
 		private function setAccessLevelForUser($id_cli) {
-			$sql = 'select AL.SHORT_NAME AS AL from CM$DB_USER U LEFT JOIN CM$ACCESS_LEVEL AL ON AL.ID_ACCESS_LEVEL=U.ID_ACCESS_LEVEL where U.ID_DB_USER='.$id_cli;
-			$this->user_access_level = $this->getQueryFirstRowResultWithErrorNoticing($sql, $id_cli)['AL'];
+			$sql = 'select AL.ID_ACCESS_LEVEL AS AL from CM$DB_USER U LEFT JOIN CM$ACCESS_LEVEL AL ON AL.ID_ACCESS_LEVEL=U.ID_ACCESS_LEVEL where U.ID_DB_USER='.$id_cli;
+			$this->id_min_access_level = $this->getQueryFirstRowResultWithErrorNoticing($sql, $id_cli)['AL'];
 
 		}
 		
@@ -93,6 +128,21 @@
 			}
 		}
 
+		private function processVerifiedUser($row, $web_user) {
+			if ($row["IS_ACTIVE"] == 'F') {
+				Notification::add("Обслуживание аккаунта $web_user приостановлено", 'danger');
+				return false;
+			} else {
+				if ($row['IS_SUPERADMIN'] == 'T') {
+					$this->id_db_user_editor = $row['ID_DB_USER'];
+					$this->id_min_access_level = $row['ID_ACCESS_LEVEL'];
+					$this->setAcceccLevelAcceptedArray();
+				} else {
+					$this->id_db_user = $row['ID_DB_USER'];
+				}
+				return true;
+			}
+		}
 
 		private function setWebUserByID($id) {
 			$this->sanitize($id);
@@ -104,29 +154,8 @@
 			LEFT JOIN CM$ACCESS_LEVEL AL ON AL.ID_ACCESS_LEVEL=U.ID_ACCESS_LEVEL
 			WHERE U.ID_DB_USER='.$id;
 			
-			$result = $this->conn->query($sql);
-			if ($result === false) {
-				Notification::add("Error with query $sql", 'danger');
-				return false;
-			}
-			
-			if ($result->num_rows == 1) {
-				while($row = $result->fetch_assoc()) {
-					if ($row["IS_ACTIVE"] == 'F') {
-						Notification::add("Обслуживание аккаунта $web_user приостановлено", 'danger');
-						return false;
-					} else {
-						if ($row['IS_SUPERADMIN'] == 'T') {
-							$this->id_db_user_editor = $row['ID_DB_USER'];
-							$this->user_access_level = $row['ID_ACCESS_LEVEL'];
-						} else {
-							$this->id_db_user = $row['ID_DB_USER'];
-							return true;
-						}
-					}
-				}
-			}
-			
+			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $id);
+			return $this->processVerifiedUser($result, $id);
 		}
 		
 		private function setWebUser($web_user, $web_password) {
@@ -139,32 +168,15 @@
 			from CM$DB_USER U
 			LEFT JOIN CM$ACCESS_LEVEL AL ON AL.ID_ACCESS_LEVEL=U.ID_ACCESS_LEVEL
 			WHERE U.LOGIN=\''.$web_user.'\'';
-						
-			$result = $this->conn->query($sql);
-			if ($result === false) {
-				Notification::add("Error with query $sql", 'danger');
-				return false;
-			}
 			
-			if ($result->num_rows == 1) {
-				while($row = $result->fetch_assoc()) {
-					if (password_verify($web_password, $row['PASSWORD'])) {
-						if ($row["IS_ACTIVE"] == 'F') {
-							Notification::add("Обслуживание аккаунта $web_user приостановлено", 'danger');
-							return false;
-						} else {
-							if ($row['IS_SUPERADMIN'] == 'T') {
-								$this->id_db_user_editor = $row['ID_DB_USER'];
-								$this->user_access_level = $row['ID_ACCESS_LEVEL'];
-							} else {
-								$this->id_db_user = $row['ID_DB_USER'];
-							}
-							return true;
-						}
-					} else {
-						Notification::add("Логин и(или) пароль неверны", 'danger');
-						return false;
-					}
+			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $web_user, true);
+			
+			if ($result) {
+				if (password_verify($web_password, $result['PASSWORD'])) {
+					return $this->processVerifiedUser($result, $web_user);
+				} else {
+					Notification::add("Логин и(или) пароль неверны", 'danger');
+					return false;
 				}
 			} else {
 				Notification::add("Логин и(или) пароль неверны", 'danger');
@@ -180,6 +192,14 @@
 				return $this->id_db_user;
 			}
 		}
+		
+		# ==== КОНЕЦ ПЕРВИЧНАЯ ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ (АВТОРИЗАЦИЯ) ==== #
+		# ======================================================================== #
+		
+		# ============================================================= #
+		# ==== ПОЛУЧЕНИЕ ДАННЫХ ИЗ СЛОВАРЯ ==== #
+		# ============================================================= #
+
 		
 		
 		public function getValueByShortName($short_name) {
@@ -200,6 +220,22 @@
 			return $this->getQueryFirstRowResultWithErrorNoticing($sql, $id);
 		}
 		
+		# ==== КОНЕЦ ПОЛУЧЕНИЕ ДАННЫХ ИЗ СЛОВАРЯ ==== #
+		# ============================================================= #
+		
+		# ===================================================================================== #
+		# ==== PROTECTED ОБЩИЕ МЕТОДЫ ПРЕОБРАЗОВАНИЯ ДАННЫХ ==== #
+		# ===================================================================================== #
+		
+		protected function sanitizeFromTo(&$from, &$to) {
+			$this->sanitize($from);
+			if ($to == null) {
+				$to = $this->tablePageLimit;
+			} else {
+				$this->sanitize($to);
+			}
+		}
+		
 		protected function appendToSQLIsOrInArrayOfValues($values, &$sql) {
 			if (is_array($values)) {
 				$sql = $sql.' in (';
@@ -217,6 +253,9 @@
 				$sql = $sql.'="'.$values.'"';
 			}
 		}
+		
+		# ==== КОНЕЦ PROTECTED ОБЩИЕ МЕТОДЫ ПРЕОБРАЗОВАНИЯ ДАННЫХ ==== #
+		# ===================================================================================== #
 		
 		
 		/**
@@ -288,15 +327,6 @@
 						
 			$result = $this->getQueryResultWithErrorNoticing($sql);
 			return $this->keyRowsByColumn('SHORT_NAME', $result);
-		}	
-		
-		private function sanitizeFromTo(&$from, &$to) {
-			$this->sanitize($from);
-			if ($to == null) {
-				$to = $this->tablePageLimit;
-			} else {
-				$this->sanitize($to);
-			}
 		}
 		
 		public function getLoginActs($from = 0, $to = null) {
@@ -558,7 +588,6 @@
 			return $out;
 			
 		}
-		
 		
 		
 		// ========= Функции, изменяющие данные в БД =========

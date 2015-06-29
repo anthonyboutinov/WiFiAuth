@@ -22,7 +22,7 @@
 	$wifiCaptivePage 		= 'login.php';
 	$adminLoginPage 		= 'admin-login.php';
 	$adminMainPage 			= 'admin-dashboard.php';
-	$superadminMainPage 	= 'superadmin-dashboard.php';
+	$superadminMainPage 	= 'superadmin-clients.php';
 	
 
 	// Если находится на открытой странице
@@ -152,5 +152,7 @@
 	unset($id_cli);
 	unset($remember_me);
 	
+	require 'Protector.php';
+	$protector = new Protector($database);
 	
 ?>

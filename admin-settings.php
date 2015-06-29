@@ -1,4 +1,6 @@
-<?php	include 'includes/core/session.php';
+<?php
+	include 'includes/core/vars.php';
+	$protector->protectPageAdminPage();
 	
 	$dictionary_branches = ['POST', 'GENERAL_FIELDS', 'ADMIN_DISPLAY_SETTINGS', 'LOGIN_OPTIONS', 'PASSWORD'];
 

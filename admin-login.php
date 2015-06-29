@@ -1,7 +1,5 @@
-<?php
-	
+<?php	
 	include 'includes/core/session.php';
-	include 'includes/core/CommonFunctions.php';	
 ?>
 <!DOCTYPE html>
 <html lang="ru">

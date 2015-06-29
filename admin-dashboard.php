@@ -1,4 +1,6 @@
-<?php include 'includes/core/vars.php';
+<?php
+	include 'includes/core/vars.php';
+	$protector->protectPageAdminPage();
 	
 	// Отрисовывать мини-версии модулей
 	$drawFullContent = false;
@@ -35,12 +37,12 @@
 			</div>
 			<div class="row">
 				
-				<div class="col-md-4 col-sm-12">
+				<div class="col-md-4 col-sm-12 col-md-push-8">
 					
-					<!-- Loyal Clients Table -->	
-					<?php include 'includes/modules/loyalClientsTable.php'; ?>
+					<!-- Clients Table -->
+					<?php include 'includes/modules/clientsTable.php'; ?>
 					<a class="hidden-xs hidden-sm dashboard-more-info animated fadeInUp" href="admin-users-combined-list.php">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
-					<a class="visible-xs-block visible-sm-block dashboard-more-info animated fadeInUp" href="admin-users-combined-list.php?onlyloyals">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
+					<a class="visible-xs-block visible-sm-block dashboard-more-info animated fadeInUp" href="admin-users-combined-list.php?onlyclients">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
 					
 				</div>
 				
@@ -51,13 +53,14 @@
 					<a class="dashboard-more-info animated fadeInUp" href="admin-birthdays-list.php">Подробнее <i class="fa fa-chevron-circle-right"></i></a>					
 				</div>
 				
-				<div class="col-md-4 col-sm-12">
+				<div class="col-md-4 col-sm-12 col-md-pull-8">
 					
-					<!-- Clients Table -->
-					<?php include 'includes/modules/clientsTable.php'; ?>
+					<!-- Loyal Clients Table -->	
+					<?php include 'includes/modules/loyalClientsTable.php'; ?>
 					<a class="hidden-xs hidden-sm dashboard-more-info animated fadeInUp" href="admin-users-combined-list.php">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
-					<a class="visible-xs-block visible-sm-block dashboard-more-info animated fadeInUp" href="admin-users-combined-list.php?onlyclients">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
-					
+					<a class="visible-xs-block visible-sm-block dashboard-more-info animated fadeInUp" href="admin-users-combined-list.php?onlyloyals">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
+
+										
 				</div>
 				
 			</div>
