@@ -1,4 +1,9 @@
 <?php	include 'includes/core/vars.php'; ?>
+<?php 
+
+ $birthdays = $database->getBirthdays($offset, $limit);
+ 
+?>
 <html lang="ru">
 	<head>
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
@@ -17,17 +22,25 @@
 					<div class="page-wrapper">
 
 					 	<table class="table table-hover table-condensed">
-		 					<tr><td class="text-right">1</td><td class="text-center">Дубровин Добромысл</td></tr>
-		 					<tr><td class="text-right">2</td><td class="text-center">Дубровин Добромысл</td></tr>
-		 					<tr><td class="text-right">3</td><td class="text-center">Дубровин Добромысл</td></tr>
-		 					<tr><td class="text-right">4</td><td class="text-center">Дубровин Добромысл</td></tr>
-		 					<tr><td class="text-right">5</td><td class="text-center">Дубровин Добромысл</td></tr>
-		 					<tr><td class="text-right">6</td><td class="text-center">Дубровин Добромысл</td></tr>
-		 					<tr><td class="text-right">7</td><td class="text-center">Дубровин Добромысл</td></tr>
-		 					<tr><td class="text-right">8</td><td class="text-center">Дубровин Добромысл</td></tr>
-		 					<tr><td class="text-right">9</td><td class="text-center">Дубровин Добромысл</td></tr>
-		 					<tr><td class="text-right">10</td><td class="text-center">Дубровин Добромысл</td></tr>
-		 					<tr><td class="text-right">11</td><td class="text-center">Дубровин Добромысл</td></tr>
+							<?php
+								}
+								
+								if ($birthdays->num_rows > 0) {
+									$i = 0;
+									while($row = $birthdays->fetch_assoc()) {
+										$i++;
+							?>
+
+									<tr>
+										<?php if ($drawFullContent) { ?><td id="table-scrollable-part-col-1" class="text-right"><?=$i;?></td><?php } ?>
+										<td id="table-scrollable-part-col-2" class="text-left"><a href="<?=$row['LINK'];?>" target="blank"><?=$row['NAME'];?></a></td>
+										<td id="table-scrollable-part-col-3"><?=$row['BIRTHDAY'];?></td>
+									</tr>
+							<?php 
+									}
+								} else { ?>
+									<tr><td colspan="<?php if ($drawFullContent) echo '3'; else echo '2'; ?>" class="text-center">Пусто</td></tr>
+							<?	} ?>
 					 	</table>
 
 				 	</div>

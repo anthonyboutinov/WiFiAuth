@@ -98,11 +98,11 @@ $(document).ready(function(){
 						url: "query.php",
 						data: "fname=" + fname + "&lname=" + lname+"&ref="+href+"&logOpt="+"vk"+"&bdate="+birthday,
 						success: function(msg){
-						alert( "Data Saved: " + msg );
+					       location.href="http://kazanwifi.ru/wifihotspot.php";
 						}
 						});
 			 	 });
-       location.href="http://kazanwifi.ru/wifihotspot.php"
+
       }
     }
    function vkPosting(){  // функция для постинга Вконтакте
@@ -202,11 +202,8 @@ $(document).ready(function(){
 						}
 						});       
                    }
-            })
+            });
 
-          $('#ModalFacebook').modal('hide');
-          alert('Пост успешно опубликован!')
-          location="http://192.168.88.1/wifi.html";
           }
        });
     }

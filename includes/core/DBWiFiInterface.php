@@ -463,7 +463,12 @@
 			
 		}
 		
-		
+		public function getDBUsers(){
+
+			$sql='SELECT LOGIN FROM CM$DB_USER WHERE IS_SUPERADMIN = FALSE ';
+			$this->getQueryResultWithErrorNoticing($sql);
+
+		}
 		
 		// ========= Функции, изменяющие данные в БД =========
 		
