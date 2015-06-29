@@ -21,9 +21,7 @@
 			// session
 			//check login, if exists, then set id db user from it
 			//if session is over, try the code below
-			
-			$this->superadmin_name = $cli_login;
-			
+						
 			if ($mac_address && $router_pasword && !$cli_login && !$cli_password && !$id_cli) {
 				
 				// Get web user credentials (from router)
@@ -45,18 +43,23 @@
 				die('Error: DBWiFiTinterface constructor received bad parameters');
 			}
 						
-			if($this->is_valid()) {			
+			if($this->is_valid()) {
 				// Get other data
 				$this->tablePageLimit = $this->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
 				$this->dashboardTablePreviewLimit = $this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT')['NUMBER_VALUE'];
 			}
+			
+// 			Notification::add("Database interface constructor performed ".$this->num_queries_performed.' queries');
 						
+		}
+		
+		public function getNumQueriesPerformed() {
+			return $this->num_queries_performed;
 		}
 		
 		# ======================================================================== #
 		# ==== ПЕРВИЧНАЯ ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ (АВТОРИЗАЦИЯ)                 ==== #
 		# ======================================================================== #
-
 		
 		public function is_superadmin() {
 			return isset($this->id_db_user_editor);
@@ -77,7 +80,7 @@
 			
 			$out = array();
 			foreach ($result as $key => $value) {
-				if ($key <= $this->id_min_access_level) {
+				if ($key >= $this->id_min_access_level) {
 					$out[] = $value;
 				}
 			}
@@ -92,12 +95,6 @@
 				}
 			}
 			return false;
-		}
-		
-		private function setAccessLevelForUser($id_cli) {
-			$sql = 'select AL.ID_ACCESS_LEVEL AS AL from CM$DB_USER U LEFT JOIN CM$ACCESS_LEVEL AL ON AL.ID_ACCESS_LEVEL=U.ID_ACCESS_LEVEL where U.ID_DB_USER='.$id_cli;
-			$this->id_min_access_level = $this->getQueryFirstRowResultWithErrorNoticing($sql, $id_cli)['AL'];
-
 		}
 		
 		private function getWebUserByAuthenticatingViaMACAddress($macAddress, $routerPassword) {
@@ -136,6 +133,7 @@
 				if ($row['IS_SUPERADMIN'] == 'T') {
 					$this->id_db_user_editor = $row['ID_DB_USER'];
 					$this->id_min_access_level = $row['ID_ACCESS_LEVEL'];
+					$this->superadmin_name = $row['LOGIN'];
 					$this->setAcceccLevelAcceptedArray();
 				} else {
 					$this->id_db_user = $row['ID_DB_USER'];
@@ -148,11 +146,8 @@
 			$this->sanitize($id);
 			
 			$sql = 
-			'SELECT
-				U.ID_DB_USER, U.IS_ACTIVE, U.PASSWORD, AL.SHORT_NAME AS ACCESS_LEVEL, U.IS_SUPERADMIN
-			from CM$DB_USER U
-			LEFT JOIN CM$ACCESS_LEVEL AL ON AL.ID_ACCESS_LEVEL=U.ID_ACCESS_LEVEL
-			WHERE U.ID_DB_USER='.$id;
+			'SELECT U.ID_DB_USER, U.IS_ACTIVE, U.LOGIN, U.PASSWORD, U.ID_ACCESS_LEVEL, U.IS_SUPERADMIN
+			FROM CM$DB_USER U WHERE U.ID_DB_USER='.$id;
 			
 			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $id);
 			return $this->processVerifiedUser($result, $id);
@@ -163,11 +158,8 @@
 			$this->sanitize($web_password);
 			
 			$sql = 
-			'SELECT
-				U.ID_DB_USER, U.IS_ACTIVE, U.PASSWORD, AL.SHORT_NAME AS ACCESS_LEVEL, U.IS_SUPERADMIN
-			from CM$DB_USER U
-			LEFT JOIN CM$ACCESS_LEVEL AL ON AL.ID_ACCESS_LEVEL=U.ID_ACCESS_LEVEL
-			WHERE LOWER(U.LOGIN)=LOWER(\''.$web_user.'\')';
+			'SELECT U.ID_DB_USER, U.IS_ACTIVE, U.LOGIN, U.PASSWORD, U.ID_ACCESS_LEVEL, U.IS_SUPERADMIN
+			FROM CM$DB_USER U WHERE LOWER(U.LOGIN)=LOWER(\''.$web_user.'\')';
 			
 			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $web_user, true);
 			
@@ -191,6 +183,10 @@
 			} else {
 				return $this->id_db_user;
 			}
+		}
+		
+		public function getSuperadminName() {
+			return $this->superadmin_name;
 		}
 		
 		# ==== КОНЕЦ ПЕРВИЧНАЯ ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ (АВТОРИЗАЦИЯ) ==== #

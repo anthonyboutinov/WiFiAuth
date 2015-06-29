@@ -1,7 +1,10 @@
 <footer class="footer">
 <!-- 	Разработано<span class="sr-only"> Авторское право</span> &copy; 2015 <a href="#" target="_blank">ПочтиГотово</a> -->
 </footer>
-<?php if (count(Notification::getMessages()) > 0) {
+
+<?php
+// 	Notification::add("Total number of queries performed: ".$database->getNumQueriesPerformed());
+	if (count(Notification::getMessages()) > 0) {
 	$first_key = key(Notification::getMessages());
 ?>
 <div class="notification group-notification bg-<?=$first_key;?> animated bounceInDown no-padding"><?php

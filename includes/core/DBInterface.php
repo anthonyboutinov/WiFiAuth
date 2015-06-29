@@ -7,6 +7,8 @@
 		
 		protected $conn;
 		
+		protected $num_queries_performed = 0;
+		
 		function __construct($servername, $username, $password, $dbname) {
 			
 			// Create connection
@@ -38,7 +40,6 @@
 					}
 					$sql[$key] = $val;
 				}
-// 				return $sql;
 			} else {
 				$sql = $this->conn->real_escape_string($sql);
 			}
@@ -49,6 +50,7 @@
 		}
 
 		protected function getQueryFirstRowResultWithErrorNoticing($sql, $variableIdentifier = null, $allowNullValue = false) {
+			$this->num_queries_performed++;
 			$result = $this->conn->query($sql);
 			if (!$result) {
 				Notification::add('<b>SQL error in query: </b>'.$sql, 'danger');
@@ -71,6 +73,7 @@
 		}
 		
 		protected function getQueryResultWithErrorNoticing($sql) {
+			$this->num_queries_performed++;
 			$result = $this->conn->query($sql);
 			if (!$result) {
 				Notification::add('<b>SQL error in query: </b>'.$sql, 'danger');
