@@ -1,5 +1,4 @@
 <?php
-// 	$superadmin_page_access_level = 'MANAGER';
 	/**
 	 *	Задавать переменную $current_page_is_not_protected = true для страниц,
 	 *	для посещения которых не требуется авторизация (кроме страницы
@@ -19,7 +18,7 @@
 	$remember_me = false;
 	
 	
-	$wifiCaptivePage 		= 'login.php';
+	$wifiCaptivePage 		= ['login.php', 'wifihotspot.php', 'query.php'];
 	$adminLoginPage 		= 'admin-login.php';
 	$adminMainPage 			= 'admin-dashboard.php';
 	$superadminMainPage 	= 'superadmin-clients.php';
@@ -28,8 +27,7 @@
 	// Если находится на открытой странице
 	if (isset($current_page_is_not_protected) && $current_page_is_not_protected) {
 		// Ничего не делать
-		Notification::add('DEBUG (includes/core/session.php): находится на открытой странице', 'warning');
-		unset($current_page_is_not_protected);
+// 		Notification::add('DEBUG (includes/core/session.php): находится на открытой странице', 'warning');
 	} else
 	
 	// Если находится на странице авторизации
@@ -55,12 +53,19 @@
 				// Если выполняетя 1 шаг восстановления пароля (отправка заявки)
 				// ...
 			}
+		} else {
+			
+			// Иначе, если даные формы не принимаются, то
+			if (isset($_SESSION['id_cli'])) {
+				// Если авторизован, взять ID из сессии
+				$id_cli = $_SESSION['id_cli'];
+			}
 		}
 	
 	} else
 	
-	// Если находится не на странице login
-	if (basename($_SERVER['PHP_SELF']) != $wifiCaptivePage) {
+	// Если находится не на странице Login страницах
+	if (!in_array(basename($_SERVER['PHP_SELF']), $wifiCaptivePage)) {
 			
 		// Если не авторизован
 		if(!isset($_SESSION['id_cli'])) {
@@ -87,12 +92,12 @@
 			$id_cli = $_SESSION['id_cli'];
 			
 			// Пропустить в интернет напрямую без вывода страницы login
-			Notification::add('DEBUG (includes/core/session.php): Пропустить в интернет напрямую без вывода страницы login', 'warning');
+			Notification::add('DEBUG (includes/core/session.php): НЕ РЕАЛИЗОВАНО! Пропустить в интернет напрямую без вывода страницы login', 'warning');
 			
 			// ...
 			
 		} else {
-			Notification::add('DEBUG (includes/core/session.php): Получаются данные от роутера для функционирования страницы login', 'warning');
+// 			Notification::add('DEBUG (includes/core/session.php): Получаются данные от роутера для функционирования страницы login', 'warning');
 			
 			//	Иначе получить данные от роутера для функционирования страницы login
 			

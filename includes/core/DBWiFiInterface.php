@@ -44,9 +44,12 @@
 			}
 						
 			if($this->is_valid()) {
+				$this->pretendToBe();
+				
 				// Get other data
 				$this->tablePageLimit = $this->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
 				$this->dashboardTablePreviewLimit = $this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT')['NUMBER_VALUE'];
+				
 			}
 			
 // 			Notification::add("Database interface constructor performed ".$this->num_queries_performed.' queries');
@@ -177,6 +180,23 @@
 			
 		}
 		
+		private function pretendToBe() {
+			
+			if (isset($_POST['form-name']) && $_POST['form-name'] == 'pretend-to-be' && isset($_POST['pretend-to-be'])) {
+				$_SESSION['pretend-to-be'] = $_POST['pretend-to-be'];
+			}
+			
+			echo $_SESSION['pretend-to-be']; 
+			
+			if (isset($_SESSION['pretend-to-be']) && $this->is_superadmin()) {
+				if (CommonFunctions::startsWith("{$_SERVER['REQUEST_URI']}", '/superadmin-')) {
+					unset($_SESSION['pretend-to-be']);
+				} else {
+					$this->id_db_user = $_SESSION['pretend-to-be'];
+				}
+			}
+		}
+		
 		public function getBDUserID() {
 			if ($this->id_db_user_editor) {
 				return $this->id_db_user_editor;
@@ -191,6 +211,7 @@
 		
 		# ==== КОНЕЦ ПЕРВИЧНАЯ ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ (АВТОРИЗАЦИЯ) ==== #
 		# ======================================================================== #
+		
 		
 		# ============================================================= #
 		# ==== ПОЛУЧЕНИЕ ДАННЫХ ИЗ СЛОВАРЯ ==== #

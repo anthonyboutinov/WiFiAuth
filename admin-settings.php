@@ -1,6 +1,7 @@
 <?php
 	include 'includes/core/vars.php';
 	$protector->protectPageAdminPage();
+	$protector->protectPageForbidSuperadmin();
 	
 	$dictionary_branches = ['POST', 'GENERAL_FIELDS', 'ADMIN_DISPLAY_SETTINGS', 'LOGIN_OPTIONS', 'PASSWORD'];
 

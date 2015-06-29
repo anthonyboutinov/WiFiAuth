@@ -59,6 +59,12 @@ class Protector {
 		}
 	}
 	
+	public function protectPageForbidSuperadmin() {
+		if ($this->database->is_superadmin()) {
+			CommonFunctions::redirect($this->superadminMainPage);
+		}
+	}
+	
 }
 	
 ?>
