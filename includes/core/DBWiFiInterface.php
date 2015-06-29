@@ -59,15 +59,15 @@
 
 		
 		public function is_superadmin() {
-			return !($this->id_db_user_editor == null);
+			return isset($this->id_db_user_editor);
 		}
 		
 		public function is_valid() {
-			return ($this->id_db_user_editor || $this->id_db_user);
+			return (isset($this->id_db_user_editor) || isset($this->id_db_user));
 		}
 		
 		public function is_db_user() {
-			return $this->is_db_user != null;
+			return isset($this->id_db_user);
 		}
 		
 		private function setAcceccLevelAcceptedArray() {
@@ -167,7 +167,7 @@
 				U.ID_DB_USER, U.IS_ACTIVE, U.PASSWORD, AL.SHORT_NAME AS ACCESS_LEVEL, U.IS_SUPERADMIN
 			from CM$DB_USER U
 			LEFT JOIN CM$ACCESS_LEVEL AL ON AL.ID_ACCESS_LEVEL=U.ID_ACCESS_LEVEL
-			WHERE U.LOGIN=\''.$web_user.'\'';
+			WHERE LOWER(U.LOGIN)=LOWER(\''.$web_user.'\')';
 			
 			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $web_user, true);
 			

@@ -22,7 +22,7 @@
 
 						<li><a href="superadmin-settings.php"><i class="fa fa-fw fa-cog"></i> Настройки</a></li>
 						<li><a href="superadmin-help.php"><i class="fa fa-fw fa-support"></i> Помощь</a></li>
-						<li><a href="superadmin-logout.php"><i class="fa fa-fw fa-sign-out"></i> Выйти</a></li>
+						<li><a href="admin-logout.php"><i class="fa fa-fw fa-sign-out"></i> Выйти</a></li>
         
 			</ul>
 		</div><!-- /.navbar-collapse -->
