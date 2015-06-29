@@ -624,6 +624,34 @@
 			
 		}
 		
+
+		public function addDBUser ($name, $email,$macAdress,$routerPassword,$login,$password) {
+ 					
+					sanitize($macAdress);
+ 					sanitize($routerPassword);
+ 					sanitize($login);
+ 					sanitize($password);
+ 					sanitize($name);
+ 					sanitize($email);
+
+					$sql='INSERT INTO CM$DB_USER 
+					( IS_SUPERADMIN, MAC_ADDRESS, 
+					ROUTER_PASSWORD, LOGIN, PASSWORD) 
+					VALUES ("F","'.$macAdress.'","'
+									 .$routerPassword.'","'
+									 .$login.'","'
+									 .$password.'")';
+					
+					$this->getQueryResultWithErrorNoticing($sql);
+
+					$sql = 'SELECT E.ID_DICTIONARY FROM CM$DICTIONARY E WHERE E.ID_PARENT in 
+							(SELECT B.ID_DICTIONARY FROM 
+							CM$DICTIONARY B WHERE B.ID_PARENT IN
+							(SELECT F.ID_DICTIONARY FROM 
+							 CM$DICTIONARY F WHERE F.SHORT_NAME = "VARS"))';
+
+
+		}
 		public function updateDBUserPassowrd() {
 
 			if (!$this->postIsFine(['old-password', 'password', 'repeat-password'])) {

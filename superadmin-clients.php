@@ -33,13 +33,12 @@
 							?>
 
 									<tr>
-										<td class="text-right"><?=$i;?></td>
 										<td class="text-left"><?=$row['LOGIN'];?></td>
 									</tr>
 							<?php 
 									}
 								} else { ?>
-									<tr><td colspan="<?php if ($drawFullContent) echo '3'; else echo '2'; ?>" class="text-center">Пусто</td></tr>
+									<tr><td colspan="1" class="text-center">Пусто</td></tr>
 							<?	} ?>
 					 	</table>
 
