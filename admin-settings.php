@@ -7,6 +7,8 @@
 
 	$updateDBUserPasswordResponce = null;
 	$processSettingsUpdateResponce = null;
+	
+	$additionalScripts = "";
 		
 	if (isset($_POST['form-name'])) {
 		if ($_POST['form-name'] == 'admin-settings') {

@@ -195,12 +195,12 @@
 			exit();
 		}
 		
-		public function startsWith($needle, $haystack) {
+		public static function startsWith($needle, $haystack) {
 		    // search backwards starting from haystack length characters from the end
 		    return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
 		}
 		
-		public function endsWith($needle, $haystack) {
+		public static function endsWith($needle, $haystack) {
 		    // search forward starting from end minus needle length characters
 		    return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
 		}

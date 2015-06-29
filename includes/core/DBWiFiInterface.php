@@ -60,6 +60,12 @@
 			return $this->num_queries_performed;
 		}
 		
+/*
+		public function is_pretending() {
+			return isset($_SESSION['pretend-to-be']);
+		}
+*/
+		
 		# ======================================================================== #
 		# ==== ПЕРВИЧНАЯ ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ (АВТОРИЗАЦИЯ)                 ==== #
 		# ======================================================================== #
@@ -185,11 +191,9 @@
 			if (isset($_POST['form-name']) && $_POST['form-name'] == 'pretend-to-be' && isset($_POST['pretend-to-be'])) {
 				$_SESSION['pretend-to-be'] = $_POST['pretend-to-be'];
 			}
-			
-			echo $_SESSION['pretend-to-be']; 
-			
+						
 			if (isset($_SESSION['pretend-to-be']) && $this->is_superadmin()) {
-				if (CommonFunctions::startsWith("{$_SERVER['REQUEST_URI']}", '/superadmin-')) {
+				if (CommonFunctions::startsWith('/superadmin-', "{$_SERVER['REQUEST_URI']}")) {
 					unset($_SESSION['pretend-to-be']);
 				} else {
 					$this->id_db_user = $_SESSION['pretend-to-be'];
@@ -198,7 +202,11 @@
 		}
 		
 		public function getBDUserID() {
-			if ($this->id_db_user_editor) {
+			return isset($this->id_db_user_editor) ? $this->id_db_user_editor : $this->id_db_user;
+		}
+		
+		protected function getMixedDBUserID() {
+			if (!isset($_SESSION['pretend-to-be']) && $this->id_db_user_editor) {
 				return $this->id_db_user_editor;
 			} else {
 				return $this->id_db_user;
@@ -221,7 +229,7 @@
 		
 		public function getValueByShortName($short_name) {
 			$this->sanitize($short_name);
-			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY IN (SELECT D.ID_DICTIONARY FROM CM$DICTIONARY D WHERE SHORT_NAME="'.$short_name.'") AND V.ID_DB_USER='.$this->getBDUserID();
+			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY IN (SELECT D.ID_DICTIONARY FROM CM$DICTIONARY D WHERE SHORT_NAME="'.$short_name.'") AND V.ID_DB_USER='.$this->getMixedDBUserID();
 			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $short_name);
 			if ($result['VALUE'] == 'T' || $result['VALUE'] == 't') {
 				$result['VALUE'] = true;
@@ -233,7 +241,7 @@
 		
 		public function getValueByID($id) {
 			$this->sanitize($id);
-			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY='.$id.' AND V.ID_DB_USER='.$this->getBDUserID();
+			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY='.$id.' AND V.ID_DB_USER='.$this->getMixedDBUserID();
 			return $this->getQueryFirstRowResultWithErrorNoticing($sql, $id);
 		}
 		
