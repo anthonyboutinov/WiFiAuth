@@ -627,13 +627,14 @@
 
 		public function addDBUser ($name, $email,$macAdress,$routerPassword,$login,$password) {
  					
-					sanitize($macAdress);
- 					sanitize($routerPassword);
- 					sanitize($login);
- 					sanitize($password);
- 					sanitize($name);
- 					sanitize($email);
+					$this->sanitize($macAdress);
+ 					$this->sanitize($routerPassword);
+ 					$this->sanitize($login);
+ 					$this->sanitize($password);
+ 					$this->sanitize($name);
+ 					$this->sanitize($email);
 
+ 					echo $email;
 					$sql='INSERT INTO CM$DB_USER 
 					( IS_SUPERADMIN, MAC_ADDRESS, 
 					ROUTER_PASSWORD, LOGIN, PASSWORD) 
@@ -641,15 +642,61 @@
 									 .$routerPassword.'","'
 									 .$login.'","'
 									 .$password.'")';
+
+					echo $sql;
 					
 					$this->getQueryResultWithErrorNoticing($sql);
 
-					$sql = 'SELECT E.ID_DICTIONARY FROM CM$DICTIONARY E WHERE E.ID_PARENT in 
-							(SELECT B.ID_DICTIONARY FROM 
-							CM$DICTIONARY B WHERE B.ID_PARENT IN
-							(SELECT F.ID_DICTIONARY FROM 
-							 CM$DICTIONARY F WHERE F.SHORT_NAME = "VARS"))';
+					$sql = 'SELECT ID_DB_USER FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' ORDER BY ID_DB_USER DESC LIMIT 0, 1';
 
+
+
+					$id_db_client = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DB_USER'];
+
+
+					echo $id_db_client;
+
+					// $sql = 'SELECT ID_VAR FROM SP$VAR WHERE ID_DB_USER ='.$id_db_client;
+					// echo $sql;
+					// $result=$this->getQueryResultWithErrorNoticing($sql);
+					// echo "R".$result;
+
+					// if ($result == null) {
+
+					 $sql = 'SELECT E.ID_DICTIONARY, E.SHORT_NAME, E.DEFAULT_VALUE FROM CM$DICTIONARY E WHERE E.ID_PARENT in 
+						(SELECT B.ID_DICTIONARY FROM 
+						CM$DICTIONARY B WHERE B.ID_PARENT IN
+						(SELECT F.ID_DICTIONARY FROM 
+						 CM$DICTIONARY F WHERE F.SHORT_NAME = "VARS"))';
+					echo "<br><br>";
+					$dictionary_result = $this->getQueryResultWithErrorNoticing($sql);
+
+					$sql = "";
+					while ($row = $dictionary_result->fetch_assoc()) {
+
+						if ($row['SHORT_NAME']=='EMAIL'){
+
+						$sql = 'INSERT INTO SP$VAR (ID_DICTIONARY,VALUE,ID_DB_USER) VALUES ('.$row['ID_DICTIONARY'].',"'.$email.'",'.$id_db_client.');';
+						}
+
+						if ($row['SHORT_NAME']=='COMPANY_NAME'){
+
+						$sql =  'INSERT INTO SP$VAR (ID_DICTIONARY,VALUE,ID_DB_USER) VALUES ('.$row['ID_DICTIONARY'].',"'.$name.'",'.$id_db_client.');';
+						}
+
+						if ($row['SHORT_NAME']!='EMAIL'||$row['SHORT_NAME']!='COMPANY_NAME'){
+
+							$val = isset($row['DEFAULT_VALUE']) ? "'".$row['DEFAULT_VALUE']."'" : 'NULL';
+							$sql = 'INSERT INTO SP$VAR (ID_DICTIONARY,VALUE,ID_DB_USER) VALUES ('.$row['ID_DICTIONARY'].','.$val.','.$id_db_client.');';	
+
+						}
+						echo $sql;
+						$this->getQueryResultWithErrorNoticing($sql);
+					}
+					
+					// } 
+
+					
 
 		}
 		public function updateDBUserPassowrd() {
