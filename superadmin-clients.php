@@ -1,7 +1,6 @@
 <?php	include 'includes/core/vars.php'; ?>
 <?php 
 
- $birthdays = $database->getBirthdays($offset, $limit);
  
 ?>
 <html lang="ru">
@@ -23,18 +22,19 @@
 
 					 	<table class="table table-hover table-condensed">
 							<?php
-								}
+							
 								
-								if ($birthdays->num_rows > 0) {
+								$dbusers = $database->getDBUsers();
+
+								if ($dbusers->num_rows > 0) {
 									$i = 0;
-									while($row = $birthdays->fetch_assoc()) {
+									while($row = $dbusers->fetch_assoc()) {
 										$i++;
 							?>
 
 									<tr>
-										<?php if ($drawFullContent) { ?><td id="table-scrollable-part-col-1" class="text-right"><?=$i;?></td><?php } ?>
-										<td id="table-scrollable-part-col-2" class="text-left"><a href="<?=$row['LINK'];?>" target="blank"><?=$row['NAME'];?></a></td>
-										<td id="table-scrollable-part-col-3"><?=$row['BIRTHDAY'];?></td>
+										<td class="text-right"><?=$i;?></td>
+										<td class="text-left"><?=$row['LOGIN'];?></td>
 									</tr>
 							<?php 
 									}

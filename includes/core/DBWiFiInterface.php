@@ -465,8 +465,8 @@
 		
 		public function getDBUsers(){
 
-			$sql='SELECT LOGIN FROM CM$DB_USER WHERE IS_SUPERADMIN = FALSE ';
-			$this->getQueryResultWithErrorNoticing($sql);
+			$sql='SELECT LOGIN FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' ORDER BY LOGIN ASC';
+			return  $this->getQueryResultWithErrorNoticing($sql);
 
 		}
 		
