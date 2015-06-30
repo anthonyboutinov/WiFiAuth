@@ -9,7 +9,7 @@
     	header("Location:$routerAdmin");
     } else {
 
-    	CommonFunctions::addNextPage('Неверный пароль!','error');
+    	Notification::addNextPage('Неверный пароль!','error');
     	CommonFunctions::redirect ("login.php");
     }
 

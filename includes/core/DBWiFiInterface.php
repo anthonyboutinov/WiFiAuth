@@ -767,44 +767,29 @@
 		}
 		
 		public function addDBUser ($name, $email,$routerLogin,$routerPassword,$login,$password) {
-
- 					
+			if (!$this->is_superadmin()) {
+				CommonFunctions::addNextPage('Access Level Violation Error', 'danger');
+				CommonFunctions::redirect($adminMainPage);
+			}
 
 			$this->sanitize($routerLogin);
-
 			$this->sanitize($routerPassword);
-
 			$this->sanitize($login);
-
 			$this->sanitize($password);
-
 			$this->sanitize($name);
-
 			$this->sanitize($email);
-
-
 
 			$password = password_hash($password, PASSWORD_BCRYPT);
 
-
-
 			$sql='INSERT INTO CM$DB_USER 
-
 			( IS_SUPERADMIN, ROUTER_LOGIN, 
-
-			ROUTER_PASSWORD, LOGIN, PASSWORD) 
-
+			ROUTER_PASSWORD, LOGIN, PASSWORD, ID_DB_USER_MODIFIED) 
 			VALUES ("F","'.$routerLogin.'","'
-
 							 .$routerPassword.'","'
-
 							 .$login.'","'
+							 .$password.'","'
+							 .$this->id_db_user_editor.'")';
 
-							 .$password.'")';
-
-
-
-			
 
 			$this->getQueryResultWithErrorNoticing($sql);
 

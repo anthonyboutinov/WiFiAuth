@@ -103,212 +103,212 @@
 
 			<div class="col-md-8">
 
+            	<form action = "superadmin-query.php" method="post">
 
-
-				<h1><i class="fa fa-user-plus"></i> Добавить клиента</h1> 
-
-				
-
-				<div class="page-wrapper close-follow">
+					<h1><i class="fa fa-user-plus"></i> Добавить клиента</h1> 
 
 					
 
-					<h2>Компания</h2>
-
-					<div class="form-horizontal">
-
-
-
-						<div class="form-group">
-
-								<label class="col-sm-3 control-label" for="company-name">Название</label>
-
-								<div class="col-sm-9">
-
-									<input type="text" class="form-control" name="company-name" id="company-name" autocomplete="off" maxlength="255">
-
-								</div>
-
-
-
-						</div>
-
-
-
-						<div class="form-group">
-
-								<label class="col-sm-3 control-label" for="email">E-mail</label>							
-
-								<div class="col-sm-9">
-
-									<input type="text" class="form-control" name="email" id="email" autocomplete="off" maxlength="255">
-
-								</div>
-
-							</div>
-
-					</div>
-
-					
-
-				</div>
-
-				<div class="page-wrapper close-follow">
-
-					
-
-					<h2>Роутеры</h2>
-
-					<div class="form-horizontal">
+					<div class="page-wrapper close-follow">
 
 						
 
-						<div class="form-group">
+						<h2>Компания</h2>
 
-						  <label class="col-sm-3 control-label" for="router-login">Логин роутера</label>							
+						<div class="form-horizontal">
 
-							<div class="col-sm-9">
 
-								<input type="text" class="form-control" name="router-login" id="router-login" autocomplete="off" maxlength="1024">
+
+							<div class="form-group">
+
+									<label class="col-sm-3 control-label" for="company-name">Название</label>
+
+									<div class="col-sm-9">
+
+										<input type="text" class="form-control" name="company-name" id="company-name" autocomplete="off" maxlength="255">
+
+									</div>
+
+
 
 							</div>
 
-						</div>
 
 
+							<div class="form-group">
 
-						<div class="form-group">
+									<label class="col-sm-3 control-label" for="email">E-mail</label>							
 
-							<label class="col-sm-3 control-label" for="router-token">Токен</label>	
+									<div class="col-sm-9">
 
-							<div class="col-sm-9">
+										<input type="text" class="form-control" name="email" id="email" autocomplete="off" maxlength="255">
 
-								<div class="input-group">
-
-									<input type="text" class="form-control default-cursor"
-
-										name="router-token" id="router-token" autocomplete="off" maxlength="32" disabled>
-
-					                <span class="input-group-btn">
-
-										<span class="btn btn-black" id="generate-token">
-
-											Генерировать <i class="fa fa-key"></i>
-
-										</span>
-
-					                </span>
+									</div>
 
 								</div>
 
-							</div>
-
 						</div>
-
-
-
-					</div>
-
-					
-
-				</div>
-
-				<div class="page-wrapper close-follow">
 
 						
 
-					<h2>Личный кабинет</h2>
+					</div>
 
-					<div class="form-horizontal">
+					<div class="page-wrapper close-follow">
 
-						<div class="form-group">
+						
 
-						  <label class="col-sm-3 control-label" for="login">Логин</label>							
+						<h2>Роутеры</h2>
 
-							<div class="col-sm-9">
+						<div class="form-horizontal">
 
-								<input type="text" class="form-control" name="login" id="login" autocomplete="off" maxlength="255">
+							
 
-							</div>
+							<div class="form-group">
 
-						</div>
+							  <label class="col-sm-3 control-label" for="router-login">Логин роутера</label>							
 
+								<div class="col-sm-9">
 
-
-						<div class="form-group">
-
-							<label class="col-sm-3 control-label" for="password">Пароль</label>	
-
-							<div class="col-sm-9">
-
-								<div class="input-group">
-
-									<input type="text" class="form-control"
-
-										name="password" id="password" autocomplete="off" maxlength="32">
-
-					                <span class="input-group-btn">
-
-										<span class="btn btn-black" id="generate-password">
-
-											Генерировать <i class="fa fa-key"></i>
-
-										</span>
-
-					                </span>
+									<input type="text" class="form-control" name="router-login" id="router-login" autocomplete="off" maxlength="1024">
 
 								</div>
 
 							</div>
 
+
+
+							<div class="form-group">
+
+								<label class="col-sm-3 control-label" for="router-token">Токен</label>	
+
+								<div class="col-sm-9">
+
+									<div class="input-group">
+
+										<input type="text" class="form-control"
+
+											name="router-token" id="router-token" autocomplete="off" maxlength="32" readonly>
+
+						                <span class="input-group-btn">
+
+											<span class="btn btn-black" id="generate-token">
+
+												Генерировать <i class="fa fa-key"></i>
+
+											</span>
+
+						                </span>
+
+									</div>
+
+								</div>
+
+							</div>
+
+
+
 						</div>
 
-
-
-					</div>								
-
-			 	
-
-			 	</div>
-
-				<div class="page-wrapper">
-
-					<div class="action-buttons-mid-way-panel only-child">
-
-						<button type="submit" class="btn btn btn-black gradient">Добавить <i class="fa fa-plus"></i></button>
+						
 
 					</div>
 
-				</div>
+					<div class="page-wrapper close-follow">
 
-				
+							
 
-				<div class="page-wrapper">
+						<h2>Личный кабинет</h2>
 
-					<div class="action-buttons-mid-way-panel only-child">
+						<div class="form-horizontal">
 
-						<button type="button" class="btn btn btn-black gradient">Сохранить <i class="fa fa-floppy-o"></i></button>
+							<div class="form-group">
 
-						<button type="button" class="btn btn btn-red gradient">Приостановить обслуживание <i class="fa fa-toggle-off"></i></button>
+							  <label class="col-sm-3 control-label" for="login">Логин</label>							
 
-					</div>
+								<div class="col-sm-9">
 
-				</div>
+									<input type="text" class="form-control" name="login" id="login" autocomplete="off" maxlength="255">
 
-				
+								</div>
 
-				<div class="page-wrapper">
+							</div>
 
-					<div class="action-buttons-mid-way-panel only-child">
 
-						<button type="button" class="btn btn btn-black gradient">Активировать и сохранить <i class="fa fa-toggle-on"></i></button>
 
-					</div>
+							<div class="form-group">
 
-				</div>
+								<label class="col-sm-3 control-label" for="password">Пароль</label>	
+
+								<div class="col-sm-9">
+
+									<div class="input-group">
+
+										<input type="text" class="form-control"
+
+											name="password" id="password" autocomplete="off" maxlength="32">
+
+						                <span class="input-group-btn">
+
+											<span class="btn btn-black" id="generate-password">
+
+												Генерировать <i class="fa fa-key"></i>
+
+											</span>
+
+						                </span>
+
+									</div>
+
+								</div>
+
+							</div>
+
+
+
+						</div>								
 
 				 	
 
+				 	</div>
+
+					<div class="page-wrapper">
+
+						<div class="action-buttons-mid-way-panel only-child">
+
+							<button type="submit" class="btn btn btn-black gradient">Добавить <i class="fa fa-plus"></i></button>
+
+						</div>
+
+					</div>
+
+					
+
+					<div class="page-wrapper">
+
+						<div class="action-buttons-mid-way-panel only-child">
+
+							<button type="button" class="btn btn btn-black gradient">Сохранить <i class="fa fa-floppy-o"></i></button>
+
+							<button type="button" class="btn btn btn-red gradient">Приостановить обслуживание <i class="fa fa-toggle-off"></i></button>
+
+						</div>
+
+					</div>
+
+					
+
+					<div class="page-wrapper">
+
+						<div class="action-buttons-mid-way-panel only-child">
+
+							<button type="button" class="btn btn btn-black gradient">Активировать и сохранить <i class="fa fa-toggle-on"></i></button>
+
+						</div>
+
+					</div>
+
+				 	
+				</form>
          	</div>
 
     	</div>
