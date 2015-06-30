@@ -14,6 +14,8 @@ $.extend({
             if ((randomNumber >=58) && (randomNumber <=64)) { continue; }
             if ((randomNumber >=91) && (randomNumber <=96)) { continue; }
             if ((randomNumber >=123) && (randomNumber <=126)) { continue; }
+            // Исключать неоднозначные символы: O, o, 0, I, i ()
+            if (randomNumber == 111 || randomNumber == 79 || randomNumber == 48 || randomNumber == 73 || randomNumber == 105) { continue; }
         }
         iteration++;
         password += String.fromCharCode(randomNumber);
@@ -42,7 +44,8 @@ $(document).ready(function() {
 	genRouterToken();
 	
 	function genPassword() {
-		$("#password").val($.password(4,false)+'-'+$.password(4,false)+'-'+$.password(4,false));
+		var password = $.password(4,false)+'-'+$.password(4,false)+'-'+$.password(4,false);
+		$("#password").val(password.toUpperCase());
 	}
 	$(generatePasswordButton).click(genPassword);
 	genPassword();
