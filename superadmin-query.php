@@ -2,9 +2,9 @@
  	include 'includes/core/db_config.php';
 
  	$email = 'optimisist@gmail.com';
- 	$name = 'TopSpot';
- 	$macAdress = '5D-AC-4C-68-38-BA';
- 	$login = 'test';
+ 	$name = 'Spot';
+ 	$macAdress = '6C-AC-4C-68-38-BA';
+ 	$login = 'tst';
  	$password = 'tiyOHUC4YuuF65ivw6Q3';
  	$routerPassword = 'R%g~/WaYBD~WMPZy';
 
