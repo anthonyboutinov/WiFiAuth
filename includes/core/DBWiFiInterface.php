@@ -15,29 +15,29 @@
 		
 		var $access_level_accepted = null;
 		
-		function    __construct($servername, $username, $password, $dbname, $mac_address, $router_pasword, $cli_login, $cli_password, $id_cli) {
+		function    __construct($servername, $username, $password, $dbname, $router_login, $router_pasword, $cli_login, $cli_password, $id_cli) {
 			parent::__construct($servername, $username, $password, $dbname);
 			
 			// session
 			//check login, if exists, then set id db user from it
 			//if session is over, try the code below
 						
-			if ($mac_address && $router_pasword && !$cli_login && !$cli_password && !$id_cli) {
+			if ($router_login && $router_pasword && !$cli_login && !$cli_password && !$id_cli) {
 				
 				// Get web user credentials (from router)
-				$this->id_db_user = $this->getWebUserByAuthenticatingViaMACAddress($mac_address, $router_pasword);
+				$this->id_db_user = $this->getWebUserByAuthenticatingViaRouterData($router_login, $router_pasword);
 				
-			} else if (!$mac_address && !$router_pasword && $cli_login && $cli_password && !$id_cli) {
+			} else if (!$router_login && !$router_pasword && $cli_login && $cli_password && !$id_cli) {
 				
 				// Get web user credentials (from live user) (login act)
 				$this->setWebUser($cli_login, $cli_password);
 				
-			} else if (!$mac_address && !$router_pasword && !$cli_login && !$cli_password && $id_cli) {
+			} else if (!$router_login && !$router_pasword && !$cli_login && !$cli_password && $id_cli) {
 				
 				// Set id
 				$this->setWebUserByID($id_cli);
 			
-			} else if (!$mac_address && !$router_pasword && !$cli_login && !$cli_password && !$id_cli) {
+			} else if (!$router_login && !$router_pasword && !$cli_login && !$cli_password && !$id_cli) {
 				// Ничего не делать, база данных подключена.
 			} else {
 				die('Error: DBWiFiTinterface constructor received bad parameters');
@@ -106,11 +106,11 @@
 			return false;
 		}
 		
-		private function getWebUserByAuthenticatingViaMACAddress($macAddress, $routerPassword) {
-			$this->sanitize($macAddress);
+		private function getWebUserByAuthenticatingViaRouterData($router_login, $routerPassword) {
+			$this->sanitize($router_login);
 			$this->sanitize($routerPassword);
 			
-			$sql = 'SELECT ID_DB_USER, IS_ACTIVE, ROUTER_PASSWORD FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' AND MAC_ADDRESS=\''.$macAddress.'\'';
+			$sql = 'SELECT ID_DB_USER, IS_ACTIVE, ROUTER_PASSWORD FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' AND ROUTER_LOGIN=\''.$router_login.'\'';
 			
 			$result = $this->conn->query($sql);
 			if ($result === false) {
@@ -121,16 +121,16 @@
 				while($row = $result->fetch_assoc()) {
 					if (password_verify($row['ROUTER_PASSWORD'], $routerPassword)) { // 			
 						if ($row["IS_ACTIVE"] == 'F') {
-							die("Error #1: Router with MAC address $macAddress is disabled.");
+							die("Error #1: Router $router_login is disabled.");
 						} else {
 							return $row['ID_DB_USER'];
 						}
 					} else {
-						die("Error #2: Credentials for router with MAC address $macAddress are incorrect. 0");
+						die("Error #2: Credentials for router $router_login are incorrect. 0");
 					}
 				}
 			} else {
-				die("Error #2: Credentials for router with MAC address $macAddress are incorrect. 1");
+				die("Error #2: Credentials for router $router_login are incorrect. 1");
 			}
 		}
 

@@ -10,7 +10,7 @@
 	require 'db_config.php';
 	require 'DBWiFiInterface.php';
 	
-	$mac_address = null;
+	$router_login = null;
 	$router_pasword = null;
 	$cli_login = null;
 	$cli_password = null;
@@ -101,7 +101,7 @@
 			
 			//	Иначе получить данные от роутера для функционирования страницы login
 			
-			$mac_address = 'd8:a2:5e:8c:db:fe';		// MAC адрес роутера	
+			$router_login = 'd8:a2:5e:8c:db:fe';		// MAC адрес роутера	
 			$router_pasword = password_hash('password', PASSWORD_BCRYPT); // Зашифрованный пароль от роутера
 		
 		}
@@ -109,8 +109,8 @@
 	}
 	
 	// Если есть данные для входа или страница не защищена (в последнем просто подключается к бд) 
-	if (($mac_address && $router_pasword) || ($cli_login && $cli_password) || $id_cli || (isset($current_page_is_not_protected) && $current_page_is_not_protected)) {
-		$database = new DBWiFiInterface($servername, $username, $password, $dbname, $mac_address, $router_pasword, $cli_login, $cli_password, $id_cli);
+	if (($router_login && $router_pasword) || ($cli_login && $cli_password) || $id_cli || (isset($current_page_is_not_protected) && $current_page_is_not_protected)) {
+		$database = new DBWiFiInterface($servername, $username, $password, $dbname, $router_login, $router_pasword, $cli_login, $cli_password, $id_cli);
 		
 		// Если пользователь валиден
 		if ($database->is_valid()) {
@@ -150,7 +150,7 @@
 	unset($username);
 	unset($password);
 	unset($dbname);
-	unset($mac_address);
+	unset($router_login);
 	unset($router_pasword);
 	unset($cli_login);
 	unset($cli_password);
