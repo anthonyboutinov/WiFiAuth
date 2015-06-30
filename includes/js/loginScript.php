@@ -131,7 +131,7 @@ $(document).ready(function(){
             //если ошибок нет то размещается пост и пользователя перебрасывает на другую страницу
               
               alert('Пост успешно опубликован!');
-              location="http://192.168.88.1/wifi.html";     
+              location="<?php echo $routerAdmin; ?>";     
        });
 
    }
@@ -141,15 +141,10 @@ $(document).ready(function(){
 
 	function passwordLoginInput() {  //функция входа по паролю
      
-    pass='chikchik';
-	passwordValue=$("#password").val();
+    
+		location="loginusingpass.php?p="+$("#password").val();
 
 
-		 if(passwordValue==pass){
-             
-		 	location="http://192.168.88.1/wifi.html";
-
-		 }
 	}
  function FacebookLoginInput(){  //функция авторизации в Facebook
 
@@ -198,7 +193,7 @@ $(document).ready(function(){
 						success: function(msg){
 						$('#ModalFacebook').modal('hide');
           				alert('Пост успешно опубликован!');
-          				location="http://192.168.88.1/wifi.html";
+          				location="<?php echo $routerAdmin; ?>";
 						}
 						});       
                    }
