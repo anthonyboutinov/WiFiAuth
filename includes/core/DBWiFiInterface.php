@@ -111,7 +111,6 @@
 			$this->sanitize($routerPassword);
 			
 			$sql = 'SELECT ID_DB_USER, IS_ACTIVE, ROUTER_PASSWORD FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' AND ROUTER_LOGIN=\''.$router_login.'\'';
-			
 			$result = $this->conn->query($sql);
 			if ($result === false) {
 				die("Error with query $sql");
@@ -126,11 +125,11 @@
 							return $row['ID_DB_USER'];
 						}
 					} else {
-						die("Error #2: Credentials for router $router_login are incorrect. 0");
+						die("Error #2: Credentials for router $router_login are incorrect.");
 					}
 				}
 			} else {
-				die("Error #2: Credentials for router $router_login are incorrect. 1");
+				die("Error #2: Credentials for router $router_login are incorrect.");
 			}
 		}
 

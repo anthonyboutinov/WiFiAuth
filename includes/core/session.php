@@ -101,7 +101,7 @@
 			
 			//	Иначе получить данные от роутера для функционирования страницы login
 			
-			$router_login = 'd8:a2:5e:8c:db:fe';		// MAC адрес роутера	
+			$router_login = 'chopchop';		// MAC адрес роутера	
 			$router_pasword = password_hash('password', PASSWORD_BCRYPT); // Зашифрованный пароль от роутера
 		
 		}
