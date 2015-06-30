@@ -17,7 +17,7 @@
 // 				}
 
 				if ($database->is_superadmin()) {
-					echo "</a> <a href=\"superadmin-clients.php\"><small style=\"opacity: 0.3;\">as superadmin</small>";
+					echo "</a> <a href=\"superadmin-clients.php\" class=\"pretend-to-be\">".$database->getSuperadminName();
 				}
 			?></a>
 		</div>

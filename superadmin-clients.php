@@ -19,11 +19,13 @@
 					
 					<div class="page-wrapper">
 						
+						<?php if ($database->meetsAccessLevel('ROOT')) { ?>
 						<form action="admin-dashboard.php" method="post">
 							<input type="hidden" name="form-name" value="pretend-to-be">
 							<input type="hidden" name="pretend-to-be" value="2">
 							<input type="submit" value="Посмотреть админскую панель Chop-Chop">
 						</form>
+						<?php } ?>
 
 					 	<table class="table table-hover table-condensed">
 		 					<tr><td class="text-right">1</td><td class="text-center">Дубровин Добромысл</td></tr>

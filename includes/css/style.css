@@ -573,6 +573,12 @@ table.contains-fas .fa {
 .navbar-toggle .icon-bar {
   background-color: rgba(255, 255, 255, 0.9);
 }
+.navbar-header .pretend-to-be {
+  position: absolute;
+  bottom: 25px;
+  font-size: 85%;
+  opacity: 0.6;
+}
 /* eof NAVBAR */
 /* LOGIN PAGE */
 .login-page {

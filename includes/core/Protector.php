@@ -27,12 +27,8 @@ class Protector {
 		// то редиректнуть на начальную страницу
 		if (!$this->database->is_superadmin()) {
 			CommonFunctions::redirect($this->adminMainPage);
-// 			Notification::add("redirect to: ".$this->adminMainPage);
-// 			echo ("redirect to: ".$this->adminMainPage);
 		} else if ($this->database->is_superadmin() && !$this->database->meetsAccessLevel($acc_level_short_name)) {
 			CommonFunctions::redirect($this->superadminMainPage);
-// 			Notification::add("redirect to: ".$this->superadminMainPage);
-// 			echo ("redirect to: ".$this->superadminMainPage);
 		}
 	}
 	
@@ -49,19 +45,23 @@ class Protector {
 		if (!$this->database->is_db_user()) {
 			if ($this->database->is_superadmin()) {
 				CommonFunctions::redirect($this->superadminMainPage);
-// 				Notification::add("redirect to: ".$this->superadminMainPage);
-// 				echo ("redirect to: ".$this->superadminMainPage);
 			} else {
 				CommonFunctions::redirect($this->adminMainPage);
-// 				Notification::add("redirect to: ".$this->adminMainPage);
-// 				echo ("redirect to: ".$this->adminMainPage);;
 			}
 		}
 	}
 	
+	/**
+	 *	protectPageForbidSuperadmin
+	 *
+	 *	Защищает страницу из группы admin-... от доступа любым суперадмином.
+	 *	
+	 *	@author Anthony Boutinov
+	 */
 	public function protectPageForbidSuperadmin() {
 		if ($this->database->is_superadmin()) {
-			CommonFunctions::redirect($this->superadminMainPage);
+			Notification::addSessionMessage('Вы не имеете право доступа к странице, на которую пытались перейти.', 'warning');
+			CommonFunctions::redirect($this->adminMainPage);
 		}
 	}
 	
