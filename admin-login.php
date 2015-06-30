@@ -60,13 +60,11 @@
 			function reorderToLogin() {
 				$("#login").css('z-index', '5');
 				$("#password").css('z-index', '4');
-				alert("4");
 			}
 			
 			function reorderToPassword() {
 				$("#login").css('z-index', '4');
 				$("#password").css('z-index', '5');
-				alert("5");
 			}
 			
 			reorderToLogin();
