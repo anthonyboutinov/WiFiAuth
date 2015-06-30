@@ -31,12 +31,19 @@ body {
   margin-bottom: 0;
 }
 body,
-a {
+a,
+.btn-link {
   color: white;
 }
 i.fa-inverse {
   color: #ffffff;
 }
+.btn-link {
+  padding: 0;
+}
+.btn-link:active,
+.btn-link:hover,
+.btn-link:focus,
 a:hover,
 a:focus,
 a:active,
