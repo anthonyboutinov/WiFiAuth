@@ -24,6 +24,14 @@ $.extend({
 
 
 $(document).ready(function() {
+	
+	// включить подсказки
+	$('[data-toggle="tooltip"]').tooltip({'html': true});
+	
+	/* *
+	   * ГЕНЕРИРОВАНИЕ ПАРОЛЕЙ
+	   */
+
 	var generateTokenButton = $("#generate-token");
 	var generatePasswordButton = $("#generate-password");
 	
@@ -34,7 +42,7 @@ $(document).ready(function() {
 	genRouterToken();
 	
 	function genPassword() {
-		$("#password").val($.password(20,false));
+		$("#password").val($.password(4,false)+'-'+$.password(4,false)+'-'+$.password(4,false));
 	}
 	$(generatePasswordButton).click(genPassword);
 	genPassword();
