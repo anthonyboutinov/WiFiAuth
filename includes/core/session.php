@@ -28,7 +28,7 @@
 	// Если находится на открытой странице
 	if (isset($current_page_is_not_protected) && $current_page_is_not_protected) {
 		// Ничего не делать
-// 		Notification::add('DEBUG (includes/core/session.php): находится на открытой странице', 'warning');
+		Notification::add('DEBUG (includes/core/session.php): находится на открытой странице', 'warning');
 	} else
 	
 	// Если находится на странице авторизации
