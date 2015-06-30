@@ -19,7 +19,8 @@
 	
 	$routerAdmin = 'http://192.168.88.1/wifi.html';
 	
-	$wifiCaptivePage 		= ['login.php', 'wifihotspot.php', 'query.php', 'loginusingpass.php'];
+	$wifiCaptivePageMainPage = 'login.php';
+	$wifiCaptivePage 		= [$wifiCaptivePageMainPage, 'wifihotspot.php', 'query.php', 'loginusingpass.php'];
 	$adminLoginPage 		= 'admin-login.php';
 	$adminMainPage 			= 'admin-dashboard.php';
 	$superadminMainPage 	= 'superadmin-clients.php';
@@ -96,7 +97,7 @@
 			header("Location: $routerAdmin");
 			
 		} else {
-// 			Notification::add('DEBUG (includes/core/session.php): Получаются данные от роутера для функционирования страницы login', 'warning');
+			Notification::add('DEBUG (includes/core/session.php): Получаются фиктивные данные роутера ChopChop', 'warning');
 			
 			//	Иначе получить данные от роутера для функционирования страницы login
 			
@@ -114,7 +115,9 @@
 		// Если пользователь валиден
 		if ($database->is_valid()) {
 			
-			$_SESSION['id_cli'] = $database->getBDUserID();
+			if (!$database->is_router()) {
+				$_SESSION['id_cli'] = $database->getBDUserID();
+			}
 			
 			// Если надо запомнить, то сделать это
 			if ($remember_me) {

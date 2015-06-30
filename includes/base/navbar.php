@@ -9,13 +9,7 @@
 				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" href="admin-dashboard.php"><?php
-// 				$companyLogo = $database->getValueByShortName("LOGO")["BLOB_VALUE"];
-// 				if (!$companyLogo) {
-					echo $companyName;
-// 				} else {
-// 					echo '<img src="data:image/jpeg;base64,'.base64_encode($companyLogo['BLOB_VALUE']).'" title="'.$companyName.'" alt="'.$companyName.'">';
-// 				}
-
+				echo $companyName;
 				if ($database->is_superadmin()) {
 					echo "</a> <a href=\"superadmin-clients.php\" class=\"pretend-to-be\">".$database->getSuperadminName();
 				}

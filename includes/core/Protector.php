@@ -42,7 +42,9 @@ class Protector {
 	 *	@author Anthony Boutinov
 	 */
 	public function protectPageAdminPage() {
-		if (!$this->database->is_db_user()) {
+		if ($this->database->is_router()) {
+			CommonFunctions::redirect($wifiCaptivePageMainPage);
+		} else if (!$this->database->is_db_user()) {
 			if ($this->database->is_superadmin()) {
 				CommonFunctions::redirect($this->superadminMainPage);
 			} else {

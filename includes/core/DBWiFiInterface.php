@@ -4,6 +4,7 @@
 
 	class DBWiFiInterface extends DBInterface {
 		
+		var $is_router;
 		var $id_db_user = null;
 		var $id_db_user_editor = null;
 		var $id_min_access_level = null;
@@ -17,28 +18,22 @@
 		
 		function    __construct($servername, $username, $password, $dbname, $router_login, $router_pasword, $cli_login, $cli_password, $id_cli) {
 			parent::__construct($servername, $username, $password, $dbname);
-			
-			// session
-			//check login, if exists, then set id db user from it
-			//if session is over, try the code below
 						
-			if ($router_login && $router_pasword && !$cli_login && !$cli_password && !$id_cli) {
-				
+			if        ($router_login && $router_pasword && !$cli_login && !$cli_password && !$id_cli) {
 				// Get web user credentials (from router)
 				$this->id_db_user = $this->getWebUserByAuthenticatingViaRouterData($router_login, $router_pasword);
 				
 			} else if (!$router_login && !$router_pasword && $cli_login && $cli_password && !$id_cli) {
-				
 				// Get web user credentials (from live user) (login act)
 				$this->setWebUser($cli_login, $cli_password);
 				
 			} else if (!$router_login && !$router_pasword && !$cli_login && !$cli_password && $id_cli) {
-				
 				// Set id
 				$this->setWebUserByID($id_cli);
 			
 			} else if (!$router_login && !$router_pasword && !$cli_login && !$cli_password && !$id_cli) {
 				// Ничего не делать, база данных подключена.
+				
 			} else {
 				die('Error: DBWiFiTinterface constructor received bad parameters');
 			}
@@ -60,15 +55,13 @@
 			return $this->num_queries_performed;
 		}
 		
-/*
-		public function is_pretending() {
-			return isset($_SESSION['pretend-to-be']);
-		}
-*/
-		
 		# ======================================================================== #
 		# ==== ПЕРВИЧНАЯ ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ (АВТОРИЗАЦИЯ)                 ==== #
 		# ======================================================================== #
+		
+		public function is_router() {
+			return $this->is_router;
+		}
 		
 		public function is_superadmin() {
 			return isset($this->id_db_user_editor);
@@ -122,6 +115,7 @@
 						if ($row["IS_ACTIVE"] == 'F') {
 							die("Error #1: Router $router_login is disabled.");
 						} else {
+							$this->is_router = true;
 							return $row['ID_DB_USER'];
 						}
 					} else {
@@ -146,6 +140,7 @@
 				} else {
 					$this->id_db_user = $row['ID_DB_USER'];
 				}
+				$this->is_router = false;
 				return true;
 			}
 		}
