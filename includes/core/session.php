@@ -17,6 +17,7 @@
 	$id_cli = null;
 	$remember_me = false;
 	
+	$routerAdmin = 'http://192.168.88.1/wifi.html';
 	
 	$wifiCaptivePage 		= ['login.php', 'wifihotspot.php', 'query.php'];
 	$adminLoginPage 		= 'admin-login.php';
@@ -92,9 +93,7 @@
 			$id_cli = $_SESSION['id_cli'];
 			
 			// Пропустить в интернет напрямую без вывода страницы login
-			Notification::add('DEBUG (includes/core/session.php): НЕ РЕАЛИЗОВАНО! Пропустить в интернет напрямую без вывода страницы login', 'warning');
-			
-			// ...
+			header("Location: $routerAdmin");
 			
 		} else {
 // 			Notification::add('DEBUG (includes/core/session.php): Получаются данные от роутера для функционирования страницы login', 'warning');
