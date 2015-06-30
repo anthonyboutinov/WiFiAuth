@@ -56,7 +56,7 @@
 						<div class="form-group">
 								<label class="col-sm-3 control-label" for="company-name">Название</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" name="company-name" autocomplete="off" maxlength="255">
+									<input type="text" class="form-control" name="company-name" id="company-name" autocomplete="off" maxlength="255">
 								</div>
 
 						</div>
@@ -64,7 +64,7 @@
 						<div class="form-group">
 								<label class="col-sm-3 control-label" for="email">E-mail</label>							
 								<div class="col-sm-9">
-									<input type="text" class="form-control" name="email" autocomplete="off" maxlength="255">
+									<input type="text" class="form-control" name="email" id="email" autocomplete="off" maxlength="255">
 								</div>
 							</div>
 					</div>
@@ -76,14 +76,14 @@
 					<div class="form-horizontal">
 						
 						<div class="form-group">
-						  <label class="col-sm-3 control-label" for="mac-adress">MAC-адрес</label>							
+						  <label class="col-sm-3 control-label" for="router-login">Логин роутера</label>							
 							<div class="col-sm-9">
-								<input type="text" class="form-control" name="mac-adress" autocomplete="off" maxlength="1024">
+								<input type="text" class="form-control" name="router-login" id="router-login" autocomplete="off" maxlength="1024">
 							</div>
 						</div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label" for="mac-adress">Токен</label>	
+							<label class="col-sm-3 control-label" for="router-token">Токен</label>	
 							<div class="col-sm-9">
 								<div class="input-group">
 									<input type="text" class="form-control default-cursor"
@@ -105,9 +105,9 @@
 					<h2>Личный кабинет</h2>
 					<div class="form-horizontal">
 						<div class="form-group">
-						  <label class="col-sm-3 control-label" for="mac-adress">Логин</label>							
+						  <label class="col-sm-3 control-label" for="login">Логин</label>							
 							<div class="col-sm-9">
-								<input type="text" class="form-control" name="login" autocomplete="off" maxlength="255">
+								<input type="text" class="form-control" name="login" id="login" autocomplete="off" maxlength="255">
 							</div>
 						</div>
 
@@ -144,7 +144,7 @@
 				
 				<div class="page-wrapper">
 					<div class="action-buttons-mid-way-panel only-child">
-						<button type="button" class="btn btn btn-black gradient">Сохранить и активировать <i class="fa fa-toggle-on"></i></button>
+						<button type="button" class="btn btn btn-black gradient">Активировать и сохранить <i class="fa fa-toggle-on"></i></button>
 					</div>
 				</div>
 				 	

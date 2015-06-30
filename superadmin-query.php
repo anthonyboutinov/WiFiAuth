@@ -1,12 +1,12 @@
 <?php 
  	include 'includes/core/db_config.php';
 
- 	$email = 'optimisist@gmail.com';
- 	$name = 'Spot';
- 	$macAdress = '6C-AC-4C-68-38-BA';
- 	$login = 'tst';
- 	$password = 'tiyOHUC4YuuF65ivw6Q3';
- 	$routerPassword = 'R%g~/WaYBD~WMPZy';
+ 	$email = $_POST['email'];
+ 	$name = $_POST['company'];
+ 	$routerLogin = $_POST['routerlogin'];
+ 	$login = $_POST['login'];
+ 	$password = $_POST['password'];
+ 	$routerPassword = $_POST['router'];
 
- 	$database->addDBUser($name,$email,$macAdress,$routerPassword,$login,$password); 
+ 	$database->addDBUser($name,$email,$routerLogin,$routerPassword,$login,$password); 
 ?>

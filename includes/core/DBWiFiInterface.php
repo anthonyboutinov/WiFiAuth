@@ -625,19 +625,21 @@
 		}
 		
 
-		public function addDBUser ($name, $email,$macAdress,$routerPassword,$login,$password) {
+		public function addDBUser ($name, $email,$routerLogin,$routerPassword,$login,$password) {
  					
-			$this->sanitize($macAdress);
+			$this->sanitize($routerLogin);
 			$this->sanitize($routerPassword);
 			$this->sanitize($login);
 			$this->sanitize($password);
 			$this->sanitize($name);
 			$this->sanitize($email);
 
+			$password = password_hash($password, PASSWORD_BCRYPT);
+
 			$sql='INSERT INTO CM$DB_USER 
-			( IS_SUPERADMIN, MAC_ADDRESS, 
+			( IS_SUPERADMIN, ROUTER_LOGIN, 
 			ROUTER_PASSWORD, LOGIN, PASSWORD) 
-			VALUES ("F","'.$macAdress.'","'
+			VALUES ("F","'.$routerLogin.'","'
 							 .$routerPassword.'","'
 							 .$login.'","'
 							 .$password.'")';
