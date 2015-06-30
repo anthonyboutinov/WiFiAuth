@@ -189,6 +189,21 @@
 			return $out;
 		}
 		
+		public static function redirect($page) {
+			$base_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+			header("Location: $base_url/$page");
+			exit();
+		}
+		
+		public static function startsWith($needle, $haystack) {
+		    // search backwards starting from haystack length characters from the end
+		    return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
+		}
+		
+		public static function endsWith($needle, $haystack) {
+		    // search forward starting from end minus needle length characters
+		    return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
+		}
 		
 	}
 

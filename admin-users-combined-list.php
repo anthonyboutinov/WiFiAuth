@@ -1,4 +1,6 @@
-<?php include 'includes/core/vars.php';
+<?php
+	include 'includes/core/vars.php';
+	$protector->protectPageAdminPage();
 
 	$drawClients = true;
 	$drawLoyals = true;

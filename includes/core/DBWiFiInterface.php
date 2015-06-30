@@ -1,37 +1,116 @@
 <?php
 	
-	include 'includes/core/DBInterface.php';
+	include 'DBInterface.php';
 
 	class DBWiFiInterface extends DBInterface {
 		
-		var $id_db_user;
-		var $is_superadmin;
+		var $id_db_user = null;
+		var $id_db_user_editor = null;
+		var $id_min_access_level = null;
 		
-		var $tablePageLimit;
-		var $dashboardTablePreviewLimit;
+		var $superadmin_name = null;
 		
-		function __construct($servername, $username, $password, $dbname, $macAddress, $routerPassword) {
+		var $tablePageLimit = null;
+		var $dashboardTablePreviewLimit = null;
+		
+		var $access_level_accepted = null;
+		
+		function    __construct($servername, $username, $password, $dbname, $router_login, $router_pasword, $cli_login, $cli_password, $id_cli) {
 			parent::__construct($servername, $username, $password, $dbname);
 			
 			// session
 			//check login, if exists, then set id db user from it
 			//if session is over, try the code below
+						
+			if ($router_login && $router_pasword && !$cli_login && !$cli_password && !$id_cli) {
+				
+				// Get web user credentials (from router)
+				$this->id_db_user = $this->getWebUserByAuthenticatingViaRouterData($router_login, $router_pasword);
+				
+			} else if (!$router_login && !$router_pasword && $cli_login && $cli_password && !$id_cli) {
+				
+				// Get web user credentials (from live user) (login act)
+				$this->setWebUser($cli_login, $cli_password);
+				
+			} else if (!$router_login && !$router_pasword && !$cli_login && !$cli_password && $id_cli) {
+				
+				// Set id
+				$this->setWebUserByID($id_cli);
 			
-			// Check web user credentials
-			$this->id_db_user = $this->getWebUserByAuthenticatingViaMACAddress($macAddress, $routerPassword);
+			} else if (!$router_login && !$router_pasword && !$cli_login && !$cli_password && !$id_cli) {
+				// Ничего не делать, база данных подключена.
+			} else {
+				die('Error: DBWiFiTinterface constructor received bad parameters');
+			}
+						
+			if($this->is_valid()) {
+				$this->pretendToBe();
+				
+				// Get other data
+				$this->tablePageLimit = $this->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
+				$this->dashboardTablePreviewLimit = $this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT')['NUMBER_VALUE'];
+				
+			}
 			
-			// Get other data
-			$this->tablePageLimit = $this->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
-			$this->dashboardTablePreviewLimit = $this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT')['NUMBER_VALUE'];
+// 			Notification::add("Database interface constructor performed ".$this->num_queries_performed.' queries');
 						
 		}
 		
-		private function getWebUserByAuthenticatingViaMACAddress($macAddress, $routerPassword) {
-			$this->sanitize($macAddress);
+		public function getNumQueriesPerformed() {
+			return $this->num_queries_performed;
+		}
+		
+/*
+		public function is_pretending() {
+			return isset($_SESSION['pretend-to-be']);
+		}
+*/
+		
+		# ======================================================================== #
+		# ==== ПЕРВИЧНАЯ ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ (АВТОРИЗАЦИЯ)                 ==== #
+		# ======================================================================== #
+		
+		public function is_superadmin() {
+			return isset($this->id_db_user_editor);
+		}
+		
+		public function is_valid() {
+			return (isset($this->id_db_user_editor) || isset($this->id_db_user));
+		}
+		
+		public function is_db_user() {
+			return isset($this->id_db_user);
+		}
+		
+		private function setAcceccLevelAcceptedArray() {
+			$sql = 'SELECT AL.ID_ACCESS_LEVEL, AL.SHORT_NAME FROM CM$ACCESS_LEVEL AL';
+			$result = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
+			$result = CommonFunctions::extractSingleValueFromMultiValueArray($result, 'SHORT_NAME', 'ID_ACCESS_LEVEL');
+			
+			$out = array();
+			foreach ($result as $key => $value) {
+				if ($key >= $this->id_min_access_level) {
+					$out[] = $value;
+				}
+			}
+			
+			$this->access_level_accepted = $out;
+		}
+		
+		public function meetsAccessLevel($accl_short_name) {
+			foreach ($this->access_level_accepted as $value) {
+				if ($accl_short_name == $value) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		private function getWebUserByAuthenticatingViaRouterData($router_login, $routerPassword) {
+			$this->sanitize($router_login);
 			$this->sanitize($routerPassword);
 			
-			$sql = 'SELECT ID_DB_USER, IS_ACTIVE, ROUTER_PASSWORD FROM CM$DB_USER WHERE'." MAC_ADDRESS='$macAddress'";
-			
+			$sql = 'SELECT ID_DB_USER, IS_ACTIVE, ROUTER_PASSWORD FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' AND ROUTER_LOGIN=\''.$router_login.'\'';
 			$result = $this->conn->query($sql);
 			if ($result === false) {
 				die("Error with query $sql");
@@ -41,54 +120,115 @@
 				while($row = $result->fetch_assoc()) {
 					if (password_verify($row['ROUTER_PASSWORD'], $routerPassword)) { // 			
 						if ($row["IS_ACTIVE"] == 'F') {
-							die("Error #1: Router with MAC address $macAddress is disabled.");
+							die("Error #1: Router $router_login is disabled.");
 						} else {
 							return $row['ID_DB_USER'];
 						}
 					} else {
-						die("Error #2: Credentials for router with MAC address $macAddress are incorrect. 0");
+						die("Error #2: Credentials for router $router_login are incorrect.");
 					}
 				}
 			} else {
-				die("Error #2: Credentials for router with MAC address $macAddress are incorrect. 1");
+				die("Error #2: Credentials for router $router_login are incorrect.");
 			}
 		}
 
+		private function processVerifiedUser($row, $web_user) {
+			if ($row["IS_ACTIVE"] == 'F') {
+				Notification::add("Обслуживание аккаунта $web_user приостановлено", 'danger');
+				return false;
+			} else {
+				if ($row['IS_SUPERADMIN'] == 'T') {
+					$this->id_db_user_editor = $row['ID_DB_USER'];
+					$this->id_min_access_level = $row['ID_ACCESS_LEVEL'];
+					$this->superadmin_name = $row['LOGIN'];
+					$this->setAcceccLevelAcceptedArray();
+				} else {
+					$this->id_db_user = $row['ID_DB_USER'];
+				}
+				return true;
+			}
+		}
 
+		private function setWebUserByID($id) {
+			$this->sanitize($id);
+			
+			$sql = 
+			'SELECT U.ID_DB_USER, U.IS_ACTIVE, U.LOGIN, U.PASSWORD, U.ID_ACCESS_LEVEL, U.IS_SUPERADMIN
+			FROM CM$DB_USER U WHERE U.ID_DB_USER='.$id;
+			
+			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $id);
+			return $this->processVerifiedUser($result, $id);
+		}
 		
-		private function logInDBUser($web_user, $web_password) {
+		private function setWebUser($web_user, $web_password) {
 			$this->sanitize($web_user);
 			$this->sanitize($web_password);
 			
-			$sql = 'SELECT ID_DB_USER, IS_ACTIVE, PASSWORD FROM CM$DB_USER WHERE'." LOGIN='$web_user'";
+			$sql = 
+			'SELECT U.ID_DB_USER, U.IS_ACTIVE, U.LOGIN, U.PASSWORD, U.ID_ACCESS_LEVEL, U.IS_SUPERADMIN
+			FROM CM$DB_USER U WHERE LOWER(U.LOGIN)=LOWER(\''.$web_user.'\')';
 			
-			$result = $this->conn->query($sql);
-			if ($result === false) {
-				die("Error with query $sql");
-			}
+			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $web_user, true);
 			
-			if ($result->num_rows > 0) {
-				while($row = $result->fetch_assoc()) {
-					if (password_verify($web_password, $row['PASSWORD'])) {
-						if ($row["IS_ACTIVE"] == 'F') {
-							die("Error #3: Account $web_user is disabled.");
-						} else {
-							return $row['ID_DB_USER'];
-						}
-					} else {
-						die("Error #4: Credentials for $web_user are incorrect.");
-					}
+			if ($result) {
+				if (password_verify($web_password, $result['PASSWORD'])) {
+					return $this->processVerifiedUser($result, $web_user);
+				} else {
+					Notification::add("Логин и(или) пароль неверны", 'danger');
+					return false;
 				}
 			} else {
-				die("Error #4: Credentials for $web_user are incorrect.");
+				Notification::add("Логин и(или) пароль неверны", 'danger');
+				return false;
 			}
 			
 		}
+		
+		private function pretendToBe() {
+			
+			if (isset($_POST['form-name']) && $_POST['form-name'] == 'pretend-to-be' && isset($_POST['pretend-to-be'])) {
+				$_SESSION['pretend-to-be'] = $_POST['pretend-to-be'];
+			}
+						
+			if (isset($_SESSION['pretend-to-be']) && $this->is_superadmin()) {
+				if (CommonFunctions::startsWith('/superadmin-', "{$_SERVER['REQUEST_URI']}")) {
+					unset($_SESSION['pretend-to-be']);
+				} else {
+					$this->id_db_user = $_SESSION['pretend-to-be'];
+				}
+			}
+		}
+		
+		public function getBDUserID() {
+			return isset($this->id_db_user_editor) ? $this->id_db_user_editor : $this->id_db_user;
+		}
+		
+		protected function getMixedDBUserID() {
+			if (!isset($_SESSION['pretend-to-be']) && $this->id_db_user_editor) {
+				return $this->id_db_user_editor;
+			} else {
+				return $this->id_db_user;
+			}
+		}
+		
+		public function getSuperadminName() {
+			return $this->superadmin_name;
+		}
+		
+		# ==== КОНЕЦ ПЕРВИЧНАЯ ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ (АВТОРИЗАЦИЯ) ==== #
+		# ======================================================================== #
+		
+		
+		# ============================================================= #
+		# ==== ПОЛУЧЕНИЕ ДАННЫХ ИЗ СЛОВАРЯ ==== #
+		# ============================================================= #
+
 		
 		
 		public function getValueByShortName($short_name) {
 			$this->sanitize($short_name);
-			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY IN (SELECT D.ID_DICTIONARY FROM CM$DICTIONARY D WHERE SHORT_NAME="'.$short_name.'") AND V.ID_DB_USER='.$this->id_db_user;
+			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY IN (SELECT D.ID_DICTIONARY FROM CM$DICTIONARY D WHERE SHORT_NAME="'.$short_name.'") AND V.ID_DB_USER='.$this->getMixedDBUserID();
 			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $short_name);
 			if ($result['VALUE'] == 'T' || $result['VALUE'] == 't') {
 				$result['VALUE'] = true;
@@ -100,8 +240,24 @@
 		
 		public function getValueByID($id) {
 			$this->sanitize($id);
-			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY='.$id.' AND V.ID_DB_USER = "'.$this->id_db_user.'"';
+			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY='.$id.' AND V.ID_DB_USER='.$this->getMixedDBUserID();
 			return $this->getQueryFirstRowResultWithErrorNoticing($sql, $id);
+		}
+		
+		# ==== КОНЕЦ ПОЛУЧЕНИЕ ДАННЫХ ИЗ СЛОВАРЯ ==== #
+		# ============================================================= #
+		
+		# ===================================================================================== #
+		# ==== PROTECTED ОБЩИЕ МЕТОДЫ ПРЕОБРАЗОВАНИЯ ДАННЫХ ==== #
+		# ===================================================================================== #
+		
+		protected function sanitizeFromTo(&$from, &$to) {
+			$this->sanitize($from);
+			if ($to == null) {
+				$to = $this->tablePageLimit;
+			} else {
+				$this->sanitize($to);
+			}
 		}
 		
 		protected function appendToSQLIsOrInArrayOfValues($values, &$sql) {
@@ -121,6 +277,9 @@
 				$sql = $sql.'="'.$values.'"';
 			}
 		}
+		
+		# ==== КОНЕЦ PROTECTED ОБЩИЕ МЕТОДЫ ПРЕОБРАЗОВАНИЯ ДАННЫХ ==== #
+		# ===================================================================================== #
 		
 		
 		/**
@@ -192,15 +351,6 @@
 						
 			$result = $this->getQueryResultWithErrorNoticing($sql);
 			return $this->keyRowsByColumn('SHORT_NAME', $result);
-		}	
-		
-		private function sanitizeFromTo(&$from, &$to) {
-			$this->sanitize($from);
-			if ($to == null) {
-				$to = $this->tablePageLimit;
-			} else {
-				$this->sanitize($to);
-			}
 		}
 		
 		public function getLoginActs($from = 0, $to = null) {
@@ -318,9 +468,9 @@
 		}
 		
 		public function getMainStatsTable($num_days) {
-			
+
 			$login_options = $this->getLoginOptions();
-			
+
 			$sql =
 			'SELECT
 				DATE_FORMAT(D.DATE, "new Date(%Y, %m, %d)") AS JSON_DATE,';			
@@ -463,12 +613,6 @@
 			
 		}
 		
-		public function getDBUsers(){
-
-			$sql='SELECT LOGIN FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' ORDER BY LOGIN ASC';
-			return  $this->getQueryResultWithErrorNoticing($sql);
-
-		}
 		
 		// ========= Функции, изменяющие данные в БД =========
 		
@@ -493,8 +637,6 @@
             $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не логировать, если нет результатов в запросе*/);
 
             if($result == null) {
-
-            	if($log_opt==1) {																																															
             	
             	$sql = 'insert into CM$USER 
             	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,ID_DB_USER_MODIFIED)  values( '
@@ -505,18 +647,6 @@
                          .$user_href.'", '
                          .$this->id_db_user.')';
 
-                echo $sql;
-
-  				} else {
-            	$sql = 'insert into CM$USER 
-            	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,ID_DB_USER_MODIFIED)  values( '
-            		     .$log_opt.', STR_TO_DATE("'
-            			 .$b_date.'","%m/%d/%Y "),"'
-                         .$first_name.' '
-                         .$last_name.'","'
-                         .$user_href.'", '
-                         .$this->id_db_user.')';	
-  				}
             	$this->getQueryResultWithErrorNoticing($sql);
 
             	$sql = 'select ID_USER from CM$USER order by ID_USER desc limit 0, 1';
@@ -624,62 +754,128 @@
 			
 		}
 		
+		public function getDBUsers(){
 
+
+
+			$sql='SELECT LOGIN FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' ORDER BY LOGIN ASC';
+
+			return  $this->getQueryResultWithErrorNoticing($sql);
+
+
+
+		}
+		
 		public function addDBUser ($name, $email,$routerLogin,$routerPassword,$login,$password) {
+
  					
+
 			$this->sanitize($routerLogin);
+
 			$this->sanitize($routerPassword);
+
 			$this->sanitize($login);
+
 			$this->sanitize($password);
+
 			$this->sanitize($name);
+
 			$this->sanitize($email);
+
+
 
 			$password = password_hash($password, PASSWORD_BCRYPT);
 
+
+
 			$sql='INSERT INTO CM$DB_USER 
+
 			( IS_SUPERADMIN, ROUTER_LOGIN, 
+
 			ROUTER_PASSWORD, LOGIN, PASSWORD) 
+
 			VALUES ("F","'.$routerLogin.'","'
+
 							 .$routerPassword.'","'
+
 							 .$login.'","'
+
 							 .$password.'")';
 
+
+
 			
+
 			$this->getQueryResultWithErrorNoticing($sql);
 
+
+
 			$sql = 'SELECT ID_DB_USER FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' ORDER BY ID_DB_USER DESC LIMIT 0, 1';
+
+
+
+
 
 
 
 			$id_db_client = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DB_USER'];
 
 
+
+
+
 			 $sql = 'SELECT E.ID_DICTIONARY, E.SHORT_NAME, E.DEFAULT_VALUE FROM CM$DICTIONARY E WHERE E.ID_PARENT in 
+
 				(SELECT B.ID_DICTIONARY FROM 
+
 				CM$DICTIONARY B WHERE B.ID_PARENT IN
+
 				(SELECT F.ID_DICTIONARY FROM 
+
 				 CM$DICTIONARY F WHERE F.SHORT_NAME = "VARS"))';
+
 			$dictionary_result = $this->getQueryResultWithErrorNoticing($sql);
 
+
+
 			$sql = "";
+
 			while ($row = $dictionary_result->fetch_assoc()) {
+
+
 
 				if ($row['SHORT_NAME']=='EMAIL'){
 
+
+
 				$sql = 'INSERT INTO SP$VAR (ID_DICTIONARY,VALUE,ID_DB_USER) VALUES ('.$row['ID_DICTIONARY'].',"'.$email.'",'.$id_db_client.');';
+
 				} else if ($row['SHORT_NAME']=='COMPANY_NAME'){
 
+
+
 				$sql =  'INSERT INTO SP$VAR (ID_DICTIONARY,VALUE,ID_DB_USER) VALUES ('.$row['ID_DICTIONARY'].',"'.$name.'",'.$id_db_client.');';
+
 				} else {
 
+
+
 					$val = isset($row['DEFAULT_VALUE']) ? "'".$row['DEFAULT_VALUE']."'" : 'NULL';
+
 					$sql = 'INSERT INTO SP$VAR (ID_DICTIONARY,VALUE,ID_DB_USER) VALUES ('.$row['ID_DICTIONARY'].','.$val.','.$id_db_client.');';	
 
+
+
 				}
+
 				$this->getQueryResultWithErrorNoticing($sql);
+
 			}
+
 					
+
 		}
+		
 		public function updateDBUserPassowrd() {
 
 			if (!$this->postIsFine(['old-password', 'password', 'repeat-password'])) {
@@ -717,5 +913,4 @@
 		// ========= EOF Функции, изменяющие данные в БД =========
 		
 	}
-
 ?>

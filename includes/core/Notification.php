@@ -1,5 +1,7 @@
 <?php
 	
+	include_once 'CommonFunctions.php';
+	
 	/**
 	 *	class Notification
 	 *
@@ -13,6 +15,8 @@
 	class Notification {
 		
 		private static $message = array();
+		
+		const SESSION_VAR_PREFIX = 'Notification-';
 				
 		public static function add($msg, $kind = 'info') {
 			
@@ -44,22 +48,18 @@
 			return Notification::$message;
 		}
 		
-		/*
-public static function addPOST() {
-			
-			$kind = 'info';
-			
-			$msg = "<b>POST request data:</b><table class=\"table\">";
-		    foreach ($_POST as $key => $value) {
-		        $msg = $msg."<tr><td>$key</td><td>$value</td></tr>";
-		    }
-		    $msg = "</table>";
-		    
-		    Notification::$message[$kind] =
-				array_key_exists($kind, Notification::$message) ? Notification::$message[$kind].'<br>'.$msg : $msg;
+		public static function addSessionMessage($msg, $kind = 'warning') {
+			$_SESSION['Notification-'.$kind] = (isset($_SESSION['Notification-'.$kind]) ? $_SESSION['Notification-warning'].'<br>' : '').$msg;
 		}
-*/
 		
+	}
+	
+	// добавить POST Notification данные
+	foreach ($_SESSION as $key => $value) {
+		if (CommonFunctions::startsWith(Notification::SESSION_VAR_PREFIX, $key)) {
+			Notification::add($value, substr($key, strlen(Notification::SESSION_VAR_PREFIX)));
+			unset($_SESSION[$key]);
+		}
 	}
 	
 	

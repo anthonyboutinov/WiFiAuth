@@ -15,6 +15,10 @@
 // 				} else {
 // 					echo '<img src="data:image/jpeg;base64,'.base64_encode($companyLogo['BLOB_VALUE']).'" title="'.$companyName.'" alt="'.$companyName.'">';
 // 				}
+
+				if ($database->is_superadmin()) {
+					echo "</a> <a href=\"superadmin-clients.php\" class=\"pretend-to-be\">".$database->getSuperadminName();
+				}
 			?></a>
 		</div>
 

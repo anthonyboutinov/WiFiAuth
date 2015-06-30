@@ -1,9 +1,14 @@
-<?php	include 'includes/core/db_config.php';
+<?php
+	include 'includes/core/vars.php';
+	$protector->protectPageAdminPage();
+	$protector->protectPageForbidSuperadmin();
 	
 	$dictionary_branches = ['POST', 'GENERAL_FIELDS', 'ADMIN_DISPLAY_SETTINGS', 'LOGIN_OPTIONS', 'PASSWORD'];
 
 	$updateDBUserPasswordResponce = null;
 	$processSettingsUpdateResponce = null;
+	
+	$additionalScripts = "";
 		
 	if (isset($_POST['form-name'])) {
 		if ($_POST['form-name'] == 'admin-settings') {
@@ -12,10 +17,6 @@
 			$updateDBUserPasswordResponce = $database->updateDBUserPassowrd();
 		}
 	}
-	
-	
-	
-	include 'includes/core/vars.php';
 	
 ?><!DOCTYPE html>
 <html lang="ru">
@@ -92,6 +93,12 @@
 												</span>
 							                </span>
 											<input type="text" class="form-control" readonly>
+											<span class="input-group-btn">
+												<span class="btn btn-black">
+													<i class="fa fa-times"></i>
+												</span>
+												<input type="checkbox" class="form-control hidden" name="<?=$key;?>-delete" id="<?=$key;?>-delete" value="1">
+											</span>
 										</div>
 										<?php
 											
