@@ -60,7 +60,7 @@ class Protector {
 	 */
 	public function protectPageForbidSuperadmin() {
 		if ($this->database->is_superadmin()) {
-			Notification::addSessionMessage('Вы не имеете право доступа к странице, на которую пытались перейти.', 'warning');
+			Notification::addNextPage('Вы не имеете право доступа к странице, на которую пытались перейти.', 'warning');
 			CommonFunctions::redirect($this->adminMainPage);
 		}
 	}

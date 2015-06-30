@@ -5,26 +5,41 @@
 	/**
 	 *	class Notification
 	 *
-	 *	Статический класс Уведомление, в который можно добавлять сообщения (add)
-	 *	и получать список всех сообщений (getMessages).
-	 *	Сообщения группируются по их типу. Тип сообщения можно указать 
-	 *	при добавлении сообщения. Тип сообщения может принимать любое значение 
-	 *	из множества (primary, success, info, warning, dander).
-	 *	По умолчанию, сообщения имеют тип info.
+	 *	РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РєР»Р°СЃСЃ РЈРІРµРґРѕРјР»РµРЅРёРµ, РІ РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РЅРѕ РґРѕР±Р°РІР»СЏС‚СЊ СЃРѕРѕР±С‰РµРЅРёСЏ (add)
+	 *	Рё РїРѕР»СѓС‡Р°С‚СЊ СЃРїРёСЃРѕРє РІСЃРµС… СЃРѕРѕР±С‰РµРЅРёР№ (getMessages).
+	 *	РЎРѕРѕР±С‰РµРЅРёСЏ РіСЂСѓРїРїРёСЂСѓСЋС‚СЃСЏ РїРѕ РёС… С‚РёРїСѓ. РўРёРї СЃРѕРѕР±С‰РµРЅРёСЏ РјРѕР¶РЅРѕ СѓРєР°Р·Р°С‚СЊ 
+	 *	РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё СЃРѕРѕР±С‰РµРЅРёСЏ. РўРёРї СЃРѕРѕР±С‰РµРЅРёСЏ РјРѕР¶РµС‚ РїСЂРёРЅРёРјР°С‚СЊ Р»СЋР±РѕРµ Р·РЅР°С‡РµРЅРёРµ 
+	 *	РёР· РјРЅРѕР¶РµСЃС‚РІР° (primary, success, info, warning, danger, error).
+	 *	РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, СЃРѕРѕР±С‰РµРЅРёСЏ РёРјРµСЋС‚ С‚РёРї info.
 	 */
 	class Notification {
-		
+
 		private static $message = array();
-		
+
 		const SESSION_VAR_PREFIX = 'Notification-';
-				
+
+
+		/**
+		 *	add
+		 *
+		 *	Р”РѕР±Р°РІРёС‚СЊ СѓРІРµРґРѕРјР»РµРЅРёРµ
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param ($msg) (string)	РЎРѕРѕР±С‰РµРЅРёРµ
+		 *	@param ($kind) (string)	РўРёРї СЃРѕРѕР±С‰РµРЅРёСЏ. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, 'warning'.
+		 */	
 		public static function add($msg, $kind = 'info') {
+			
+			if ($kind == 'error') {
+				$kind = 'danger';
+			}
 			
 			if (is_array($msg)) {
 				$msg = print_r($msg, true);
 			} else {
 			
-				// обрамляет SQL код в теги <pre></pre>, если замечает его
+				// РѕР±СЂР°РјР»СЏРµС‚ SQL РєРѕРґ РІ С‚РµРіРё <pre></pre>, РµСЃР»Рё Р·Р°РјРµС‡Р°РµС‚ РµРіРѕ
 				$lookupForSQL = ['select', 'insert into'];
 				$foundSQL = false;
 				foreach ($lookupForSQL as $value) {
@@ -44,17 +59,38 @@
 				array_key_exists($kind, Notification::$message) ? Notification::$message[$kind].'<br>'.$msg : $msg;
 		}
 		
+		
+		/**
+		 *	getMessages
+		 *
+		 *	РџРѕР»СѓС‡РёС‚СЊ РјР°СЃСЃРёРІ СЃРѕРѕР±С‰РµРЅРёР№
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@return (array[kind => message (string)])		РЎРѕРѕР±С‰РµРЅРёСЏ
+		 */
 		public static function getMessages() {
 			return Notification::$message;
 		}
 		
-		public static function addSessionMessage($msg, $kind = 'warning') {
+		
+		/**
+		 *	addNextPage
+		 *
+		 *	Р”РѕР±Р°РІР»СЏРµС‚ СѓРІРµРґРѕРјР»РµРЅРёРµ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂР°РЅРёС†Сѓ, РєРѕС‚РѕСЂР°СЏ Р±СѓРґРµС‚ Р·Р°РіСЂСѓР¶РµРЅР°
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param ($msg) (string)	РЎРѕРѕР±С‰РµРЅРёРµ
+		 *	@param ($kind) (string)	РўРёРї СЃРѕРѕР±С‰РµРЅРёСЏ. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, 'warning'.
+		 */
+		public static function addNextPage($msg, $kind = 'warning') {
 			$_SESSION['Notification-'.$kind] = (isset($_SESSION['Notification-'.$kind]) ? $_SESSION['Notification-warning'].'<br>' : '').$msg;
 		}
 		
 	}
 	
-	// добавить POST Notification данные
+	// РґРѕР±Р°РІРёС‚СЊ POST Notification РґР°РЅРЅС‹Рµ
 	foreach ($_SESSION as $key => $value) {
 		if (CommonFunctions::startsWith(Notification::SESSION_VAR_PREFIX, $key)) {
 			Notification::add($value, substr($key, strlen(Notification::SESSION_VAR_PREFIX)));
