@@ -37,7 +37,7 @@
 
 						
 
-						<?php if ($database->meetsAccessLevel('ROOT')) { ?>
+<!-- 						<?php if ($database->meetsAccessLevel('ROOT')) { ?>
 
 						<form action="admin-dashboard.php" method="post">
 
@@ -49,7 +49,7 @@
 
 						</form>
 
-						<?php } ?>
+						<?php } ?> -->
 
 
 
@@ -80,6 +80,23 @@
 									<tr>
 
 										<td class="text-left"><?=$row['LOGIN'];?></td>
+										<td class="text-right">
+											<?php if ($database->meetsAccessLevel('ROOT')) { ?>
+
+												<form action="admin-dashboard.php" method="post">
+
+													<input type="hidden" name="form-name" value="pretend-to-be">
+
+													<input type="hidden" name="pretend-to-be" value="<?=$row['ID_DB_USER'];?>">
+
+													<button type="submit" class="btn btn-link">
+														<i class="fa fa-cogs"></i>
+													</button>
+
+												</form>
+
+											<?php } ?>
+										</td>
 
 									</tr>
 

@@ -11,6 +11,7 @@
 
     	Notification::addNextPage('Неверный пароль!','error');
     	CommonFunctions::redirect ("login.php");
+
     }
 
 ?>

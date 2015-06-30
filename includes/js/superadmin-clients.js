@@ -39,32 +39,5 @@ $(document).ready(function() {
 	$(generatePasswordButton).click(genPassword);
 	genPassword();
 
-    // function addNewDBUser() {
-
-    // var companyName;
-    // var email;
-    // var routerToken;
-    // var login;
-    // var password;
-    // var routerLogin;
-
-    // company = $("#company-name").val();
-    // email = $("#email").val();
-    // routerToken = $("#router-token").val();
-    // login = $("#login").val();
-    // password = $("#password").val();
-    // routerLogin = $("#router-login").
-
-    // $.ajax({
-    //         type: "POST",
-    //         url: "superadmin-query.php",
-    //         data: "company=" + company + "&email=" +email+"&router="+routerToken+"&login="+login+"&password="+password+"&roterlogin="+routerLogin,
-    //         success: function(msg){
-    //           alert("Пользователь добавлен!");
-    //         }
-    //         });
-    // }
-
-    // $("#addUser").click(addNewDBUser);
 	
 });
