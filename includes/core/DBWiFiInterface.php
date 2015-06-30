@@ -855,6 +855,15 @@
 					
 
 		}
+
+		public function setActiveDBUser($active,$db_user) {
+
+			$this->sanitize($active);
+			$this->sanitize($db_user);
+
+			$sql = 'update  CM$DB_USER set IS_ACTIVE="'.$active.'" where ID_DB_USER='.$db_user;
+			$this->getQueryResultWithErrorNoticing($sql);
+		}
 		
 		public function updateDBUserPassowrd() {
 

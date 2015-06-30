@@ -47,5 +47,48 @@ $(document).ready(function() {
 	$(generatePasswordButton).click(genPassword);
 	genPassword();
 
+
+    $("[data-id='enabled']").click(function (e) {
+        e.preventDefault();
+
+        var idUser;
+
+        idUser = $(this).attr("data-idDBUser");
+         $.ajax({
+                type: "POST",
+                url: "superadmin-query.php",
+                data:{ 
+                    'idUser': idUser, 
+                    'active':'F', 
+                    'form-name': 'enable-disable-user'
+                },
+                success: function(msg){
+                    setTimeout(function(){location.reload();}, 600);
+                }
+                }); 
+    });
+    
+    $("[data-id='disabled']").click(function (e) {
+        e.preventDefault();
+
+        var idUser;
+
+        idUser = $(this).attr("data-idDBUser");
+         $.ajax({
+                type: "POST",
+                url: "superadmin-query.php",
+                data:{ 
+                    'idUser': idUser , 
+                    'active':'T', 
+                    'form-name': 'enable-disable-user'
+                },
+                success: function(msg){
+                 setTimeout(function(){location.reload();}, 600);
+
+                }
+                }); 
+
+    });
+
 	
 });

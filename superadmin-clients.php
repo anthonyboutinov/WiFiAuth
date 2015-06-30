@@ -95,7 +95,7 @@
 
 										<?php if ($row['IS_ACTIVE'] =='T') { ?>
 											<td class="text right">
-												<a href="#" id="enabled" data-toggle="tooltip" data-placement="left" title="Приостановитьь обслуживание">
+												<a href="#" data-id="enabled" data-idDBUser="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Приостановить обслуживание">
 													<i class="fa fa-circle" ></i>
 												</a>
 											</td>
@@ -103,7 +103,7 @@
 										<?php } else  { ?>
 
 											<td class="text right">
-												<a href="#" id="disable">
+												<a href="#" data-id="disabled" data-idDBUser="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Возобновить обслуживание">
 													<i class="fa fa-circle-thin"></i>
 												</a>
 											</td>
@@ -132,6 +132,7 @@
 			<div class="col-md-8">
 
             	<form action = "superadmin-query.php" method="post">
+            		<input type="hidden" name="form-name" value="add-user">
 
 					<h1><i class="fa fa-user-plus"></i> Добавить клиента</h1> 
 
