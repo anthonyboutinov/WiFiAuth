@@ -63,8 +63,6 @@
 
 								$dbusers = $database->getDBUsers();
 
-
-
 								if ($dbusers->num_rows > 0) {
 
 									$i = 0;
@@ -73,10 +71,7 @@
 
 										$i++;
 
-							?>
-
-
-
+									?>
 									<tr>
 
 										<td class="text-left"><?=$row['LOGIN'];?></td>
@@ -90,13 +85,29 @@
 													<input type="hidden" name="pretend-to-be" value="<?=$row['ID_DB_USER'];?>">
 
 													<button type="submit" class="btn btn-link">
-														<i class="fa fa-cogs"></i>
+														<i class="fa fa-line-chart"></i>
 													</button>
 
 												</form>
 
 											<?php } ?>
 										</td>
+
+										<?php if ($row['IS_ACTIVE'] =='T') { ?>
+											<td class="text right">
+												<a href="#" id="enabled" data-toggle="tooltip" data-placement="left" title="Приостановитьь обслуживание">
+													<i class="fa fa-circle" ></i>
+												</a>
+											</td>
+
+										<?php } else  { ?>
+
+											<td class="text right">
+												<a href="#" id="disable">
+													<i class="fa fa-circle-thin"></i>
+												</a>
+											</td>
+										<?php } ?>
 
 									</tr>
 
@@ -146,11 +157,7 @@
 
 									</div>
 
-
-
 							</div>
-
-
 
 							<div class="form-group">
 
@@ -222,11 +229,7 @@
 
 							</div>
 
-
-
 						</div>
-
-						
 
 					</div>
 
@@ -280,11 +283,7 @@
 
 							</div>
 
-
-
 						</div>								
-
-				 	
 
 				 	</div>
 
@@ -300,7 +299,7 @@
 
 					
 
-					<div class="page-wrapper">
+<!-- 					<div class="page-wrapper">
 
 						<div class="action-buttons-mid-way-panel only-child">
 
@@ -328,7 +327,7 @@
 				</form>
          	</div>
 
-    	</div>
+    	</div> -->
 
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
 

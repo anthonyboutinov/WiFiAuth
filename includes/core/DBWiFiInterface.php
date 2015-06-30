@@ -753,7 +753,7 @@
 
 
 
-			$sql='SELECT LOGIN, ID_DB_USER FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' ORDER BY LOGIN ASC';
+			$sql='SELECT * FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' ORDER BY LOGIN ASC';
 
 			return  $this->getQueryResultWithErrorNoticing($sql);
 
