@@ -40,8 +40,8 @@
 				</div>	
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-		        <button type="button" class="btn btn-primary">Приостановить</button>
+		        <button type="button" class="btn btn-black" data-dismiss="modal">Отмена</button>
+		        <button type="button" class="btn btn-red">Приостановить</button>
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->

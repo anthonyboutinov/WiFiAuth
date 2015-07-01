@@ -726,6 +726,10 @@ body.admin-page-login .modal-image {
 .modal .modal-content {
   box-shadow: 0px 15px 50px rgba(0, 0, 0, 0.5);
 }
+.modal .modal-footer .btn-black,
+.modal .modal-footer .btn-red {
+  width: auto;
+}
 .modal-dialog.modal-black {
   margin-top: 0;
   margin-bottom: 0;
