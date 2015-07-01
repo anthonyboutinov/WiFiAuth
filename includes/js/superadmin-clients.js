@@ -56,19 +56,21 @@ $(document).ready(function() {
 
         var idUser;
 
+        $('#alertModal').modal('show');
+
         idUser = $(this).attr("data-idDBUser");
-         $.ajax({
-                type: "POST",
-                url: "superadmin-query.php",
-                data:{ 
-                    'idUser': idUser, 
-                    'active':'F', 
-                    'form-name': 'enable-disable-user'
-                },
-                success: function(msg){
-                    setTimeout(function(){location.reload();}, 600);
-                }
-                }); 
+         // $.ajax({
+         //        type: "POST",
+         //        url: "superadmin-query.php",
+         //        data:{ 
+         //            'idUser': idUser, 
+         //            'active':'F', 
+         //            'form-name': 'enable-disable-user'
+         //        },
+         //        success: function(msg){
+         //            setTimeout(function(){location.reload();}, 600);
+         //        }
+         //        }); 
     });
     
     $("[data-id='disabled']").click(function (e) {
