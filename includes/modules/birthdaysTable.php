@@ -24,8 +24,8 @@
     <figure class="front">
 <?php } ?>
 
-<h1>
-	<i class="fa fa-birthday-cake"></i> Дни рождения
+<h1 class="link flip-birthdays-card">
+	<span class="ignore-link-coloring"><i class="fa fa-birthday-cake"></i> Дни рождения</span>
 	<span class="options">
 		<?php if ($drawFullContent) { ?>
 		<a href="#" id="intellectual-view-toggle">
@@ -34,11 +34,7 @@
 		<i class="fa fa-question" id="option-help" data-toggle="tooltip" data-placement="left" title="
 			В&nbsp;таком представлении записи сортируются в&nbsp;соответсвтии с&nbsp;уровнем лояльности клиентов и&nbsp;близости их&nbsp;дня&nbsp;рождения.
 		"></i>
-		<?php } else { ?>
-		<a href="#" class="flip-birthdays-card">
-			<i class="fa fa-cogs"></i>
-		</a>
-		<?php } ?>
+		<?php } else { ?><i class="fa fa-cogs"></i><?php } ?>
 	</span>
 </h1>
 <div class="page-wrapper">
@@ -142,12 +138,10 @@
 <?php if (!$drawFullContent) { ?>
 	</figure>
     <figure class="back">
-	    <h1>
-			<i class="fa fa-birthday-cake"></i> Дни рождения
+	    <h1 class="link flip-birthdays-card">
+			<span class="ignore-link-coloring"><i class="fa fa-birthday-cake"></i> Дни рождения</span>
 			<span class="options">
-				<a href="#" class="flip-birthdays-card">
-					<i class="fa fa-chevron-circle-left"></i>
-				</a>
+				<i class="fa fa-chevron-circle-left"></i>
 			</span>
 		</h1>
 		<div class="page-wrapper">

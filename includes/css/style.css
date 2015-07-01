@@ -48,6 +48,9 @@ i.fa-inverse {
 .btn-link:active,
 .btn-link:hover,
 .btn-link:focus,
+.link:hover,
+.link:focus,
+.link:active,
 a:hover,
 a:focus,
 a:active,
@@ -65,6 +68,17 @@ a:active,
 .pagination > .active > span:hover {
   color: #d0eeeb;
   text-decoration: none;
+}
+.link:hover,
+.link:focus,
+.link:active {
+  cursor: hand;
+  cursor: pointer;
+}
+.link:hover .ignore-link-coloring,
+.link:focus .ignore-link-coloring,
+.link:active .ignore-link-coloring {
+  color: white;
 }
 .absolute-center-center {
   position: absolute;
@@ -587,7 +601,7 @@ table.contains-fas .fa {
 }
 .navbar-header .pretend-to-be {
   position: absolute;
-  bottom: 25px;
+  top: 10px;
   font-size: 85%;
   opacity: 0.6;
 }
