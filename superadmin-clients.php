@@ -8,8 +8,47 @@
 		<title>Добавить клиента</title>
 	</head>
 	<body class="admin-page simple-page">
+
+		<div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        <h4 class="modal-title">Внимание!</h4>
+		      </div>
+		      <div class="modal-body">
+
+		      <p> Вы хотите приостановить обслуживания пользователя.</p> 
+		      <p>Подтвердите свои права: введите пароль и логин </p>
+
+		      <div class="form-horizontal">
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="access-login">Логин</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" name="access-login" id="access-login" autocomplete="off" maxlength="255">
+						</div>
+					</div>
+
+					<div class="form-group">
+							<label class="col-sm-3 control-label" for="acess-password">Пароль</label>							
+							<div class="col-sm-9">
+								<input type="text" class="form-control" name="access-password" id="access-password" autocomplete="off" maxlength="255">
+							</div>
+					</div>
+
+				</div>	
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+		        <button type="button" class="btn btn-primary">Приостановить</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div>
+		
 		<div class="container glass-panel">
-			<?php include 'includes/base/superadmin-navbar.php'; ?>	
+			<?php include 'includes/base/superadmin-navbar.php'; ?>			
 			<div class = "row">
 				<div class = "col-md-4">
 					<h1><i class="fa fa-users"></i> Клиенты</h1> 
@@ -121,7 +160,7 @@
 									<input type="text" class="form-control" name="login" id="login" autocomplete="off" maxlength="255">
 								</div>
 							</div>
-
+							
 							<div class="form-group">
 								<label class="col-sm-3 control-label" for="password">Пароль</label>	
 								<div class="col-sm-9">
@@ -136,51 +175,14 @@
 									</div>
 								</div>
 							</div>
-						</div>								
-
+							
+						</div>
 				 	</div>
-
 					<div class="page-wrapper">
-
 						<div class="action-buttons-mid-way-panel only-child">
-
 							<button type="submit" class="btn btn btn-black gradient">Добавить <i class="fa fa-plus"></i></button>
-
 						</div>
-
 					</div>
-
-					
-
-<!-- 					<div class="page-wrapper">
-
-						<div class="action-buttons-mid-way-panel only-child">
-
-							<button type="button" class="btn btn btn-black gradient">Сохранить <i class="fa fa-floppy-o"></i></button>
-
-							<button type="button" class="btn btn btn-red gradient">Приостановить обслуживание <i class="fa fa-toggle-off"></i></button>
-
-						</div>
-
-					</div>
-
-					
-
-					<div class="page-wrapper">
-
-						<div class="action-buttons-mid-way-panel only-child">
-
-							<button type="button" class="btn btn btn-black gradient">Активировать и сохранить <i class="fa fa-toggle-on"></i></button>
-
-						</div>
-
-					</div>
-
-				 	
-				</form>
-         	</div>
-
-    	</div> -->
 
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
 		<script src="includes/js/superadmin-clients.js"></script>
