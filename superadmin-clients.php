@@ -14,26 +14,18 @@
 		    <div class="modal-content">
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		        <h4 class="modal-title">Внимание!</h4>
+		        <h4 class="modal-title">Подтвердите права для продолжения <i class="fa fa-lock"></i></h4>
 		      </div>
 		      <div class="modal-body">
 
 		      <p> Вы хотите приостановить обслуживания пользователя.</p> 
-		      <p>Подтвердите свои права: введите пароль и логин </p>
+		      <p>Подтвердите свои права: введите пароль </p>
 
 		      <div class="form-horizontal">
-
-					<div class="form-group">
-						<label class="col-sm-3 control-label" for="access-login">Логин</label>
-						<div class="col-sm-9">
-							<input type="text" class="form-control" name="access-login" id="access-login" autocomplete="off" maxlength="255">
-						</div>
-					</div>
-
 					<div class="form-group">
 							<label class="col-sm-3 control-label" for="acess-password">Пароль</label>							
 							<div class="col-sm-9">
-								<input type="text" class="form-control" name="access-password" id="access-password" autocomplete="off" maxlength="255">
+								<input type="password" class="form-control" name="access-password" id="access-password" autocomplete="off" maxlength="255">
 							</div>
 					</div>
 
@@ -41,7 +33,7 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-black" data-dismiss="modal">Отмена</button>
-		        <button type="button" class="btn btn-red">Приостановить</button>
+		        <button type="button" id="activeClient" class="btn btn-red">Приостановить</button>
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->

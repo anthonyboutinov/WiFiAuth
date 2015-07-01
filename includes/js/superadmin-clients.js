@@ -55,22 +55,38 @@ $(document).ready(function() {
         e.preventDefault();
 
         var idUser;
-
+        var password;
         $('#alertModal').modal('show');
-
+        $('#activeClient').click( function() {
         idUser = $(this).attr("data-idDBUser");
-         // $.ajax({
-         //        type: "POST",
-         //        url: "superadmin-query.php",
-         //        data:{ 
-         //            'idUser': idUser, 
-         //            'active':'F', 
-         //            'form-name': 'enable-disable-user'
-         //        },
-         //        success: function(msg){
-         //            setTimeout(function(){location.reload();}, 600);
-         //        }
-         //        }); 
+        password =  $('#access-password').val();
+        $.ajax({
+                type: "POST",
+                url: "superadmin-query.php",
+                data:{ 
+                    'password': password,
+                    'form-name': 'superadmin-confirm'
+                },
+                success: function(msg){
+
+                    console.log(msg);
+
+                    //  $.ajax({
+                    //         type: "POST",
+                    //         url: "superadmin-query.php",
+                    //         data:{ 
+                    //             'idUser': idUser, 
+                    //             'active':'F', 
+                    //             'form-name': 'enable-disable-user'
+                    //         },
+                    //         success: function(msg){
+                    //             setTimeout(function(){location.reload();}, 600);
+                    //         }
+                    //         }); 
+                    // }
+            }
+            }); 
+        });
     });
     
     $("[data-id='disabled']").click(function (e) {

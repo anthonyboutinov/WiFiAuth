@@ -75,6 +75,20 @@
 			return isset($this->id_db_user);
 		}
 		
+		public function superadminConfirmPassword($password) {
+			$this->sanitize($password);
+			$sql='SELECT PASSWORD FROM CM$DB_USER WHERE ID_DB_USER='.$this->$id_db_user;
+			$result = $this->getQueryResultWithErrorNoticing($sql);
+
+			if ($result->num_rows == 1) {
+				while($row = $result->fetch_assoc()) {
+					return password_verify($row['PASSWORD'], $password);
+
+				}
+			}
+
+
+		}
 		private function setAcceccLevelAcceptedArray() {
 			$sql = 'SELECT AL.ID_ACCESS_LEVEL, AL.SHORT_NAME FROM CM$ACCESS_LEVEL AL';
 			$result = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
