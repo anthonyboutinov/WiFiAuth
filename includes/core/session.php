@@ -66,7 +66,7 @@
 	
 	} else
 	
-	// Если находится не на странице Login страницах
+	// Если находится не на страницах Captive Portal
 	if (!in_array(basename($_SERVER['PHP_SELF']), $wifiCaptivePage)) {
 			
 		// Если не авторизован
@@ -86,7 +86,7 @@
 		
 	} else {
 		
-		// Если находится на странице login
+		// Если находится на страницах Captive Portal
 		
 		// Если авторизован
 		if (isset($_SESSION['id_cli'])) {
@@ -101,11 +101,19 @@
 		if (isset($_POST['router-login']) && isset($_POST['router-password'])) {
 			
 			// Получить данные от роутера для функционирования страницы login
-			$router_login =$_POST['router-login'];
+			$router_login   = $_POST['router-login'];
 			$router_pasword = password_hash($_POST['router-password'], PASSWORD_BCRYPT);
 		
+		} else
+		// Если данные роутера записаны в сессии
+		if (isset($_SESSION['router-login']) && isset($_SESSION['router-password'])) {
+			
+			// Возобновить
+			$router_login   = $_POST['router-login'];
+			$router_pasword = $_POST['router-password'];
+			
 		} else /* Если происходит заход без формы */ {
-			echo 'Отсутствуют данные для авторизации.';
+			echo 'Отсутствуют данные авторизации.';
 			exit();
 		}
 		
@@ -118,7 +126,10 @@
 		// Если пользователь валиден
 		if ($database->is_valid()) {
 			
-			if (!$database->is_router()) {
+			if ($database->is_router()) {
+				$_SESSION['router-login']    = $router_login;
+				$_SESSION['router-password'] = password_hash($router_pasword, PASSWORD_BCRYPT);
+			} else {
 				$_SESSION['id_cli'] = $database->getBDUserID();
 			}
 			

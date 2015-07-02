@@ -14,12 +14,17 @@
 			
 			<div class = "row">
 				<div class = "col-md-3 col-md-offset-3">
-					<h1><i class="fa fa-2x fa-users"></i><br>Клиенты 120</h1>
+					<h1><i class="fa fa-2x fa-users"></i><br><br>Клиенты 120</h1>
+				</div>
+				
+				<div class = "col-md-3">
+					<h1><i class="fa fa-2x fa-users"></i><br><br>Админы 12</h1>
 				</div>
 			</div>
 			
 		</div>
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
+		<?php include 'includes/js/superadmin.php'; ?>
 		<script src="includes/js/superadmin-clients.js"></script>
  	</body>
 </html>

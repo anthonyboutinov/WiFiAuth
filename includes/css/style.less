@@ -34,13 +34,23 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.table form {
+form {
 	margin: 0;
 	padding: 0;
 }
 
 .simple-font {
 	font-family: 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+.navbar-nav>li>form>.btn-link {
+	padding: 15px;
+	margin: -1px;
+	text-shadow:0 1px 0 rgba(255,255,255,.25);
+	
+	&:hover, &:active, &:focus {
+		background: rgba(0, 0, 0, 0.2);
+	}
 }
 
 .table {
@@ -316,7 +326,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#561112', end
 	display: block;
 	
 	&.fa-stack-1x {
-		background-size: 28% 46%;;	
+		background-size: 25% 42%;
 	}
 }
 

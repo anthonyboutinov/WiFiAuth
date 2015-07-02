@@ -3,7 +3,7 @@
 include_once 'session.php';
 
 if ($database == false) {
-	die('Debug error: vars.php');
+	die('DEBUG error in vars.php: $database not found');
 }
 
 // Название компании

@@ -123,9 +123,9 @@
 			$this->access_level_accepted = $out;
 		}
 		
-		private function getWebUserByAuthenticatingViaRouterData($router_login, $routerPassword) {
+		private function getWebUserByAuthenticatingViaRouterData($router_login, $router_password) {
 			$this->sanitize($router_login);
-			$this->sanitize($routerPassword);
+			$this->sanitize($router_password);
 			
 			$sql = 'SELECT ID_DB_USER, IS_ACTIVE, ROUTER_PASSWORD FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' AND ROUTER_LOGIN=\''.$router_login.'\'';
 			$result = $this->conn->query($sql);
@@ -135,7 +135,7 @@
 			
 			if ($result->num_rows == 1) {
 				while($row = $result->fetch_assoc()) {
-					if (password_verify($row['ROUTER_PASSWORD'], $routerPassword)) {
+					if (password_verify($row['ROUTER_PASSWORD'], $router_password)) {
 						if ($row["IS_ACTIVE"] == 'F') {
 							die("Error #1: Router $router_login is disabled.");
 						} else {
@@ -612,8 +612,8 @@
 					INNER JOIN CM$USER U ON U.ID_USER=LA.ID_USER
 					LEFT JOIN VW_CM$LOGIN_OPTION LO ON LO.ID_LOGIN_OPTION=U.ID_LOGIN_OPTION
 					WHERE LA.ID_DB_USER='.$this->id_db_user.'
-					AND LO.ID_LOGIN_OPTION='.$login_option['ID_LOGIN_OPTION'].'
-					AND DATE(LA.DATE_CREATED)=D.DATE
+						AND LO.ID_LOGIN_OPTION='.$login_option['ID_LOGIN_OPTION'].'
+						AND DATE(LA.DATE_CREATED)=D.DATE
 					) AS \''.$login_option['SHORT_NAME'].'\'';
 				
 			}
@@ -734,7 +734,9 @@
 		}
 		
 		
-		// ========= Функции, изменяющие данные в БД =========
+		# =================================================================== #
+		# ==== Функции, изменяющие данные в БД ==== #
+		# =================================================================== #
 		
 		public function addUser($first_name, $last_name, $user_href, $log_opt, $b_date)
 		{
@@ -744,18 +746,14 @@
 			$this->sanitize($log_opt);
 			$this->sanitize($b_date);
 			
-            if($log_opt=='vk')
-            	{
-            		$log_opt = 1;
-            	}
-            else
-            {
+			// FIXME: Раситано только на две социальные сети!!!
+            if($log_opt=='vk') {
+        		$log_opt = 1;
+        	} else {
             	$log_opt =2;
             }
             $sql  = 'select ID_USER from CM$USER where LINK="'.$user_href.'"';
-
             $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не логировать, если нет результатов в запросе*/);
-
             if($result == null) {
             	
             	$sql = 'insert into CM$USER 
@@ -874,26 +872,59 @@
 			
 		}
 		
-		public function getDBUsers(){
-
-
-
-			$sql='SELECT * FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' ORDER BY LOGIN ASC';
-
-			return  $this->getQueryResultWithErrorNoticing($sql);
-
-
-
+		/**
+		 *	getNonexistentVarsForDBUser
+		 *
+		 *	Получить список несуществующих переменных для заданного DB_USER
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param ($id_db_user) (integer)		id DB_USER, касательно которого необходимо получить данные
+		 *	@return (array)						Массив с результатом запроса
+		 */
+		private function getNonexistentVarsForDBUser($id_db_user) {
+			$sql =
+			'SELECT
+				E.ID_DICTIONARY,
+				E.SHORT_NAME,
+				E.DEFAULT_VALUE
+			FROM CM$DICTIONARY E
+			WHERE
+				E.ID_PARENT IN
+				(
+					SELECT B.ID_DICTIONARY
+					FROM CM$DICTIONARY B
+					WHERE B.ID_PARENT IN
+					(
+						SELECT F.ID_DICTIONARY
+						FROM CM$DICTIONARY F
+						WHERE F.SHORT_NAME = \'VARS\'
+					)
+				)
+				AND E.ID_DICTIONARY NOT IN
+				(
+					SELECT V.ID_DICTIONARY
+					FROM SP$VAR V
+					WHERE V.ID_DB_USER='.$id_db_user.'
+				)';
+			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
-		public function addDBUser ($name, $email,$routerLogin,$routerPassword,$login,$password) {
-			if (!$this->is_superadmin()) {
-				CommonFunctions::addNextPage('Access Level Violation Error', 'danger');
-				CommonFunctions::redirect($adminMainPage);
-			}
-
+		public function getDBUsers() {
+			$sql='SELECT * FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' ORDER BY LOGIN ASC';
+			return  $this->getQueryResultWithErrorNoticing($sql);
+		}
+		
+		protected function insertVarValue($id_dictionary, $value, $db_db_user) {
+			$value = isset($value) ? "'".$value."'" : 'NULL';
+			$sql = 'INSERT INTO SP$VAR (ID_DICTIONARY,VALUE,ID_DB_USER) VALUES ('.$id_dictionary.','.$value.','.$db_db_user.');';
+			echo $sql."<br>";
+			$this->getQueryResultWithErrorNoticing($sql);
+		}
+		
+		public function addDBUser($name, $email,$routerLogin,$router_password,$login,$password) {
 			$this->sanitize($routerLogin);
-			$this->sanitize($routerPassword);
+			$this->sanitize($router_password);
 			$this->sanitize($login);
 			$this->sanitize($password);
 			$this->sanitize($name);
@@ -902,92 +933,85 @@
 			$password = password_hash($password, PASSWORD_BCRYPT);
 
 			$sql='INSERT INTO CM$DB_USER 
-			( IS_SUPERADMIN, ROUTER_LOGIN, 
+			(IS_SUPERADMIN, ROUTER_LOGIN, 
 			ROUTER_PASSWORD, LOGIN, PASSWORD, ID_DB_USER_MODIFIED) 
-			VALUES ("F","'.$routerLogin.'","'
-							 .$routerPassword.'","'
-							 .$login.'","'
-							 .$password.'","'
-							 .$this->id_db_user_editor.'")';
-
-
+			VALUES (
+				"F","'.$routerLogin.'","'
+				.$router_password.'","'
+				.$login.'","'
+				.$password.'","'
+				.$this->id_db_user_editor.'")';
 			$this->getQueryResultWithErrorNoticing($sql);
-
-
 
 			$sql = 'SELECT ID_DB_USER FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' ORDER BY ID_DB_USER DESC LIMIT 0, 1';
-
-
-
-
-
-
-
 			$id_db_client = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DB_USER'];
 
+			// Получить информацию по полям, которых нет в таблице SP$VAR для этого пользователя
+			$dictionary_result = $this->getNonexistentVarsForDBUser($id_db_client);
 
-
-
-
-			 $sql = 'SELECT E.ID_DICTIONARY, E.SHORT_NAME, E.DEFAULT_VALUE FROM CM$DICTIONARY E WHERE E.ID_PARENT in 
-
-				(SELECT B.ID_DICTIONARY FROM 
-
-				CM$DICTIONARY B WHERE B.ID_PARENT IN
-
-				(SELECT F.ID_DICTIONARY FROM 
-
-				 CM$DICTIONARY F WHERE F.SHORT_NAME = "VARS"))';
-
-			$dictionary_result = $this->getQueryResultWithErrorNoticing($sql);
-
-
-
-			$sql = "";
-
-			while ($row = $dictionary_result->fetch_assoc()) {
-
-
-
-				if ($row['SHORT_NAME']=='EMAIL'){
-
-
-
-				$sql = 'INSERT INTO SP$VAR (ID_DICTIONARY,VALUE,ID_DB_USER) VALUES ('.$row['ID_DICTIONARY'].',"'.$email.'",'.$id_db_client.');';
-
-				} else if ($row['SHORT_NAME']=='COMPANY_NAME'){
-
-
-
-				$sql =  'INSERT INTO SP$VAR (ID_DICTIONARY,VALUE,ID_DB_USER) VALUES ('.$row['ID_DICTIONARY'].',"'.$name.'",'.$id_db_client.');';
-
-				} else {
-
-
-
-					$val = isset($row['DEFAULT_VALUE']) ? "'".$row['DEFAULT_VALUE']."'" : 'NULL';
-
-					$sql = 'INSERT INTO SP$VAR (ID_DICTIONARY,VALUE,ID_DB_USER) VALUES ('.$row['ID_DICTIONARY'].','.$val.','.$id_db_client.');';	
-
-
-
+			if ($dictionary_result->num_rows > 0) {
+				while ($row = $dictionary_result->fetch_assoc()) {
+					if ($row['SHORT_NAME']=='EMAIL'){
+						// Вставить email
+						$this->insertVarValue($row['ID_DICTIONARY'], $email, $id_db_client);
+					} else if ($row['SHORT_NAME']=='COMPANY_NAME'){
+						// Вставить name
+						$this->insertVarValue($row['ID_DICTIONARY'], $name, $id_db_client);
+					} else {
+						// Вставить значение по умолчанию для остальных
+						$this->insertVarValue($row['ID_DICTIONARY'], $row['DEFAULT_VALUE'], $id_db_client);
+					}
 				}
-
-				$this->getQueryResultWithErrorNoticing($sql);
-
 			}
-
-					
-
+		}
+		
+		protected function fixVarsForOneDBUser($id_db_user) {
+			// Получить информацию по полям, которых нет в таблице SP$VAR для этого пользователя
+			$result = $this->getNonexistentVarsForDBUser($id_db_user);
+			
+			if ($result->num_rows > 0) {
+				while($row = $result->fetch_assoc()) {
+					// Вставить значение по умолчанию
+					$this->insertVarValue($row['ID_DICTIONARY'], $row['DEFAULT_VALUE'], $id_db_user);
+				}
+			}
+			
+		}
+		
+		/**
+		 *	fixVarTable
+		 *
+		 *	"Починить" таблицу SP$VAR после добавления новых записей в CM$DICTIONARY или после неполного добавления нового DB_USER.
+		 *	Добавляет значения по умолчанию для несуществующих DB_USER'ов.
+		 *	
+		 *	@author Anthony Boutinov
+		 */
+		public function fixVarTable() {
+			// Получить список всех активных ID_DB_USER
+			$sql = 'select ID_DB_USER from CM$DB_USER where IS_ACTIVE=\'T\'';
+			$result = $this->getQueryResultWithErrorNoticing($sql);
+			
+			// Итерировать по ним
+			if ($result->num_rows > 0) {
+				while($row = $result->fetch_assoc()) {
+					// Добавить значение по умолчанию для каждого
+					$this->fixVarsForOneDBUser($row['ID_DB_USER']);	
+				}
+			}		
 		}
 
-		public function setActiveDBUser($active,$db_user) {
-
+		public function setActiveDBUser($active,$id_db_user) {
 			$this->sanitize($active);
-			$this->sanitize($db_user);
+			$this->sanitize($id_db_user);
 
-			$sql = 'update  CM$DB_USER set IS_ACTIVE="'.$active.'" where ID_DB_USER='.$db_user;
+			$sql = 'update  CM$DB_USER set IS_ACTIVE="'.$active.'" where ID_DB_USER='.$id_db_user;
 			$this->getQueryResultWithErrorNoticing($sql);
+			
+			// Если активирован
+			if ($active == 'T') {
+				// Починить для него недостающие переменные, если с момента его деактивации были добавлены новые VARS в CM$DICITONARY
+				$this->fixVarsForOneDBUser($id_db_user);
+			}
 		}
 		
 		public function updateDBUserPassowrd() {
@@ -1024,7 +1048,8 @@
 			
 		}
 		
-		// ========= EOF Функции, изменяющие данные в БД =========
+		# ==== КОНЕЦ Функции, изменяющие данные в БД ==== #
+		# =================================================================== #
 		
 	}
 ?>

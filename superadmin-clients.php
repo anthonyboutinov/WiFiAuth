@@ -65,7 +65,7 @@
 										<td class="text-left"><?=$row['LOGIN'];?></td>
 										<?php if ($database->meetsAccessLevel('ROOT')) { ?>
 											<td class="text-right">
-												<form action="admin-dashboard.php" method="post">
+												<form action="superadmin-query.php" method="post">
 													<input type="hidden" name="form-name" value="pretend-to-be">
 													<input type="hidden" name="pretend-to-be" value="<?=$row['ID_DB_USER'];?>">
 													<button type="submit" class="btn btn-link">
@@ -98,7 +98,7 @@
 				 	</div>
 				</div>
 			<div class="col-md-8">
-            	<form action = "superadmin-query.php" method="post">
+            	<form action="superadmin-query.php" method="post">
             		<input type="hidden" name="form-name" value="add-user">
 					<h1><i class="fa fa-user-plus"></i> Добавить клиента</h1> 
 					
@@ -185,6 +185,7 @@
 					</div>
 
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
+		<?php include 'includes/js/superadmin.php'; ?>
 		<script src="includes/js/superadmin-clients.js"></script>
  	</body>
 </html>
