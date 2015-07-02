@@ -18,23 +18,23 @@
 
 ?>
 
-<?php if (!$drawFullContent) { ?>
+<?php if ($birthdays->num_rows > 5 && !$drawFullContent) { ?>
 <section class="card-container">
   <div id="birthdays-card">
     <figure class="front">
 <?php } ?>
 
-<h1 class="link flip-birthdays-card">
+<h1 class="flip-birthdays-card<?php if ($birthdays->num_rows > 5) {echo ' link';} ?>">
 	<span class="ignore-link-coloring"><i class="fa fa-birthday-cake"></i> Дни рождения</span>
 	<span class="options">
-		<?php if ($drawFullContent) { ?>
+		<?php if ($birthdays->num_rows > 5 && $drawFullContent) { ?>
 		<a href="#" id="intellectual-view-toggle">
 			<i class="fa fa-toggle-<?=$intellectual_view == 1 ? 'on' : 'off';?>"></i><span class="hidden-xs"> Умная сортировка</span>
 		</a>
 		<i class="fa fa-question" id="option-help" data-toggle="tooltip" data-placement="left" title="
 			В&nbsp;таком представлении записи сортируются в&nbsp;соответсвтии с&nbsp;уровнем лояльности клиентов и&nbsp;близости их&nbsp;дня&nbsp;рождения.
 		"></i>
-		<?php } else { ?><i class="fa fa-cogs"></i><?php } ?>
+		<?php } else if ($birthdays->num_rows > 5) { ?><i class="fa fa-cogs"></i><?php } ?>
 	</span>
 </h1>
 <div class="page-wrapper">
@@ -135,7 +135,7 @@
 </div>
 
 
-<?php if (!$drawFullContent) { ?>
+<?php if ($birthdays->num_rows > 5 && !$drawFullContent) { ?>
 	</figure>
     <figure class="back">
 	    <h1 class="link flip-birthdays-card">

@@ -84,8 +84,8 @@
 		 *	
 		 *	@author Anthony Boutinov
 		 *	
-		 *	@param ($msg) (string)	Сообщение
-		 *	@param ($kind) (string)	Тип сообщения. По умолчанию, 'warning'.
+		 *	@param ($msg) (string)							Сообщение
+		 *	@param ($kind) (string)							Тип сообщения. По умолчанию, 'warning'.
 		 */
 		public static function addNextPage($msg, $kind = 'warning') {
 			$_SESSION['Notification-'.$kind] = (isset($_SESSION['Notification-'.$kind]) ? $_SESSION['Notification-warning'].'<br>' : '').$msg;

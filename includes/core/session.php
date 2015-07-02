@@ -109,8 +109,8 @@
 		if (isset($_SESSION['router-login']) && isset($_SESSION['router-password'])) {
 			
 			// Возобновить
-			$router_login   = $_POST['router-login'];
-			$router_pasword = $_POST['router-password'];
+			$router_login   = $_SESSION['router-login'];
+			$router_pasword = $_SESSION['router-password'];
 			
 		} else /* Если происходит заход без формы */ {
 			echo 'Отсутствуют данные авторизации.';
@@ -128,7 +128,7 @@
 			
 			if ($database->is_router()) {
 				$_SESSION['router-login']    = $router_login;
-				$_SESSION['router-password'] = password_hash($router_pasword, PASSWORD_BCRYPT);
+				$_SESSION['router-password'] = $router_pasword;
 			} else {
 				$_SESSION['id_cli'] = $database->getBDUserID();
 			}
