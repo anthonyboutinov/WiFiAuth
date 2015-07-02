@@ -96,14 +96,17 @@
 			// Пропустить в интернет напрямую без вывода страницы login
 			header("Location: $routerAdmin");
 			
-		} else {
-			Notification::add('DEBUG (includes/core/session.php): Получаются фиктивные данные роутера ChopChop', 'warning');
+		} else
+		// Если получаются данные от роутера
+		if (isset($_POST['router-login']) && isset($_POST['router-password'])) {
 			
-			//	Иначе получить данные от роутера для функционирования страницы login
-			
-			$router_login = 'chopchop';		// MAC адрес роутера	
-			$router_pasword = password_hash('password', PASSWORD_BCRYPT); // Зашифрованный пароль от роутера
+			// Получить данные от роутера для функционирования страницы login
+			$router_login =$_POST['router-login'];
+			$router_pasword = password_hash($_POST['router-password'], PASSWORD_BCRYPT);
 		
+		} else /* Если происходит заход без формы */ {
+			echo 'Отсутствуют данные для авторизации.';
+			exit();
 		}
 		
 	}

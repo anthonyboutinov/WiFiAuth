@@ -262,10 +262,10 @@
 					return $this->processVerifiedUser($result, $web_user);
 					
 				} else /* Если пароли не совпдают */ {
-										
+
 					// Если уже были неверные попытки ввода пароля
 					if ($result['NUM_FAILED_ATTEMPTS'] != null) {
-						
+
 						// Если эти попытки были давно
 						if ($result['LAST_FAILED_ATTEMPT_WAS_LONG_AGO'] == 'T') {
 							// То сбросить счетчики неверных паролей
@@ -274,7 +274,7 @@
 
 						// Если лимит ошибок превышен
 						if ($result['NUM_FAILED_ATTEMPTS'] >= $maxAttempts - 1) {
-							
+
 							// Заблокировать временно
 							$sql =
 							'update CM$DB_USER set
