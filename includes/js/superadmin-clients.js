@@ -24,7 +24,6 @@ $.extend({
   }
 });
 
-
 $(document).ready(function() {
 	
 	// включить подсказки
@@ -71,6 +70,10 @@ $(document).ready(function() {
          //            setTimeout(function(){location.reload();}, 600);
          //        }
          //        }); 
+    }).mouseenter(function() {
+	    $(this).find("i").removeAttr('class').addClass('fa fa-times-circle');
+    }).mouseleave(function() {
+	    $(this).find("i").removeAttr('class').addClass('fa fa-circle');
     });
     
     $("[data-id='disabled']").click(function (e) {
@@ -93,7 +96,10 @@ $(document).ready(function() {
                 }
                 }); 
 
+    }).mouseenter(function() {
+	    $(this).find("i").removeAttr('class').addClass('fa fa-dot-circle-o');
+    }).mouseleave(function() {
+	    $(this).find("i").removeAttr('class').addClass('fa fa-circle-o');
     });
-
 	
 });
