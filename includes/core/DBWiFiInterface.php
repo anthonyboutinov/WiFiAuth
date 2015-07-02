@@ -55,9 +55,10 @@
 			return $this->num_queries_performed;
 		}
 		
-		# ======================================================================== #
-		# ==== ПЕРВИЧНАЯ ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ (АВТОРИЗАЦИЯ)                 ==== #
-		# ======================================================================== #
+		# ========================================================================= #
+		# ==== PUBLIC ОПРЕДЕЛЕНИЕ ТИПА ПОЛЬЗОВАТЕЛЯ И ПРАВ ДОСТУПА ==== #
+		# ========================================================================= #
+
 		
 		public function is_router() {
 			return $this->is_router;
@@ -75,8 +76,40 @@
 			return isset($this->id_db_user);
 		}
 		
+		public function meetsAccessLevel($accl_short_name) {
+			foreach ($this->access_level_accepted as $value) {
+				if ($accl_short_name == $value) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		# ==== КОНЕЦ PUBLIC ОПРЕДЕЛЕНИЕ ТИПА ПОЛЬЗОВАТЕЛЯ И ПРАВ ДОСТУПА ==== #
+		# ========================================================================= #		
+		
+		# =============================================================== #
+		# ==== PUBLIC ПОЛУЧЕНИЕ ID ПОЛЬЗОВАТЕЛЯ ==== #
+		# =============================================================== #
+
+		
+		public function getBDUserID() {
+			return isset($this->id_db_user_editor) ? $this->id_db_user_editor : $this->id_db_user;
+		}
+		
+		public function getSuperadminName() {
+			return $this->superadmin_name;
+		}
+
+		# ==== КОНЕЦ PUBLIC ПОЛУЧЕНИЕ ID ПОЛЬЗОВАТЕЛЯ ==== #
+		# =============================================================== #
+		
+		# ======================================================================== #
+		# ==== ПЕРВИЧНАЯ ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ (АВТОРИЗАЦИЯ)                 ==== #
+		# ======================================================================== #
+		
 		private function setAcceccLevelAcceptedArray() {
-			$sql = 'SELECT AL.ID_ACCESS_LEVEL, AL.SHORT_NAME FROM CM$ACCESS_LEVEL AL';
+			$sql = 'SELECT AL.ID_ACCESS_LEVEL, AL.SHORT_NAME FROM CM$ACCESS_LEVEL AL ORDER BY AL.ORDER ASC';
 			$result = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
 			$result = CommonFunctions::extractSingleValueFromMultiValueArray($result, 'SHORT_NAME', 'ID_ACCESS_LEVEL');
 			
@@ -88,15 +121,6 @@
 			}
 			
 			$this->access_level_accepted = $out;
-		}
-		
-		public function meetsAccessLevel($accl_short_name) {
-			foreach ($this->access_level_accepted as $value) {
-				if ($accl_short_name == $value) {
-					return true;
-				}
-			}
-			return false;
 		}
 		
 		private function getWebUserByAuthenticatingViaRouterData($router_login, $routerPassword) {
@@ -111,7 +135,7 @@
 			
 			if ($result->num_rows == 1) {
 				while($row = $result->fetch_assoc()) {
-					if (password_verify($row['ROUTER_PASSWORD'], $routerPassword)) { // 			
+					if (password_verify($row['ROUTER_PASSWORD'], $routerPassword)) {
 						if ($row["IS_ACTIVE"] == 'F') {
 							die("Error #1: Router $router_login is disabled.");
 						} else {
@@ -156,32 +180,141 @@
 			return $this->processVerifiedUser($result, $id);
 		}
 		
+		private function updateNumFailedAttempts($id_db_user) {
+			$sql =
+			'update CM$DB_USER set
+				LAST_FAILED_ATTEMPT=NOW(),
+				NUM_FAILED_ATTEMPTS=IFNULL(NUM_FAILED_ATTEMPTS, 0)+1,
+				ID_DB_USER_MODIFIED='.$id_db_user.'
+			where ID_DB_USER='.$id_db_user;
+			$this->getQueryResultWithErrorNoticing($sql);
+			Notification::add("Логин и(или) пароль неверны", 'danger');
+		}
+		
+		private function resetFailedLoginAtteptFields($id_db_user) {
+			// Сбросить счетчики неверных паролей
+			$sql =
+			'update CM$DB_USER set
+				UNLOCK_AT=NULL,
+				LAST_FAILED_ATTEMPT=NULL,
+				NUM_FAILED_ATTEMPTS=NULL,
+				ID_DB_USER_MODIFIED='.$id_db_user.'
+			where ID_DB_USER='.$id_db_user;
+			$this->getQueryResultWithErrorNoticing($sql);
+		}
+		
 		private function setWebUser($web_user, $web_password) {
 			$this->sanitize($web_user);
 			$this->sanitize($web_password);
 			
+			$maxAttempts = 6; // Максимальное количество попыток, разрешенное на непрерывные попытки ввести пароль
+			$caution_wait_time_interval = 30; /* 30 минут: если неверно ввел пароль и с момента этого ввода пароля прошло больше 30 минут, то в новую попытку ввода пароля счетчик неверных попыток сбросится */
+			
 			$sql = 
-			'SELECT U.ID_DB_USER, U.IS_ACTIVE, U.LOGIN, U.PASSWORD, U.ID_ACCESS_LEVEL, U.IS_SUPERADMIN
+			'SELECT U.ID_DB_USER, U.IS_ACTIVE, U.LOGIN, U.PASSWORD, U.ID_ACCESS_LEVEL, U.IS_SUPERADMIN, U.NUM_FAILED_ATTEMPTS, U.LAST_FAILED_ATTEMPT,
+			CASE WHEN U.UNLOCK_AT IS NOT NULL
+		       THEN \'T\' ELSE \'F\'
+			END AS IS_LOCKED,
+			CASE WHEN U.UNLOCK_AT IS NOT NULL AND U.UNLOCK_AT < NOW()
+		       THEN \'T\' ELSE \'F\'
+			END AS PERFORM_UNLOCK,
+			CASE WHEN U.LAST_FAILED_ATTEMPT IS NOT NULL AND U.LAST_FAILED_ATTEMPT < DATE_SUB(NOW(), INTERVAL '.$caution_wait_time_interval.' MINUTE)
+		       THEN \'T\' ELSE \'F\'
+			END AS LAST_FAILED_ATTEMPT_WAS_LONG_AGO
 			FROM CM$DB_USER U WHERE LOWER(U.LOGIN)=LOWER(\''.$web_user.'\')';
 			
 			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $web_user, true);
 			
+			// Если логин найден
 			if ($result) {
+				
+				// если пользователь заблокирован
+				if ($result['IS_LOCKED'] == 'T') {
+					
+					// Если наступило время его разблокировать
+					if ($result['PERFORM_UNLOCK'] == 'T') {
+						
+						// Разблокировать его:
+						$sql =
+						'update CM$DB_USER set
+							UNLOCK_AT=NULL,
+							LAST_FAILED_ATTEMPT=NULL,
+							ID_DB_USER_MODIFIED='.$result['ID_DB_USER'].'
+						where ID_DB_USER='.$result['ID_DB_USER'];
+						$this->getQueryResultWithErrorNoticing($sql);
+						// Продолжить после этого if'а проверку пароля...
+						
+					} else { // Если время разблокировки еще не наступило
+						// Оповестить, что еще рано
+						Notification::add("Доступ к аккаунту ".$web_user." временно заблокирован по причине многократных попыток ввода неверного пароля в течение короткого времени. Блокировка истечет через час.", 'danger');
+						return false;
+						
+					}
+				}
+				
+				// Если пароли совпадают
 				if (password_verify($web_password, $result['PASSWORD'])) {
+					
+					// Сбросить счетчики неверных паролей
+					$this->resetFailedLoginAtteptFields($result['ID_DB_USER']);
+					
+					// Обработать верифицированного пользователя: запомнить в себе (this)
 					return $this->processVerifiedUser($result, $web_user);
-				} else {
-					Notification::add("Логин и(или) пароль неверны", 'danger');
+					
+				} else /* Если пароли не совпдают */ {
+										
+					// Если уже были неверные попытки ввода пароля
+					if ($result['NUM_FAILED_ATTEMPTS'] != null) {
+						
+						// Если эти попытки были давно
+						if ($result['LAST_FAILED_ATTEMPT_WAS_LONG_AGO'] == 'T') {
+							// То сбросить счетчики неверных паролей
+							$this->resetFailedLoginAtteptFields($result['ID_DB_USER']);
+						}
+
+						// Если лимит ошибок превышен
+						if ($result['NUM_FAILED_ATTEMPTS'] >= $maxAttempts - 1) {
+							
+							// Заблокировать временно
+							$sql =
+							'update CM$DB_USER set
+								LAST_FAILED_ATTEMPT=NULL,
+								NUM_FAILED_ATTEMPTS=NULL,
+								UNLOCK_AT=DATE_ADD(NOW(), INTERVAL 1 HOUR),'./* 1 час: установить момент разблокировки на «через 1 час» */'
+								ID_DB_USER_MODIFIED='.$result['ID_DB_USER'].'
+							where ID_DB_USER='.$result['ID_DB_USER'];
+							$this->getQueryResultWithErrorNoticing($sql);
+							Notification::add("Вы несколько раз неверно ввели пароль в течение короткого времени. Доступ в личный кабинет заблокирован на 1 час.", 'danger');
+							
+						} else /* Если не превышен еще*/ {
+
+							// Увеличить счетчик и выдать предупреждение
+							$this->updateNumFailedAttempts($result['ID_DB_USER']);
+							
+							// Если осталось 3 попытки ввода пароля
+							if ($result['NUM_FAILED_ATTEMPTS'] >= $maxAttempts - 3) {
+								
+								// Предупредить об этом
+								$num_tries_left = $maxAttempts - $result['NUM_FAILED_ATTEMPTS'] - 1;
+								$postfix = $num_tries_left == 1 ? 'а' : 'и';
+								Notification::add('У вас осталось '.$num_tries_left.' попытк'.$postfix.' ввода пароля, прежде чем вход в Личный кабинет будет (временно) заблокирован.', 'warning');
+							}
+						}
+						
+					} else /* Если пароль введен неверно в первый раз */ {
+						// Увеличить счетчик и выдать предупреждение
+						$this->updateNumFailedAttempts($result['ID_DB_USER']);
+					}
+					
 					return false;
 				}
-			} else {
+			} else /* Если логин не найден */ {
 				Notification::add("Логин и(или) пароль неверны", 'danger');
 				return false;
 			}
-			
 		}
-		
+				
 		private function pretendToBe() {
-			
 			if (isset($_POST['form-name']) && $_POST['form-name'] == 'pretend-to-be' && isset($_POST['pretend-to-be'])) {
 				$_SESSION['pretend-to-be'] = $_POST['pretend-to-be'];
 			}
@@ -195,20 +328,12 @@
 			}
 		}
 		
-		public function getBDUserID() {
-			return isset($this->id_db_user_editor) ? $this->id_db_user_editor : $this->id_db_user;
-		}
-		
 		protected function getMixedDBUserID() {
 			if (!isset($_SESSION['pretend-to-be']) && $this->id_db_user_editor) {
 				return $this->id_db_user_editor;
 			} else {
 				return $this->id_db_user;
 			}
-		}
-		
-		public function getSuperadminName() {
-			return $this->superadmin_name;
 		}
 		
 		# ==== КОНЕЦ ПЕРВИЧНАЯ ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ (АВТОРИЗАЦИЯ) ==== #

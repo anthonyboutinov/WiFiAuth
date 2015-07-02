@@ -38,6 +38,9 @@
 			if (is_array($msg)) {
 				$msg = print_r($msg, true);
 			} else {
+				
+				// убрать повторяющиеся пробелы
+				$msg = preg_replace('/\s+/', ' ',$msg);
 			
 				// обрамляет SQL код в теги <pre></pre>, если замечает его
 				$lookupForSQL = ['select', 'insert into'];
