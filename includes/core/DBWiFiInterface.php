@@ -915,10 +915,14 @@
 			return  $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
-		protected function insertVarValue($id_dictionary, $value, $db_db_user) {
+		protected function insertVarValue($id_dictionary, $value, $db_db_user, $echo_sql = false) {
 			$value = isset($value) ? "'".$value."'" : 'NULL';
 			$sql = 'INSERT INTO SP$VAR (ID_DICTIONARY,VALUE,ID_DB_USER) VALUES ('.$id_dictionary.','.$value.','.$db_db_user.');';
-			echo $sql."<br>";
+			
+			if ($echo_sql == true) {
+				echo $sql."<br>";
+			}
+			
 			$this->getQueryResultWithErrorNoticing($sql);
 		}
 		
@@ -965,14 +969,14 @@
 			}
 		}
 		
-		protected function fixVarsForOneDBUser($id_db_user) {
+		protected function fixVarsForOneDBUser($id_db_user, $echo_sql = false) {
 			// Получить информацию по полям, которых нет в таблице SP$VAR для этого пользователя
 			$result = $this->getNonexistentVarsForDBUser($id_db_user);
 			
 			if ($result->num_rows > 0) {
 				while($row = $result->fetch_assoc()) {
 					// Вставить значение по умолчанию
-					$this->insertVarValue($row['ID_DICTIONARY'], $row['DEFAULT_VALUE'], $id_db_user);
+					$this->insertVarValue($row['ID_DICTIONARY'], $row['DEFAULT_VALUE'], $id_db_user, $echo_sql);
 				}
 			}
 			
@@ -995,7 +999,7 @@
 			if ($result->num_rows > 0) {
 				while($row = $result->fetch_assoc()) {
 					// Добавить значение по умолчанию для каждого
-					$this->fixVarsForOneDBUser($row['ID_DB_USER']);	
+					$this->fixVarsForOneDBUser($row['ID_DB_USER'], true);	
 				}
 			}		
 		}

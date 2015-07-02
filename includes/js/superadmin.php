@@ -1,6 +1,10 @@
 <script>
-$(document).ready(function() {
-	<?php if ($database->meetsAccessLevel('ROOT')) { ?>
+<?php if ($database->meetsAccessLevel('ROOT')) { ?>
+	$(document).ready(function() {
+	
+		/* *
+		   * FIX-VAR-TABLE
+		 */
 	
 		var fixVarTableClicked = false;
 	
@@ -15,6 +19,7 @@ $(document).ready(function() {
 			
 			$.ajax({
                 type: "POST",
+                dataType: 'html',
                 url: "superadmin-query.php",
                 data:{ 
                     'form-name': 'fix-var-table'
@@ -22,14 +27,18 @@ $(document).ready(function() {
                 success: function(msg){
 					$(i).removeAttr('class').addClass('fa fa-fw fa-check');
 					fixVarTableClicked = false;
+					if (msg == undefined || msg == '') {
+						msg = "Не было внесено никаких изменений.";
+					}
+					addNotification(msg, 'success');
                 },
                 error: function(){
 					$(i).removeAttr('class').addClass('fa fa-fw fa-times').parent().attr('title', 'Ошибка');
+					addNotification('Ошибка при выполнении запроса', 'danger');
 					fixVarTableClicked = false;
                 }
             }); 
 		});
-	
-	<?php } ?>
-});
+	});
+<?php } ?>
 </script>

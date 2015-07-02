@@ -23,7 +23,7 @@
 	$wifiCaptivePage 		= [$wifiCaptivePageMainPage, 'wifihotspot.php', 'query.php', 'loginusingpass.php'];
 	$adminLoginPage 		= 'admin-login.php';
 	$adminMainPage 			= 'admin-dashboard.php';
-	$superadminMainPage 	= 'superadmin-clients.php';
+	$superadminMainPage 	= 'superadmin-dashboard.php';
 	
 
 	// Если находится на открытой странице
