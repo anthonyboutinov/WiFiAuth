@@ -65,7 +65,7 @@
 										<td class="text-left"><?=$row['LOGIN'];?></td>
 										<?php if ($database->meetsAccessLevel('ROOT')) { ?>
 											<td class="text-right">
-												<form action="superadmin-query.php" method="post">
+												<form action="admin-dashboard.php" method="post">
 													<input type="hidden" name="form-name" value="pretend-to-be">
 													<input type="hidden" name="pretend-to-be" value="<?=$row['ID_DB_USER'];?>">
 													<button type="submit" class="btn btn-link">
