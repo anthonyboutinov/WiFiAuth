@@ -34,7 +34,7 @@
 						</div>
 						<div class="modal-body">
 							<div class="form-group">
-								<label  for="phone">Номер телефона</label>
+								<label  for="phone">Введите&nbsp;номер&nbsp;телефона,<br>чтобы&nbsp;получить код&nbsp;для&nbsp;входа:</label>
 									<div class="input-group">
 									  <span class="input-group-addon" id="sizing-addon2">+7</span>
 									  <input type="phone" class="form-control" id="phone-form" aria-describedby="sizing-addon2">
@@ -45,12 +45,12 @@
 									</div>
 							</div>
 							<div class="form-group hidden" id="phone-pass-group">
-								<label  for="password">Пароль</label>
-								<input type="text" class="form-control position-relative" id="password" >
+								<label for="password">Введите&nbsp;4&#8209;х&#8209;значный&nbsp;код, доставленный&nbsp;по&nbsp;СМС&nbsp;:</label>
+								<input type="text" class="form-control position-relative" id="password" maxlength="4">
 							</div>
 						</div>
-						<div class="modal-footer hidden" id="footer-pass">
-							<a href="#" type="submit" class="btn btn-black gradient" id ="passwordButton" >Войти <i class="fa fa-sign-in"></i></a>
+						<div class="modal-footer">
+<!-- 							<a href="#" type="submit" class="btn btn-black gradient hidden" id ="passwordButton" >Войти <i class="fa fa-sign-in"></i></a> -->
 						</div>
 					</div>
 				<!-- </form> -->

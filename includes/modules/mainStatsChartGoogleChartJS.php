@@ -54,7 +54,7 @@ include_once('googleChartAPI.html');
 			hAxis: {
 				textStyle:{color: '#FFF'},
 				baselineColor: 'none',
-				gridlines: {color: 'none', count: 0},
+				gridlines: {color: 'none', count: 0}
 			},
 			vAxis: {
 				textStyle:{color: '#FFF'},

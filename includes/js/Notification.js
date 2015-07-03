@@ -8,6 +8,9 @@ function addNotification(msg, kind) {
 	
 }
 
-function failNotification() {
+function failNotification(logError) {
+	if (logError != undefined) {
+		console.log(logError);
+	}
 	addNotification('Ошибка при выполнении запроса. Попытайтесь еще раз.', 'danger');
 }

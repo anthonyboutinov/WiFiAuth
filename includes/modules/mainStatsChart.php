@@ -11,7 +11,7 @@
 		<select id="main-stats-chart-period">
 			<option value="365"<?php if ($temp == 365) {echo ' selected';} ?>>1 год</option>
 			<option value="183"<?php if ($temp == 183) {echo ' selected';} ?>>6 месяцев</option>
-			<option value="92"<?php if ($temp == 92) {echo ' selected';} ?>>3 месяца</option>
+			<option value="61"<?php if ($temp == 61) {echo ' selected';} ?>>2 месяца</option>
 			<option value="30"<?php if ($temp == 30) {echo ' selected';} ?>>1 месяц</option>
 		</select>
 	</span>
@@ -28,7 +28,11 @@
 <ul class="legend nav<?php if (!$drawFullContent) echo " not-draw-full-content";?>" id="legend">
 	<?php
 	
-	$chartLegendValues = $database->getLoginCountByLoginOption(30); // 30 days
+	if (isset($_SESSION['main-stats-chart-data-offset']) && isset($_SESSION['main-stats-chart-data-limit'])) {
+		$chartLegendValues = $database->getLoginCountByLoginOption($_SESSION['main-stats-chart-data-limit'], $_SESSION['main-stats-chart-data-offset']);
+	} else {
+		$chartLegendValues = $database->getLoginCountByLoginOption(30); // 30 days
+	}
 	
 	for ($i = 0; $i < $numberOfSocialNetworks; $i++) {
 	?>

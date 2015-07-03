@@ -98,11 +98,17 @@ a:active,
   right: 0;
   margin: auto;
 }
+.nav > li > a:focus,
+.nav > li > a:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
 input[type="text"],
 input[type="number"],
 input[type="url"],
 input[type="color"],
-input[type="password"] {
+input[type="password"],
+input[type="email"],
+input[type="phone"] {
   font-family: 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 input[type="text"] {
