@@ -19,6 +19,8 @@
 ?><script>
 $(document).ready(function(){
 
+	 $("input[type=\"phone\"]").numeric({ decimal: false, negative: false }, function() {this.value = "1"; this.focus(); });
+
 
 // Вертикальное позиционирование
 
@@ -157,30 +159,54 @@ $(document).ready(function(){
 	
 	$("#phoneButton").click(function(e) {  //функция входа по паролю
       e.preventDefault();
+
+      var phonenum = $('#phone-form').val();
+      phone = '7'+phonenum;
+	  if(phonenum) {
 			qu = {};
+	  
 		qu[0] = quo(1,9);
 		qu[1] = quo(1,9);
 		qu[2] = quo(1,9);
 		qu[3] = quo(1,9);
 		qu[4] = quo(1,9);
 		password = ""+qu[0]+qu[1]+qu[2]+qu[3]+qu[4];
-		phone = '7'+$('#phone-form').val();
 		$.ajax({
-			type: "POST",
-			url: "loginusingpass.php",
-			data: {
-				'phone': phone,
-				'password':password
-			},
+				type: "POST",
+				url: "loginusingpass.php",
+				data: {
+					'phone': phone,
+					'password':password
+				},
 			success: function(msg){
-			addNotification('Смс с кодом отправлено на ваш телефон','success');
+					if (msg.lastIndexOf('100',0) === 0) {
+					addNotification('Смс с кодом отправлено на ваш телефон','success');
+				} else {
+					failNotification();
+				}
 			$("#footer-pass").removeClass("hidden").addClass('animated fadelnUp');
 			$("#phone-pass-group").removeClass("hidden").addClass('animated fadelnUp');
 			},
 			fail: function(){
-				alert("Ошибка при отправке запроса!");
+				addNotification('Ошибка при отправке запроса','danger');
 			}
 		});
+
+ 			
+			$("#phoneButton").text("30");
+            var phoneTimer = window.setInterval(function() {
+            var timeCounter = $("#phoneButton").html();
+            var updateTime = eval(timeCounter)- eval(1);
+                $("#phoneButton").html(updateTime);
+
+                if(updateTime <= 0){
+                    clearInterval(phoneTimer);
+                }
+            }, 1000);
+	
+		} else{
+			addNotification('Телефон не введен','warning');
+		}
 	});
 
 
