@@ -33,7 +33,7 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-black" data-dismiss="modal">Отмена</button>
-		        <button type="button" id="disactiveClient" class="btn btn-red">Приостановить</button>
+		        <button type="submit" id="disactiveClient" class="btn btn-red">Приостановить</button>
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
@@ -63,7 +63,7 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-black" data-dismiss="modal">Отмена</button>
-		        <button type="button" id="activeClient" class="btn btn-red">Возобновить</button>
+		        <button type="submit" id="activeClient" class="btn btn-red">Возобновить</button>
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->

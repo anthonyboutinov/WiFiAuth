@@ -27,26 +27,33 @@
 		
 		<div class="modal fade" id="modalPassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-black">
-				<form>
+				<!-- <form> -->
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						</div>
 						<div class="modal-body">
 							<div class="form-group">
-								<label class="sr-only" for="phone">Телефон</label>
-								<input type="phone" class="form-control position-relative" id="phone" placeholder="Телефон">
+								<label  for="phone">Номер телефона</label>
+									<div class="input-group">
+									  <span class="input-group-addon" id="sizing-addon2">+7</span>
+									  <input type="phone" class="form-control" id="phone-form" aria-describedby="sizing-addon2">
+									   <div class="input-group-btn">
+										   <button class="btn btn-black" id="phoneButton"><i class="fa fa-arrow-circle-right"></i></button>
+									   
+									  </div>
+									</div>
 							</div>
-							<div class="form-group">
-								<label class="sr-only" for="password">Пароль</label>
-								<input type="password" class="form-control position-relative" id="password" placeholder="Пароль">
+							<div class="form-group hidden" id="phone-pass-group">
+								<label  for="password">Пароль</label>
+								<input type="text" class="form-control position-relative" id="password" >
 							</div>
 						</div>
-						<div class="modal-footer">
+						<div class="modal-footer hidden" id="footer-pass">
 							<a href="#" type="submit" class="btn btn-black gradient" id ="passwordButton" >Войти <i class="fa fa-sign-in"></i></a>
 						</div>
 					</div>
-				</form>
+				<!-- </form> -->
 			</div>
 		</div>
 
