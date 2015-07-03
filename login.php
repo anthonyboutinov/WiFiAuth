@@ -34,6 +34,10 @@
 						</div>
 						<div class="modal-body">
 							<div class="form-group">
+								<label class="sr-only" for="phone">Телефон</label>
+								<input type="phone" class="form-control position-relative" id="phone" placeholder="Телефон">
+							</div>
+							<div class="form-group">
 								<label class="sr-only" for="password">Пароль</label>
 								<input type="password" class="form-control position-relative" id="password" placeholder="Пароль">
 							</div>
