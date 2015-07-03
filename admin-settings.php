@@ -95,14 +95,6 @@
 													</span>
 								                </span>
 												<input type="text" class="form-control" readonly>
-<!--
-												<span class="input-group-btn">
-													<span class="btn btn-black">
-														<i class="fa fa-times"></i>
-													</span>
-													<input type="checkbox" class="form-control hidden" name="<?=$key;?>-delete" id="<?=$key;?>-delete" value="1">
-												</span>
--->
 											</div>
 											<?php
 										}
