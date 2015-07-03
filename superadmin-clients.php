@@ -5,7 +5,7 @@
 <html lang="ru">
 	<head>
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
-		<title>Добавить клиента</title>
+		<title>Добавление клиента — Панель администрирования Re[Spot]</title>
 	</head>
 	<body class="admin-page simple-page">
 
@@ -55,7 +55,7 @@
 					<div class="form-group">
 							<label class="col-sm-3 control-label" for="disable-password">Пароль</label>							
 							<div class="col-sm-9">
-								<input type="password" class="form-control" name="disable-password" id="disable-password" autocomplete="off" maxlength="255">
+								<input type="password" class="form-control" name="disable-password" id="disable-password" autocomplete="off" maxlength="64">
 							</div>
 					</div>
 
@@ -85,8 +85,8 @@
 									?>
 									<tr>
 										<td class="text-left"><?=$row['LOGIN'];?></td>
-										<td class="text-right">
-											<?php if ($database->meetsAccessLevel('ROOT')) { ?>
+										<?php if ($database->meetsAccessLevel('ROOT')) { ?>
+											<td class="text-right">
 												<form action="admin-dashboard.php" method="post">
 													<input type="hidden" name="form-name" value="pretend-to-be">
 													<input type="hidden" name="pretend-to-be" value="<?=$row['ID_DB_USER'];?>">
@@ -94,16 +94,16 @@
 														<i class="fa fa-line-chart"></i>
 													</button>
 												</form>
-											<?php } ?>
-										</td>
+											</td>
+										<?php } ?>
 										<?php if ($row['IS_ACTIVE'] =='T') { ?>
-											<td class="text right">
+											<td class="text-right">
 												<a href="#" data-id="enabled" data-idDBUser="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Приостановить обслуживание">
 													<i class="fa fa-circle" ></i>
 												</a>
 											</td>
 										<?php } else  { ?>
-											<td class="text right">
+											<td class="text-right">
 												<a href="#" data-id="disabled" data-idDBUser="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Возобновить обслуживание">
 													<i class="fa fa-circle-thin"></i>
 												</a>
@@ -120,7 +120,7 @@
 				 	</div>
 				</div>
 			<div class="col-md-8">
-            	<form action = "superadmin-query.php" method="post">
+            	<form action="superadmin-query.php" method="post">
             		<input type="hidden" name="form-name" value="add-user">
 					<h1><i class="fa fa-user-plus"></i> Добавить клиента</h1> 
 					
@@ -207,6 +207,7 @@
 					</div>
 
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
+		<?php include 'includes/js/superadmin.php'; ?>
 		<script src="includes/js/superadmin-clients.js"></script>
  	</body>
 </html>

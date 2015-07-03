@@ -24,7 +24,6 @@ $.extend({
   }
 });
 
-
 $(document).ready(function() {
 	
 	// включить подсказки
@@ -72,6 +71,7 @@ $(document).ready(function() {
 
                     if (msg == 'true' ) {
 
+
                      $.ajax({
                             type: "POST",
                             url: "superadmin-query.php",
@@ -93,6 +93,10 @@ $(document).ready(function() {
                 alert('Введите пароль!');
                     }
         });
+    }).mouseenter(function() {
+        $(this).find("i").removeAttr('class').addClass('fa fa-times-circle');
+    }).mouseleave(function() {
+        $(this).find("i").removeAttr('class').addClass('fa fa-circle');
     });
     
     $("[data-id='disabled']").click(function (e) {
@@ -137,29 +141,10 @@ $(document).ready(function() {
                 alert('Введите пароль!');
                     }
         });
+    }).mouseenter(function() {
+	    $(this).find("i").removeAttr('class').addClass('fa fa-dot-circle-o');
+    }).mouseleave(function() {
+	    $(this).find("i").removeAttr('class').addClass('fa fa-circle-o');
     });
-
-    // $("[data-id='disabled']").click(function (e) {
-    //     e.preventDefault();
-
-    //     var idUser;
-
-    //     idUser = $(this).attr("data-idDBUser");
-    //      $.ajax({
-    //             type: "POST",
-    //             url: "superadmin-query.php",
-    //             data:{ 
-    //                 'idUser': idUser , 
-    //                 'active':'T', 
-    //                 'form-name': 'enable-disable-user'
-    //             },
-    //             success: function(msg){
-    //              setTimeout(function(){location.reload();}, 600);
-
-    //             }
-    //             }); 
-
-    // });
-
 	
 });

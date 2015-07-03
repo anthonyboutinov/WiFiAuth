@@ -58,6 +58,7 @@ $(document).ready(function(){
 
 		$(loginInputPasswordFormButton).click(openLoginInputPasswordForm);
 		positionVertically();
+		setTimeout(positionVertically, 200);
 		$(window).resize(positionVertically);
 	
 	// EOF Привязки к дейсвтиям

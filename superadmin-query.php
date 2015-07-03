@@ -28,11 +28,9 @@
 	 			$result = $database->superadminConfirmPassword($password);
 
 	 			echo $result;
- 		}
+ 		} else if ($_POST['form-name'] == 'fix-var-table') {
+			$database->fixVarTable();
+		}
 
- 	} 
-
-
-
-
+ 	}
 ?>

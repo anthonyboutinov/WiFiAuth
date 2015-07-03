@@ -23,7 +23,7 @@
 	$wifiCaptivePage 		= [$wifiCaptivePageMainPage, 'wifihotspot.php', 'query.php', 'loginusingpass.php'];
 	$adminLoginPage 		= 'admin-login.php';
 	$adminMainPage 			= 'admin-dashboard.php';
-	$superadminMainPage 	= 'superadmin-clients.php';
+	$superadminMainPage 	= 'superadmin-dashboard.php';
 	
 
 	// Если находится на открытой странице
@@ -66,7 +66,7 @@
 	
 	} else
 	
-	// Если находится не на странице Login страницах
+	// Если находится не на страницах Captive Portal
 	if (!in_array(basename($_SERVER['PHP_SELF']), $wifiCaptivePage)) {
 			
 		// Если не авторизован
@@ -86,7 +86,7 @@
 		
 	} else {
 		
-		// Если находится на странице login
+		// Если находится на страницах Captive Portal
 		
 		// Если авторизован
 		if (isset($_SESSION['id_cli'])) {
@@ -96,14 +96,25 @@
 			// Пропустить в интернет напрямую без вывода страницы login
 			header("Location: $routerAdmin");
 			
-		} else {
-			Notification::add('DEBUG (includes/core/session.php): Получаются фиктивные данные роутера ChopChop', 'warning');
+		} else
+		// Если получаются данные от роутера
+		if (isset($_POST['router-login']) && isset($_POST['router-password'])) {
 			
-			//	Иначе получить данные от роутера для функционирования страницы login
-			
-			$router_login = 'chopchop';		// MAC адрес роутера	
-			$router_pasword = password_hash('password', PASSWORD_BCRYPT); // Зашифрованный пароль от роутера
+			// Получить данные от роутера для функционирования страницы login
+			$router_login   = $_POST['router-login'];
+			$router_pasword = password_hash($_POST['router-password'], PASSWORD_BCRYPT);
 		
+		} else
+		// Если данные роутера записаны в сессии
+		if (isset($_SESSION['router-login']) && isset($_SESSION['router-password'])) {
+			
+			// Возобновить
+			$router_login   = $_SESSION['router-login'];
+			$router_pasword = $_SESSION['router-password'];
+			
+		} else /* Если происходит заход без формы */ {
+			echo 'Отсутствуют данные авторизации.';
+			exit();
 		}
 		
 	}
@@ -115,7 +126,10 @@
 		// Если пользователь валиден
 		if ($database->is_valid()) {
 			
-			if (!$database->is_router()) {
+			if ($database->is_router()) {
+				$_SESSION['router-login']    = $router_login;
+				$_SESSION['router-password'] = $router_pasword;
+			} else {
 				$_SESSION['id_cli'] = $database->getBDUserID();
 			}
 			
