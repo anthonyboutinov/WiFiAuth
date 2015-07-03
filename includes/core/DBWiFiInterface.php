@@ -77,12 +77,17 @@
 		
 		public function superadminConfirmPassword($password) {
 			$this->sanitize($password);
-			$sql='SELECT PASSWORD FROM CM$DB_USER WHERE ID_DB_USER='.$this->$id_db_user;
+			$sql='SELECT PASSWORD FROM CM$DB_USER WHERE ID_DB_USER='.$this->id_db_user_editor;
 			$result = $this->getQueryResultWithErrorNoticing($sql);
-
 			if ($result->num_rows == 1) {
 				while($row = $result->fetch_assoc()) {
-					return password_verify($row['PASSWORD'], $password);
+
+					if( password_verify($password,$row['PASSWORD'])){
+
+						echo 'true';
+					} else {
+						echo 'false';
+					}
 
 				}
 			}

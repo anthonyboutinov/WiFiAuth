@@ -56,10 +56,11 @@ $(document).ready(function() {
 
         var idUser;
         var password;
+        idUser = $(this).attr("data-idDBUser");
         $('#alertModal').modal('show');
         $('#activeClient').click( function() {
-        idUser = $(this).attr("data-idDBUser");
         password =  $('#access-password').val();
+        if(password){
         $.ajax({
                 type: "POST",
                 url: "superadmin-query.php",
@@ -69,23 +70,28 @@ $(document).ready(function() {
                 },
                 success: function(msg){
 
-                    console.log(msg);
+                    if (msg == 'true' ) {
 
-                    //  $.ajax({
-                    //         type: "POST",
-                    //         url: "superadmin-query.php",
-                    //         data:{ 
-                    //             'idUser': idUser, 
-                    //             'active':'F', 
-                    //             'form-name': 'enable-disable-user'
-                    //         },
-                    //         success: function(msg){
-                    //             setTimeout(function(){location.reload();}, 600);
-                    //         }
-                    //         }); 
-                    // }
+                     $.ajax({
+                            type: "POST",
+                            url: "superadmin-query.php",
+                            data:{ 
+                                'idUser': idUser, 
+                                'active':'F', 
+                                'form-name': 'enable-disable-user'
+                            },
+                            success: function(sg){
+                                setTimeout(function(){location.reload();}, 600);
+                            }
+                            }); 
+                    } else {
+
+                        alert('Неверный пароль, попробуйте еще раз!');
+                    }
             }
-            }); 
+            }); } else {
+                alert('Введите пароль!');
+}
         });
     });
     
