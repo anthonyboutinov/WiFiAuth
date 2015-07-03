@@ -23,9 +23,9 @@
 
 		      <div class="form-horizontal">
 					<div class="form-group">
-							<label class="col-sm-3 control-label" for="enable-password">Пароль</label>							
+							<label class="col-sm-3 control-label" for="disable-password">Пароль</label>							
 							<div class="col-sm-9">
-								<input type="password" class="form-control" name="enable-password" id="enable-password" autocomplete="off" maxlength="255">
+								<input type="password" class="form-control" name="disable-password" id="disable-password" autocomplete="off" maxlength="255">
 							</div>
 					</div>
 
@@ -33,7 +33,7 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-black" data-dismiss="modal">Отмена</button>
-		        <button type="button" id="activeClient" class="btn btn-red">Приостановить</button>
+		        <button type="button" id="disactiveClient" class="btn btn-red">Приостановить</button>
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
@@ -53,9 +53,9 @@
 
 		      <div class="form-horizontal">
 					<div class="form-group">
-							<label class="col-sm-3 control-label" for="disable-password">Пароль</label>							
+							<label class="col-sm-3 control-label" for="enable-password">Пароль</label>							
 							<div class="col-sm-9">
-								<input type="password" class="form-control" name="disable-password" id="disable-password" autocomplete="off" maxlength="64">
+								<input type="password" class="form-control" name="enable-password" id="enable-password" autocomplete="off" maxlength="64">
 							</div>
 					</div>
 
@@ -63,7 +63,7 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-black" data-dismiss="modal">Отмена</button>
-		        <button type="button" id="disactiveClient" class="btn btn-red">Возобновить</button>
+		        <button type="button" id="activeClient" class="btn btn-red">Возобновить</button>
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
@@ -84,7 +84,7 @@
 										$i++;
 									?>
 									<tr>
-										<td class="text-left"><?=$row['LOGIN'];?></td>
+										<td class="text-left"><?=$row['COMPANY_NAME'];?></td>
 										<?php if ($database->meetsAccessLevel('ROOT')) { ?>
 											<td class="text-right">
 												<form action="admin-dashboard.php" method="post">

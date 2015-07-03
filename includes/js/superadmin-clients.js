@@ -50,13 +50,13 @@ $(document).ready(function() {
 	genPassword();
 
 
-    $("[data-id='enabled']").click(function (e) {
+    $("[data-id='disabled']").click(function (e) {
         e.preventDefault();
 
         var idUser;
         var password;
-        idUser = $(this).attr("data-idDBUser");
-        $('#disableModal').modal('show');
+        idUser = $(this).attr("data-id-db-user");
+        $('#enableModal').modal('show');
         $('#activeClient').click( function() {
         password =  $('#enable-password').val();
         if(password){
@@ -71,7 +71,55 @@ $(document).ready(function() {
 
                     if (msg == 'true' ) {
 
+
+                     $.ajax({
+                            type: "POST",
+                            url: "superadmin-query.php",
+                            data:{ 
+                                'idUser': idUser, 
+                                'active':'T', 
+                                'form-name': 'enable-disable-user'
+                            },
+                            success: function(sg){
+                                setTimeout(function(){location.reload();}, 600);
+                            }
+                            }); 
+                    } else {
+
+                        alert('Неверный пароль, попробуйте еще раз!');
+                    }
+            }
+            }); } else {
+                alert('Введите пароль!');
+                    }
+        });
+    }).mouseenter(function() {
+        $(this).find("i").removeAttr('class').addClass('fa fa-dot-circle-o');
+    }).mouseleave(function() {
+        $(this).find("i").removeAttr('class').addClass('fa fa-circle-o');
+    });
+    
+    $("[data-id='enabled']").click(function (e) {
+        e.preventDefault();
+
+        var idUser;
+        var password;
         idUser = $(this).attr("data-id-db-user");
+        $('#disableModal').modal('show');
+        $('#disactiveClient').click( function() {
+        password =  $('#disable-password').val();
+        if(password){
+        $.ajax({
+                type: "POST",
+                url: "superadmin-query.php",
+                data:{ 
+                    'password': password,
+                    'form-name': 'superadmin-confirm'
+                },
+                success: function(msg){
+
+                    if (msg == 'true' ) {
+
                      $.ajax({
                             type: "POST",
                             url: "superadmin-query.php",
@@ -98,53 +146,4 @@ $(document).ready(function() {
     }).mouseleave(function() {
         $(this).find("i").removeAttr('class').addClass('fa fa-circle');
     });
-
-    
-    $("[data-id='disabled']").click(function (e) {
-        e.preventDefault();
-
-        var idUser = $(this).attr("data-id-db-user");
-        var password;
-        $('#enableModal').modal('show');
-        $('#disactiveClient').click( function() {
-        password =  $('#disable-password').val();
-        if(password){
-        $.ajax({
-                type: "POST",
-                url: "superadmin-query.php",
-                data:{ 
-                    'password': password,
-                    'form-name': 'superadmin-confirm'
-                },
-                success: function(msg){
-
-                    if (msg == 'true' ) {
-
-                     $.ajax({
-                            type: "POST",
-                            url: "superadmin-query.php",
-                            data:{ 
-                                'idUser': idUser, 
-                                'active':'T', 
-                                'form-name': 'enable-disable-user'
-                            },
-                            success: function(sg){
-                                setTimeout(function(){location.reload();}, 600);
-                            }
-                            }); 
-                    } else {
-
-                        alert('Неверный пароль, попробуйте еще раз!');
-                    }
-            }
-            }); } else {
-                alert('Введите пароль!');
-                    }
-        });
-    }).mouseenter(function() {
-	    $(this).find("i").removeAttr('class').addClass('fa fa-dot-circle-o');
-    }).mouseleave(function() {
-	    $(this).find("i").removeAttr('class').addClass('fa fa-circle-o');
-    });
-	
 });

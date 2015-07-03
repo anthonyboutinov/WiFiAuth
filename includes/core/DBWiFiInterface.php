@@ -924,7 +924,13 @@
 		}
 		
 		public function getDBUsers() {
-			$sql='SELECT * FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' ORDER BY LOGIN ASC';
+			$sql='SELECT  B.VALUE AS COMPANY_NAME, D.* FROM CM$DB_USER D, SP$VAR B 
+					WHERE D.IS_SUPERADMIN=\'F\' 
+					AND D.ID_DB_USER = B.ID_DB_USER
+					AND B.ID_DICTIONARY = (SELECT ID_DICTIONARY 
+					FROM CM$DICTIONARY
+                    WHERE SHORT_NAME = "COMPANY_NAME")
+					ORDER BY B.VALUE ASC';
 			return  $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
