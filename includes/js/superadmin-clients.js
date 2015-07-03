@@ -57,7 +57,7 @@ $(document).ready(function() {
 
         $('#alertModal').modal('show');
 
-        idUser = $(this).attr("data-idDBUser");
+        idUser = $(this).attr("data-id-db-user");
          // $.ajax({
          //        type: "POST",
          //        url: "superadmin-query.php",
@@ -75,13 +75,14 @@ $(document).ready(function() {
     }).mouseleave(function() {
 	    $(this).find("i").removeAttr('class').addClass('fa fa-circle');
     });
+
     
     $("[data-id='disabled']").click(function (e) {
         e.preventDefault();
 
         var idUser;
 
-        idUser = $(this).attr("data-idDBUser");
+        idUser = $(this).attr("data-id-db-user");
          $.ajax({
                 type: "POST",
                 url: "superadmin-query.php",

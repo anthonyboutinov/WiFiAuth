@@ -68,7 +68,7 @@
 												<form action="admin-dashboard.php" method="post">
 													<input type="hidden" name="form-name" value="pretend-to-be">
 													<input type="hidden" name="pretend-to-be" value="<?=$row['ID_DB_USER'];?>">
-													<button type="submit" class="btn btn-link">
+													<button type="submit" class="btn btn-link" data-toggle="tooltip" data-placement="left" title="Просмотреть личный кабинет">
 														<i class="fa fa-line-chart"></i>
 													</button>
 												</form>
@@ -76,13 +76,13 @@
 										<?php } ?>
 										<?php if ($row['IS_ACTIVE'] =='T') { ?>
 											<td class="text-right">
-												<a href="#" data-id="enabled" data-idDBUser="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Приостановить обслуживание">
+												<a href="#" data-id="enabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Приостановить обслуживание">
 													<i class="fa fa-circle" ></i>
 												</a>
 											</td>
 										<?php } else  { ?>
 											<td class="text-right">
-												<a href="#" data-id="disabled" data-idDBUser="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Возобновить обслуживание">
+												<a href="#" data-id="disabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Возобновить обслуживание">
 													<i class="fa fa-circle-thin"></i>
 												</a>
 											</td>

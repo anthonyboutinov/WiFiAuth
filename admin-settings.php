@@ -75,35 +75,35 @@
 										if ($value['DATA_TYPE'] == 'text&file' || $value['DATA_TYPE'] == 'file') { // ЕСЛИ ФАЙЛ
 											$addFileScript = true;
 											
-										?>
-										<small>Изображение, которое используется сейчас:</small>
-										<img src="data:image/jpeg;base64,<?=base64_encode($value['BLOB_VALUE']);?>" class="tiny-image-preview">
-										<div class="input-group">
-							                <span class="input-group-btn">
-												<span class="btn btn-black btn-file">
-													Выбрать&hellip; <i class="fa fa-folder-open-o"></i>
-													<input type="hidden" name="MAX_FILE_SIZE" value="2000000">
-													<input
-														type="file"
-														accept="image/png, image/jpeg, image/gif"
-														class="form-control"
-														name="<?=$key;?>_file"
-														id="<?=$key;?>_file"
-														value="<?=$value['VALUE'];?>">
+											if (isset($value['BLOB_VALUE'])) { ?>
+											<small>Изображение, которое используется сейчас:</small>
+											<img src="data:image/jpeg;base64,<?=base64_encode($value['BLOB_VALUE']);?>" class="tiny-image-preview">
+											<?php } ?>
+											<div class="input-group">
+								                <span class="input-group-btn">
+													<span class="btn btn-black btn-file">
+														Выбрать&hellip; <i class="fa fa-folder-open-o"></i>
+														<input type="hidden" name="MAX_FILE_SIZE" value="2000000">
+														<input
+															type="file"
+															accept="image/png, image/jpeg, image/gif"
+															class="form-control"
+															name="<?=$key;?>_file"
+															id="<?=$key;?>_file"
+															value="<?=$value['VALUE'];?>">
+													</span>
+								                </span>
+												<input type="text" class="form-control" readonly>
+<!--
+												<span class="input-group-btn">
+													<span class="btn btn-black">
+														<i class="fa fa-times"></i>
+													</span>
+													<input type="checkbox" class="form-control hidden" name="<?=$key;?>-delete" id="<?=$key;?>-delete" value="1">
 												</span>
-							                </span>
-											<input type="text" class="form-control" readonly>
-											<span class="input-group-btn">
-												<span class="btn btn-black">
-													<i class="fa fa-times"></i>
-												</span>
-												<input type="checkbox" class="form-control hidden" name="<?=$key;?>-delete" id="<?=$key;?>-delete" value="1">
-											</span>
-										</div>
-										<?php
-											
-											
-											
+-->
+											</div>
+											<?php
 										}
 										if ($value['DATA_TYPE'] == 'textarea') { // ЕСЛИ TEXTAREA ?>
 										

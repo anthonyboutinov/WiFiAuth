@@ -1,5 +1,5 @@
 <footer class="footer">
-<!-- 	Разработано<span class="sr-only"> Авторское право</span> &copy; 2015 <a href="#" target="_blank">ПочтиГотово</a> -->
+	&copy; 2015 Re[Spot]
 </footer>
 
 <?php

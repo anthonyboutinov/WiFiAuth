@@ -5,48 +5,53 @@
 		$desktop = false;
 	}
 	
-	$intellectual_view = 1;
+	$intellectual_view = false;
 	if (isset($_COOKIE['birthdays-intellectual-view'])) {
 		$intellectual_view = $_COOKIE['birthdays-intellectual-view'];
 	} else {
 		$_COOKIE['birthdays-intellectual-view'] = $intellectual_view;
 	}
 	
+	$intellectual_view_min_threshold = 1;
+	
 	$limit = $drawFullContent ? $database->tablePageLimit : $database->dashboardTablePreviewLimit;
 	$birthdays = $database->getBirthdays(0, $limit, $intellectual_view);
 	
+	$dislay_as_flipcard = ($birthdays->num_rows >= $intellectual_view_min_threshold && (!$drawFullContent || !$desktop));
 
 ?>
 
-<?php if ($birthdays->num_rows > 5 && !$drawFullContent) { ?>
+<?php if ($dislay_as_flipcard) { ?>
 <section class="card-container">
   <div id="birthdays-card">
     <figure class="front">
 <?php } ?>
 
-<h1 class="flip-birthdays-card<?php if ($birthdays->num_rows > 5) {echo ' link';} ?>">
+<h1 class="flip-birthdays-card<?php if ($birthdays->num_rows >= $intellectual_view_min_threshold) {echo ' link';} ?>">
 	<span class="ignore-link-coloring"><i class="fa fa-birthday-cake"></i> Дни рождения</span>
 	<span class="options">
-		<?php if ($birthdays->num_rows > 5 && $drawFullContent) { ?>
+		<?php if (!$dislay_as_flipcard) { ?>
 		<a href="#" id="intellectual-view-toggle">
-			<i class="fa fa-toggle-<?=$intellectual_view == 1 ? 'on' : 'off';?>"></i><span class="hidden-xs"> Умная сортировка</span>
+			<i class="fa fa-toggle-<?=(($intellectual_view == true) ? 'on' : 'off');?>"></i><span class="hidden-xs"> Умная сортировка</span>
 		</a>
 		<i class="fa fa-question" id="option-help" data-toggle="tooltip" data-placement="left" title="
 			В&nbsp;таком представлении записи сортируются в&nbsp;соответсвтии с&nbsp;уровнем лояльности клиентов и&nbsp;близости их&nbsp;дня&nbsp;рождения.
 		"></i>
-		<?php } else if ($birthdays->num_rows > 5) { ?><i class="fa fa-cogs"></i><?php } ?>
+		<?php } else if ($birthdays->num_rows >= $intellectual_view_min_threshold) { ?><i class="fa fa-cogs"></i><?php } ?>
 	</span>
 </h1>
 <div class="page-wrapper">
 	
 	<?php if ($desktop) { 	?><table class="table table-head-row text-center" id="birthdays-header"><?php } 
-		  else { 			?><table class="table text-center contains-fas"><?php } ?>
+		  else { 			?><table class="table text-center contains-fas td-vertical-align"><?php } ?>
 		<?php if ($drawFullContent) { ?><tr class="head-row">
 			<td><span class="sr-only">Логин</span></td>
 			<td>Клиент</td>
 			<?php if ($drawFullContent) { ?><td>День рождения</td><?php } ?>
+			<?php if ($desktop) { 	?>
 			<td>Через <span class="hidden-xs hidden-sm">(дней)</span></td>
 			<td>Исполнится</td>
+			<?php } ?>
 		</tr>
 	<?php }
 		if ($desktop) { ?>
@@ -63,16 +68,20 @@
 				
 				
 				$years_leftover = $row['DAYS_UNTIL'] % 10;
-				$russian_days_ending = (
-					$years_leftover == 1 ? 'день' : (
-						$years_leftover > 1 && $years_leftover < 5 ? 'дня' : 'дней'
-					)
-				);
+				if ($desktop) {
+					$russian_days_ending = (
+						$years_leftover == 1 ? 'день' : (
+							$years_leftover > 1 && $years_leftover < 5 ? 'дня' : 'дней'
+						)
+					);
+				} else {
+					$russian_days_ending = 'д';
+				}
 				
 				$will_turn_leftover = $row['WILL_TURN'] % 10;
 				$russian_years_ending = (
-					$will_turn_leftover == 1 ? 'год' : (
-						$will_turn_leftover > 1 && $will_turn_leftover < 5 ? 'года' : 'лет'
+					$will_turn_leftover == 1 ? ($desktop ? 'год' : 'г') : (
+						$will_turn_leftover > 1 && $will_turn_leftover < 5 ? ($desktop ? 'года' : 'г') : ($desktop ? 'лет' : 'л')
 					)
 				);
 				
@@ -83,13 +92,17 @@
 					)
 				);
 				
-				$days_until_tooltip = (
+				$days_until_formatted = $row['DAYS_UNTIL'];
+				
+				$days_until_tooltip = (	
 					$row['DAYS_UNTIL'] == 0 ? 'сегодня' : (
-						$row['DAYS_UNTIL'] == 1 ? 'завтра' :  'через '.$row['DAYS_UNTIL'].' '.$russian_days_ending
+						$row['DAYS_UNTIL'] == 1 ? 'завтра' :  (
+							$desktop ?
+								'через ' :
+								'<small class="x2">через</small> '
+						).$days_until_formatted.' '.$russian_days_ending
 					)
 				);
-				
-				
 	?>
 
 			<tr>
@@ -98,13 +111,29 @@
 					<span class="sr-only"><?=$row['LOGIN_OPTION_NAME'];?></span>
 				</td>
 				<td class="text-left"><a href="<?=$row['LINK'];?>" target="blank"><?=$row['NAME'];?></a></td>
-				<?php if ($drawFullContent) { ?><td class="text-right"><?=$row['BIRTHDAY'];?></td><?php } ?>
-				<td class="text-right"><span data-toggle="tooltip" data-placement="left" title="День рождения <?=$days_until_tooltip;?>"<?php //<?=(($row['DAYS_UNTIL'] == 0) ? 'text-center' : 'text-right');
-					if ($row['DAYS_UNTIL'] < 5) {
-						echo ' class="alert-value alert-value-'.$row['DAYS_UNTIL'].'"';
-					}
-				?>><?=$days_until;?></span></td>
-				<td class="text-right"><span data-toggle="tooltip" data-placement="left" title="Исполнится <?=$row['WILL_TURN'].' '.$russian_years_ending;?>"><?=$row['WILL_TURN'];?></span></td>
+				<?php if ($drawFullContent) { ?><td class="text-<?=$desktop ? 'right' : 'right';?>">
+					<?php
+						echo $row['BIRTHDAY'];
+						if (!$desktop) { 
+							echo "<br>".$row['WILL_TURN']." $russian_years_ending ";
+							if ($row['DAYS_UNTIL'] < 5) {
+								echo '<span class="alert-value alert-value-'.$row['DAYS_UNTIL'].'">';
+							}
+							echo $days_until_tooltip;
+							if ($row['DAYS_UNTIL'] < 5) {
+								echo '</span>';
+							}
+						}
+					?>
+				</td><?php } ?>
+				<?php if ($desktop) { ?>
+					<td class="text-right"><span data-toggle="tooltip" data-placement="left" title="День рождения <?=$days_until_tooltip;?>"<?php
+						if ($row['DAYS_UNTIL'] < 5) {
+							echo ' class="alert-value alert-value-'.$row['DAYS_UNTIL'].'"';
+						}
+					?>><?=$days_until;?></span></td>
+					<td class="text-right"><span data-toggle="tooltip" data-placement="left" title="Исполнится <?=$row['WILL_TURN'].' '.$russian_years_ending;?>"><?=$row['WILL_TURN'];?></span></td>
+				<?php } ?>
 			</tr>
 	<?php 
 			}
@@ -135,7 +164,7 @@
 </div>
 
 
-<?php if ($birthdays->num_rows > 5 && !$drawFullContent) { ?>
+<?php if ($dislay_as_flipcard) { ?>
 	</figure>
     <figure class="back">
 	    <h1 class="link flip-birthdays-card">
@@ -147,7 +176,7 @@
 		<div class="page-wrapper">
 			<div class="margin-bottom margin-top text-center lead">
 				<a href="#" id="intellectual-view-toggle">
-			    	<i class="fa fa-toggle-<?=$intellectual_view == 1 ? 'on' : 'off';?>"></i> Умная сортировка
+			    	<i class="fa fa-toggle-<?=(($intellectual_view == true) ? 'on' : 'off');?>"></i> Умная сортировка
 				</a>
 			</div>
 	    	<p>В&nbsp;представлении «Умная сортировка» записи сортируются в&nbsp;соответсвтии с&nbsp;уровнем лояльности клиентов и&nbsp;близости их&nbsp;дня&nbsp;рождения.</p>

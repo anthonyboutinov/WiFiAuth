@@ -566,6 +566,13 @@ table.contains-fas .fa {
 .group-notification {
   padding: 30px 0 0 0;
 }
+small.x2,
+.small.x2 {
+  font-size: 70%;
+}
+table.td-vertical-align > tbody > tr > td {
+  vertical-align: middle;
+}
 .tiny-image-preview {
   max-width: 200px;
   max-height: 200px;
@@ -1264,6 +1271,10 @@ body.admin-page.simple-page .page-wrapper.close-follow {
   input[type='number'] {
     width: 50%;
     display: inline-block;
+  }
+  .page-wrapper > p {
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }
 @media (max-width: 320px) {
