@@ -153,7 +153,7 @@ $(document).ready(function(){
 		qu[3] = quo(1,9);
 		qu[4] = quo(1,9);
 		password = ""+qu[0]+qu[1]+qu[2]+qu[3]+qu[4];
-		phone = '79172856297';
+		phone = $("#phone").val();
 		$.ajax({
 			type: "POST",
 			url: "loginusingpass.php",
@@ -166,7 +166,8 @@ $(document).ready(function(){
 			}
 		});
 		if($('#password').val()= password){
-				location="<?php echo $routerAdmin; ?>";
+				//location="<?php echo $routerAdmin; ?>";
+				alert('Пароли совпадают');
 		}		
 		//location="loginusingpass.php?p="+$("#password").val();
 
