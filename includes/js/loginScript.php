@@ -121,7 +121,7 @@ $(document).ready(function(){
 	}
 	
 	function vkPosting(){  // функция для постинга Вконтакте
-          
+
 		var photoVK = '<?php echo $photoVK; ?>';
 		var linkVK = '<?php echo $linkVK; ?>';
 		var photo = photoVK+ "," +linkVK;
@@ -210,7 +210,6 @@ $(document).ready(function(){
 				} else {
 					failNotification();
 				}
-// 			$("#passwordButton").removeClass("hidden").addClass('animated fadelnUp');
 			$("#phone-pass-group").removeClass("hidden");
 			},
 			fail: failNotification
