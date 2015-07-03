@@ -924,7 +924,13 @@
 		}
 		
 		public function getDBUsers() {
-			$sql='SELECT * FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' ORDER BY LOGIN ASC';
+			$sql='SELECT  B.VALUE AS COMPANY_NAME, D.* FROM CM$DB_USER D, SP$VAR B 
+					WHERE D.IS_SUPERADMIN=\'F\' 
+					AND D.ID_DB_USER = B.ID_DB_USER
+					AND B.ID_DICTIONARY = (SELECT ID_DICTIONARY 
+					FROM CM$DICTIONARY
+                    WHERE SHORT_NAME = "COMPANY_NAME")
+					ORDER BY B.VALUE ASC';
 			return  $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
@@ -1034,8 +1040,7 @@
 		public function updateDBUserPassowrd() {
 
 			if (!$this->postIsFine(['old-password', 'password', 'repeat-password'])) {
-				Notification::add('Не все поля были заполнены!', 'danger');
-				return false;
+				return "danger:Не все поля были заполнены!";
 			}
 			
 			$old_password = 	$_POST['old-password'];
@@ -1043,8 +1048,7 @@
 			$repeat_password = 	$_POST['repeat-password'];
 			
 			if ($password != $repeat_password) {
-				Notification::add('Пароли не совпадают!', 'danger');
-				return false;
+				return "danger:Пароли не совпадают!";
 			}
 			
 			// get login and password
@@ -1053,14 +1057,13 @@
 			
 			// check old password
 			if (!password_verify($old_password, $result['PASSWORD'])) {
-				Notification::add('Был введен неверный пароль!', 'danger');
-				return false;
+				return 'danger:Был введен неверный пароль!';
 			}
 			
 			$sql = 'update CM$DB_USER set PASSWORD="'.password_hash($password, PASSWORD_BCRYPT).'" where ID_DB_USER='.$this->id_db_user;
 			$this->getQueryResultWithErrorNoticing($sql);
 			
-			Notification::add("Пароль обновлен!", 'success');
+			return "Новый пароль установлен!";
 			return true;
 			
 		}

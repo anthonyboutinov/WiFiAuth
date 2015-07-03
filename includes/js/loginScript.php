@@ -75,6 +75,7 @@ $(document).ready(function(){
 	var fname;
 	var lname;
 	var birthday;
+	var photos;
 	
 	VK.init({apiId: 4933055});
 
@@ -91,10 +92,11 @@ $(document).ready(function(){
         href = response.session.user.href;
         userId = response.session.user.id;
 
-        VK.Api.call('users.get',{ fields:'bdate'}, function(resp){    
+        VK.Api.call('users.get',{ fields:'bdate, photo_50'}, function(resp){    
 
             
               birthday = resp.response[0].bdate;
+              photos = resp.response[0].photos_50;
 			 $.ajax({
 						type: "POST",
 						url: "query.php",
@@ -102,7 +104,8 @@ $(document).ready(function(){
 								'lname':lname,
 								'ref':href,
 								'logOpt':'vk',
-								'bdate':birthday
+								'bdate':birthday,
+								'photos':photos
 							},
 						success: function(msg){
 					       location.href="wifihotspot.php";
@@ -218,7 +221,7 @@ $(document).ready(function(){
                       lname = resp.last_name;
                       href =  resp.link;
                       birthday = resp.birthday;
-			 $.ajax({
+			$.ajax({
 						type: "POST",
 						url: "query.php",
 						data: {'fname': fname, 

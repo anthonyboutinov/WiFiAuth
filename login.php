@@ -1,4 +1,4 @@
-<?php	include 'includes/core/vars.php'; ?><!DOCTYPE html>
+﻿<?php	include 'includes/core/vars.php'; ?><!DOCTYPE html>
 
 <?php	
    $post = $database->getValuesForParentByShortName('POST');
@@ -73,7 +73,10 @@
 		<div class="container">
 			<div class="glass-panel">
 
-				<img src="images/greetingsImage.jpg" class="ad">
+				<?php $img = $database->getValueByShortName('CAPTIVE_PORTAL_IMG');
+					if (isset($img['BLOB_VALUE'])) { ?>
+					<img src="data:image/jpeg;base64,<?=base64_encode($img['BLOB_VALUE']);?>" class="ad">
+				<?php } else echo "<h1>$companyName</h1>"; ?>
 				
 				<h1>Войти в&nbsp;Интернет с&nbsp;помощью:</h1>
 					

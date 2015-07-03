@@ -20,7 +20,6 @@
                    
  				$active=$_POST['active'];
  				$id_db_user=$_POST['idUser'];
- 				echo $id_db_user;
  				$database->setActiveDBUser($active,$id_db_user);
  		} else if($_POST['form-name'] == 'superadmin-confirm'){
 
