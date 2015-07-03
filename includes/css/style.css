@@ -153,23 +153,29 @@ input[type="text"] {
 .fa-pulse {
   text-shadow: none;
 }
-h1 {
+h1,
+div.complex-h1 {
   position: relative;
 }
-h1 .options {
+h1 .options,
+div.complex-h1 .options {
   font-size: 16px;
   margin-top: 4px;
   vertical-align: middle;
   position: absolute;
   right: 15px;
 }
-h1 .options i.fa {
+h1 .options i.fa,
+div.complex-h1 .options i.fa {
   font-size: inherit !important;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   margin-right: 5px !important;
   position: relative !important;
   top: 0 !important;
+}
+div.complex-h1 .options {
+  top: 24%;
 }
 i.fa[data-toggle="tooltip"] {
   cursor: help;

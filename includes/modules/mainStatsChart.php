@@ -1,7 +1,15 @@
 <div class="complex-h1">
 	<i class="fa fa-line-chart hidden-xs"></i>
 	<h1>График авторизаций<span class="hidden-xs"> в&nbsp;сети</span></h1>
-	<h2>Количество пользователей за&nbsp;последние 30&nbsp;дней</h2>					
+	<h2>Количество пользователей за&nbsp;последние 30&nbsp;дней</h2>
+	<span class="options">
+		<select id="main-stats-chart-period">
+			<option value="365">1 год</option>
+			<option value="183">6 месяцев</option>
+			<option value="92">3 месяца</option>
+			<option value="30">1 месяц</option>
+		</select>
+	</span>
 </div>
 <div class="page-wrapper chart-wrapper">
 

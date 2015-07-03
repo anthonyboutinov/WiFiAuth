@@ -766,7 +766,7 @@
 			$this->sanitize($log_opt);
 			$this->sanitize($b_date);
 			
-			// FIXME: Раситано только на две социальные сети!!!
+			// FIXME: Расчитано только на две социальные сети!!!
             if($log_opt=='vk') {
         		$log_opt = 1;
         	} else {
@@ -774,8 +774,8 @@
             }
             $sql  = 'select ID_USER from CM$USER where LINK="'.$user_href.'"';
             $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не логировать, если нет результатов в запросе*/);
+
             if($result == null) {
-            	
             	$sql = 'insert into CM$USER 
             	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,ID_DB_USER_MODIFIED)  values( '
             		     .$log_opt.', STR_TO_DATE("'
@@ -784,22 +784,15 @@
                          .$last_name.'","'
                          .$user_href.'", '
                          .$this->id_db_user.')';
-
             	$this->getQueryResultWithErrorNoticing($sql);
 
             	$sql = 'select ID_USER from CM$USER order by ID_USER desc limit 0, 1';
-
             	$result = $this->getQueryFirstRowResultWithErrorNoticing($sql);
-
-            	$id = $result['ID_USER'];
-            } else {
-            	$id = $result['ID_USER'];
             }
-
+        	$id = $result['ID_USER']; // либо из result перед if'ом, либо из result внутри него
 
             $sql = 'insert into SP$LOGIN_ACT (ID_DB_USER,ID_USER) values ('.$this->id_db_user.', '.$id.')';
             $this->getQueryResultWithErrorNoticing($sql);
-
 		}
 		
 		

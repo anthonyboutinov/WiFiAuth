@@ -1,5 +1,4 @@
 <?php
-	$current_page_is_not_protected = true;
 	include 'includes/core/session.php';
 
   $firstName =$_POST['fname'];

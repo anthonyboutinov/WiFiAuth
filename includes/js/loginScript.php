@@ -98,9 +98,14 @@ $(document).ready(function(){
 			 $.ajax({
 						type: "POST",
 						url: "query.php",
-						data: "fname=" + fname + "&lname=" + lname+"&ref="+href+"&logOpt="+"vk"+"&bdate="+birthday,
+						data: {'fname': fname, 
+								'lname':lname,
+								'ref':href,
+								'logOpt':'vk',
+								'bdate':birthday
+							},
 						success: function(msg){
-					       location.href="http://kazanwifi.ru/wifihotspot.php";
+					       location.href="wifihotspot.php";
 						}
 						});
 			 	 });
@@ -216,11 +221,19 @@ $(document).ready(function(){
 			 $.ajax({
 						type: "POST",
 						url: "query.php",
-						data: "fname=" + fname + "&lname=" + lname+"&ref="+href+"&logOpt="+"fb"+"&bdate="+birthday,
+						data: {'fname': fname, 
+								'lname':lname,
+								'ref':href,
+								'logOpt':'fb',
+								'bdate':birthday
+							},
 						success: function(msg){
 						$('#ModalFacebook').modal('hide');
           				alert('Пост успешно опубликован!');
           				location="<?php echo $routerAdmin; ?>";
+						},
+						fail: function(){
+							alert('error');
 						}
 						});       
                    }
