@@ -9,7 +9,7 @@
 	</head>
 	<body class="admin-page simple-page">
 
-		<div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
+		<div class="modal fade" id="disableModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
 		  <div class="modal-dialog">
 		    <div class="modal-content">
 		      <div class="modal-header">
@@ -18,14 +18,14 @@
 		      </div>
 		      <div class="modal-body">
 
-		      <p> Вы хотите приостановить обслуживания пользователя.</p> 
+		      <p> Вы хотите приостановить обслуживание пользователя.</p> 
 		      <p>Подтвердите свои права: введите пароль </p>
 
 		      <div class="form-horizontal">
 					<div class="form-group">
-							<label class="col-sm-3 control-label" for="acess-password">Пароль</label>							
+							<label class="col-sm-3 control-label" for="enable-password">Пароль</label>							
 							<div class="col-sm-9">
-								<input type="password" class="form-control" name="access-password" id="access-password" autocomplete="off" maxlength="255">
+								<input type="password" class="form-control" name="enable-password" id="enable-password" autocomplete="off" maxlength="255">
 							</div>
 					</div>
 
@@ -34,6 +34,36 @@
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-black" data-dismiss="modal">Отмена</button>
 		        <button type="button" id="activeClient" class="btn btn-red">Приостановить</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div>
+
+		<div class="modal fade" id="enableModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        <h4 class="modal-title">Подтвердите права для продолжения <i class="fa fa-lock"></i></h4>
+		      </div>
+		      <div class="modal-body">
+
+		      <p> Вы хотите возобновить обслуживание пользователя.</p> 
+		      <p>Подтвердите свои права: введите пароль </p>
+
+		      <div class="form-horizontal">
+					<div class="form-group">
+							<label class="col-sm-3 control-label" for="disable-password">Пароль</label>							
+							<div class="col-sm-9">
+								<input type="password" class="form-control" name="disable-password" id="disable-password" autocomplete="off" maxlength="255">
+							</div>
+					</div>
+
+				</div>	
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-black" data-dismiss="modal">Отмена</button>
+		        <button type="button" id="disactiveClient" class="btn btn-red">Возобновить</button>
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->

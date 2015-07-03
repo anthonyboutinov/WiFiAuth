@@ -57,9 +57,9 @@ $(document).ready(function() {
         var idUser;
         var password;
         idUser = $(this).attr("data-idDBUser");
-        $('#alertModal').modal('show');
+        $('#disableModal').modal('show');
         $('#activeClient').click( function() {
-        password =  $('#access-password').val();
+        password =  $('#enable-password').val();
         if(password){
         $.ajax({
                 type: "POST",
@@ -91,7 +91,7 @@ $(document).ready(function() {
             }
             }); } else {
                 alert('Введите пароль!');
-}
+                    }
         });
     });
     
@@ -99,23 +99,67 @@ $(document).ready(function() {
         e.preventDefault();
 
         var idUser;
-
+        var password;
         idUser = $(this).attr("data-idDBUser");
-         $.ajax({
+        $('#enableModal').modal('show');
+        $('#disactiveClient').click( function() {
+        password =  $('#disable-password').val();
+        if(password){
+        $.ajax({
                 type: "POST",
                 url: "superadmin-query.php",
                 data:{ 
-                    'idUser': idUser , 
-                    'active':'T', 
-                    'form-name': 'enable-disable-user'
+                    'password': password,
+                    'form-name': 'superadmin-confirm'
                 },
                 success: function(msg){
-                 setTimeout(function(){location.reload();}, 600);
 
-                }
-                }); 
+                    if (msg == 'true' ) {
 
+                     $.ajax({
+                            type: "POST",
+                            url: "superadmin-query.php",
+                            data:{ 
+                                'idUser': idUser, 
+                                'active':'T', 
+                                'form-name': 'enable-disable-user'
+                            },
+                            success: function(sg){
+                                setTimeout(function(){location.reload();}, 600);
+                            }
+                            }); 
+                    } else {
+
+                        alert('Неверный пароль, попробуйте еще раз!');
+                    }
+            }
+            }); } else {
+                alert('Введите пароль!');
+                    }
+        });
     });
+
+    // $("[data-id='disabled']").click(function (e) {
+    //     e.preventDefault();
+
+    //     var idUser;
+
+    //     idUser = $(this).attr("data-idDBUser");
+    //      $.ajax({
+    //             type: "POST",
+    //             url: "superadmin-query.php",
+    //             data:{ 
+    //                 'idUser': idUser , 
+    //                 'active':'T', 
+    //                 'form-name': 'enable-disable-user'
+    //             },
+    //             success: function(msg){
+    //              setTimeout(function(){location.reload();}, 600);
+
+    //             }
+    //             }); 
+
+    // });
 
 	
 });
