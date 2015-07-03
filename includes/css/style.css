@@ -1131,6 +1131,24 @@ body.admin-page.simple-page .page-wrapper.close-follow {
 #phoneButton {
   min-width: 99px;
 }
+.affix {
+  top: 40px;
+}
+ul.affix,
+ul.affix-top {
+  margin-top: 20px;
+}
+ul.affix > li > a,
+ul.affix-top > li > a {
+  padding-bottom: 5px;
+  padding-top: 5px;
+  display: block;
+}
+h1.huge-cover {
+  margin-bottom: 6px !important;
+  padding: 60px 0 60px 12% !important;
+  text-align: left !important;
+}
 /* COMBINED (this way it's faster) */
 @media screen and (min-width: 768px) {
   nav.navbar {

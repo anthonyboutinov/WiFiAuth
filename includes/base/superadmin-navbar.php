@@ -27,7 +27,7 @@
 	            
 				<li class="divider visible-xs-block"></li>
 
-<!-- 				<li><a href="superadmin-settings.php"><i class="fa fa-fw fa-cog"></i> Настройки</a></li> -->
+<!-- 				<li><a href="superadmin-settings.php"><i class="fa fa-fw fa-cogs"></i> Настройки</a></li> -->
 				<li><a href="admin-logout.php"><i class="fa fa-fw fa-sign-out"></i> Выйти</a></li>
         
 			</ul>
