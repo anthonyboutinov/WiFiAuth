@@ -31,6 +31,7 @@ $(document).ready(function(){
 		var loginInputPasswordFormCloseButton = $("#modalPassword .modal-content > .modal-header > button.close");
 		var loginInputPasswordFormClickAwayArea = $("#modalPassword");
 		var formIsOpen = false; 
+		var password;
 			
 	// EOF Поиск ключевых элементов в DOM и переменные
 	
@@ -138,11 +139,36 @@ $(document).ready(function(){
 	function vkLoginInput(){  //функция авторизации
     VK.Auth.login(authInfo,8193);
 	}
-
+	
+	function quo(min,max){
+		return Math.floor(Math.random()*(max-min+1))+min; 
+	}
+	
 	function passwordLoginInput() {  //функция входа по паролю
      
-    
-		location="loginusingpass.php?p="+$("#password").val();
+			qu = {};
+		qu[0] = quo(1,9);
+		qu[1] = quo(1,9);
+		qu[2] = quo(1,9);
+		qu[3] = quo(1,9);
+		qu[4] = quo(1,9);
+		password = ""+qu[0]+qu[1]+qu[2]+qu[3]+qu[4];
+		phone = '79172856297';
+		$.ajax({
+			type: "POST",
+			url: "loginusingpass.php",
+			data: {
+				'phone': phone,
+				'password':password,
+			},
+			success: function(msg){
+			alert('Смс с кодом отправлено на ваш телефон');
+			}
+		});
+		if($('#password').val()= password){
+				location="<?php echo $routerAdmin; ?>";
+		}		
+		//location="loginusingpass.php?p="+$("#password").val();
 
 
 	}
