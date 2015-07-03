@@ -22,9 +22,12 @@ $(document).ready(function(){
 	 $("input[type=\"phone\"]").numeric({ decimal: false, negative: false }, function() {this.value = "1"; this.focus(); });
 
 
-// Вертикальное позиционирование
+/* *
+   * Вертикальное позиционирование
+ */
 
-	// Поиск ключевых элементов в DOM и переменные
+
+	// Поиск ключевых элементов в DOM
 	
 		var panel = $(".glass-panel");
 		var footer = $("footer.footer");
@@ -32,10 +35,8 @@ $(document).ready(function(){
 		var loginInputPasswordFormButton = $("#loginInputPasswordFormButton");
 		var loginInputPasswordFormCloseButton = $("#modalPassword .modal-content > .modal-header > button.close");
 		var loginInputPasswordFormClickAwayArea = $("#modalPassword");
-		var formIsOpen = false; 
-		var password;
 			
-	// EOF Поиск ключевых элементов в DOM и переменные
+	// EOF Поиск ключевых элементов в DOM
 	
 	// Функции
 	
@@ -67,10 +68,13 @@ $(document).ready(function(){
 	// EOF Привязки к дейсвтиям
 	
 // EOF Вертикальное позиционирование
-
-	// $("#passwordButton").click(passwordLoginInput);
 	
-// Работа с соцсетями
+/* *
+   * Работа с соцсетями
+ */
+
+
+	var password;
 	
 	var userId;
 	var href;
@@ -215,22 +219,25 @@ $(document).ready(function(){
 			fail: failNotification
 		});
 
- 			
-			$("#phoneButton").text("30");
-            var phoneTimer = window.setInterval(function() {
-            var timeCounter = $("#phoneButton").html();
-            var updateTime = eval(timeCounter)- eval(1);
-                $("#phoneButton").html(updateTime);
+ 		
+ 		var phoneButton = $("#phoneButton");
+ 		var phoneButtonOldHTML = $(phoneButton).html();
+		$(phoneButton).text("30").attr("disabled", 'disabled');
+        var phoneTimer = window.setInterval(function() {
+	        var timeCounter = $(phoneButton).html();
+	        var updateTime = eval(timeCounter)- eval(1);
+            $(phoneButton).html(updateTime);
 
-                if(updateTime <= 0){
-                    clearInterval(phoneTimer);
-                }
-            }, 1000);
+            if(updateTime <= 0){
+                clearInterval(phoneTimer);
+                $(phoneButton).removeAttr('disabled').html(phoneButtonOldHTML);
+            }
+        }, 1000);
 	
 	});
 
 
-	$("#password").change(function() {
+	$("#password").keyup(function() {
 		var pass_val = $(this).val();
 		if (pass_val.length == 4) {
 			if (pass_val == password){

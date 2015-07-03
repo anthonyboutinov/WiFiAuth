@@ -45,7 +45,7 @@
 									</div>
 							</div>
 							<div class="form-group hidden" id="phone-pass-group">
-								<label for="password">Введите&nbsp;4&#8209;х&#8209;значный&nbsp;код, доставленный&nbsp;по&nbsp;СМС&nbsp;:</label>
+								<label for="password">Введите&nbsp;4&#8209;значный&nbsp;код, доставленный&nbsp;по&nbsp;СМС:</label>
 								<input type="text" class="form-control position-relative" id="password" maxlength="4">
 							</div>
 						</div>

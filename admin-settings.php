@@ -5,9 +5,7 @@
 	
 	$dictionary_branches = ['POST', 'GENERAL_FIELDS', 'ADMIN_DISPLAY_SETTINGS', 'LOGIN_OPTIONS', 'PASSWORD'];
 
-	$updateDBUserPasswordResponce = null;
 	$processSettingsUpdateResponce = null;
-	
 	$additionalScripts = "";
 		
 	if (isset($_POST['form-name'])) {
@@ -285,9 +283,6 @@
 						return;
 					}
 
-					
-					
-					
 					// отправить форму
 					$(this).html("Сохраняется... <i class=\"fa fa-spinner fa-pulse\"></i>").attr('disabled', 'disabled');
 					var _this = $(this);
