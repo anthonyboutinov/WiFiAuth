@@ -14,7 +14,8 @@
 		if ($_POST['form-name'] == 'admin-settings') {
 			$processSettingsUpdateResponce = $database->processPostRequestUpdateVars($dictionary_branches);
 		} else if ($_POST['form-name'] == 'admin-password') {
-			$updateDBUserPasswordResponce = $database->updateDBUserPassowrd();
+			echo $database->updateDBUserPassowrd();
+			exit();
 		}
 	}
 	
@@ -181,26 +182,26 @@
 						<div class="form-group">
 							<label class="col-sm-4 control-label" for="old-password">Старый пароль</label>
 							<div class="col-sm-8">
-								<input type="password" class="form-control" name="old-password">
+								<input type="password" class="form-control" name="old-password" id="old-password">
 							</div>
 						</div>
 				
 						<div class="form-group">
 							<label class="col-sm-4 control-label" for="password">Новый пароль</label>
 							<div class="col-sm-8">
-								<input type="password" class="form-control" name="password">
+								<input type="password" class="form-control" name="password" id="password">
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label class="col-sm-4 control-label" for="repeat-password">Повторите пароль</label>
 							<div class="col-sm-8">
-								<input type="password" class="form-control" name="repeat-password">
+								<input type="password" class="form-control" name="repeat-password" id="repeat-password">
 							</div>
 						</div>
 				
 						<div class="action-buttons-mid-way-panel last-child">
-							<button type="submit" class="btn btn btn-black gradient">Сохранить <i class="fa fa-floppy-o"></i></button>
+							<button type="button" class="btn btn btn-black gradient" id="password-submit">Сохранить <i class="fa fa-floppy-o"></i></button>
 							<?php if ($updateDBUserPasswordResponce === true || $updateDBUserPasswordResponce === false) { 
 								echo '<i class="text-'.($updateDBUserPasswordResponce == true ? 'success' : 'danger').' fa fa-'.($updateDBUserPasswordResponce == true ? 'check-circle' : 'times-circle').'"></i>'; 
 							} ?>
@@ -213,33 +214,32 @@
 			<?php	include 'includes/base/footer.php'; ?>
 		</div>
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html';
-			if (isset($addFileScript) && $addFileScript) { ?>
-				<script>// Добавление названия справа от кнопки Добавить... в областях выбора файлов при выборе файла для загрузки
-					
-					$(document).on('change', '.btn-file :file', function() {
-					  var input = $(this),
-					      numFiles = input.get(0).files ? input.get(0).files.length : 1,
-					      label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-					  input.trigger('fileselect', [numFiles, label]);
-					});
-					
-					$(document).ready( function() {
-					    $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-					        
-					        var input = $(this).parents('.input-group').find(':text'),
-					            log = numFiles > 1 ? numFiles + ' files selected' : label;
-					        
-					        if( input.length ) {
-					            input.val(log);
-					        } else {
-					            if( log ) alert(log);
-					        }
-					        
-					    });
-					});
-				</script>
-			<?php }
-		?>
+		if (isset($addFileScript) && $addFileScript) { ?>
+			<script>// Добавление названия справа от кнопки Добавить... в областях выбора файлов при выборе файла для загрузки
+				
+				$(document).on('change', '.btn-file :file', function() {
+				  var input = $(this),
+				      numFiles = input.get(0).files ? input.get(0).files.length : 1,
+				      label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+				  input.trigger('fileselect', [numFiles, label]);
+				});
+				
+				$(document).ready( function() {
+				    $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+				        
+				        var input = $(this).parents('.input-group').find(':text'),
+				            log = numFiles > 1 ? numFiles + ' files selected' : label;
+				        
+				        if( input.length ) {
+				            input.val(log);
+				        } else {
+				            if( log ) alert(log);
+				        }
+				        
+				    });
+				});
+			</script>
+		<?php } ?>
 		
 		<script src="includes/js/jquery.numeric.min.js"></script>
 		<script>
@@ -278,6 +278,56 @@
 					setTimeout(function() {
 						$(a).attr('disabled', 'disabled');
 						}, 100);
+				});
+				
+				
+				$("#password-submit").click(function(e) {
+					e.preventDefault();
+					
+					// обработать форму
+					if ($("#old-password").val().length == 0 || $("#password").val().length == 0 || $("#repeat-password").val().length == 0) {
+						addNotification('Не все поля заполнены!', 'danger');
+						return;
+					} else if ($("#password").val().length < 8 || $("#repeat-password").val().length < 8) {
+						addNotification('Длина нового пароля должа быть не меньше 8 символов!', 'danger');
+						return;
+					}
+
+					
+					
+					
+					// отправить форму
+					$(this).html("Сохраняется... <i class=\"fa fa-spinner fa-pulse\"></i>").attr('disabled', 'disabled');
+					var _this = $(this);
+					$.ajax({
+						type: "POST",
+						url: "admin-settings.php",
+						data: {
+							'form-name': 'admin-password',
+							'old-password': $("#old-password").val(),
+							'password': $("#password").val(),
+							'repeat-password': $("#repeat-password").val()
+							},
+						success: function(msg) {
+							if (msg.lastIndexOf('danger:', 0) === 0) {
+								addNotification(msg.substr('danger:'.length), 'danger');
+								$(_this).html("Сохранить <i class=\"fa fa-floppy-o\">").removeAttr('disabled');
+							} else {
+								addNotification(msg, 'success');
+								$("#old-password").val('');
+								$("#password").val('');
+								$("#repeat-password").val('');
+								$(_this).html("Готово <i class=\"fa fa-check\"></i>").removeAttr('disabled');
+								setTimeout(function() {$(_this).html("Сохранить <i class=\"fa fa-floppy-o\">");}, 5000);
+							}
+	          				
+						},
+						fail: function() {
+							addNotification('Произошла ошибка при отправке запроса', 'danger');
+							$(_this).html("Сохранить <i class=\"fa fa-floppy-o\">").removeAttr('disabled');
+						}
+					});
+					
 				});
 				
 			});

@@ -218,7 +218,7 @@ $(document).ready(function(){
                       lname = resp.last_name;
                       href =  resp.link;
                       birthday = resp.birthday;
-			 $.ajax({
+			$.ajax({
 						type: "POST",
 						url: "query.php",
 						data: {'fname': fname, 
