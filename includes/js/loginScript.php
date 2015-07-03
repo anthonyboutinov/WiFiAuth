@@ -129,14 +129,14 @@ $(document).ready(function(){
             }, function(r) {   
                 if (r.error) {                      //проверка на ошибки ответа от сервера
                     console.log(r.error);
-                        alert('Для авторизации необходимо разместить запись на стене.');
+                       addNotification('Для авторизации необходимо разместить запись на стене.','danger');
                     if (r.error.error_code == 10007) {
                     } else             
                     if (r.error.error_code == 20) {
-                        alert('Произошла неизвестная ошибка, пожалуйста повторите еще раз.');
+                        addNotification('Произошла неизвестная ошибка, пожалуйста повторите еще раз.','danger');
                     }              
                     else {
-                        alert('Произошла неизвестная ошибка, повторите позже.');                
+                        addNotification('Произошла неизвестная ошибка, повторите позже.','danger');                
                     }
 
 
@@ -187,9 +187,7 @@ $(document).ready(function(){
 			$("#footer-pass").removeClass("hidden").addClass('animated fadelnUp');
 			$("#phone-pass-group").removeClass("hidden").addClass('animated fadelnUp');
 			},
-			fail: function(){
-				addNotification('Ошибка при отправке запроса','danger');
-			}
+			fail: failNotification
 		});
 
  			
