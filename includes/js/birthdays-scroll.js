@@ -52,7 +52,8 @@ function resizeScrollableTables() {
 	scrollMasking();
 }
 
-
-$(document).ready(resizeScrollableTables);
-$(window).resize(resizeScrollableTables);
-$(birthdayScrollable).scroll(scrollMasking);
+if (!($(birthdayScrollable).find("table>tbody>tr>td:first-child")[0].hasAttribute('colspan'))) {
+	$(document).ready(resizeScrollableTables);
+	$(window).resize(resizeScrollableTables);
+	$(birthdayScrollable).scroll(scrollMasking);
+}

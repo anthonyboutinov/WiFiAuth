@@ -2,323 +2,212 @@
 	include 'includes/core/vars.php';
 	$protector->protectPageSetMinAccessLevel('MANAGER');
 ?>
-
 <html lang="ru">
-
 	<head>
-
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
-
-		<title>Добавить клиента</title>
-
+		<title>Добавление клиента — Панель администрирования Re[Spot]</title>
 	</head>
-
-
-
 	<body class="admin-page simple-page">
 
-		<div class="container glass-panel">
+		<div class="modal fade" id="disableModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        <h4 class="modal-title">Подтвердите права для продолжения <i class="fa fa-lock"></i></h4>
+		      </div>
+		      <div class="modal-body">
 
-			<?php include 'includes/base/superadmin-navbar.php'; ?>			
+		      <p> Вы хотите приостановить обслуживание пользователя.</p> 
+		      <p>Подтвердите свои права: введите пароль </p>
 
+		      <div class="form-horizontal">
+					<div class="form-group">
+							<label class="col-sm-3 control-label" for="enable-password">Пароль</label>							
+							<div class="col-sm-9">
+								<input type="password" class="form-control" name="enable-password" id="enable-password" autocomplete="off" maxlength="255">
+							</div>
+					</div>
+
+				</div>	
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-black" data-dismiss="modal">Отмена</button>
+		        <button type="button" id="activeClient" class="btn btn-red">Приостановить</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div>
+
+		<div class="modal fade" id="enableModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        <h4 class="modal-title">Подтвердите права для продолжения <i class="fa fa-lock"></i></h4>
+		      </div>
+		      <div class="modal-body">
+
+		      <p> Вы хотите возобновить обслуживание пользователя.</p> 
+		      <p>Подтвердите свои права: введите пароль </p>
+
+		      <div class="form-horizontal">
+					<div class="form-group">
+							<label class="col-sm-3 control-label" for="disable-password">Пароль</label>							
+							<div class="col-sm-9">
+								<input type="password" class="form-control" name="disable-password" id="disable-password" autocomplete="off" maxlength="64">
+							</div>
+					</div>
+
+				</div>	
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-black" data-dismiss="modal">Отмена</button>
+		        <button type="button" id="disactiveClient" class="btn btn-red">Возобновить</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div>
 		
-
+		<div class="container glass-panel">
+			<?php include 'includes/base/superadmin-navbar.php'; ?>			
 			<div class = "row">
-
 				<div class = "col-md-4">
-
-
-
 					<h1><i class="fa fa-users"></i> Клиенты</h1> 
-
-					
-
 					<div class="page-wrapper">
-
-						
-
-						<?php if ($database->meetsAccessLevel('ROOT')) { ?>
-
-						<form action="admin-dashboard.php" method="post">
-
-							<input type="hidden" name="form-name" value="pretend-to-be">
-
-							<input type="hidden" name="pretend-to-be" value="2">
-
-							<input type="submit" value="Посмотреть админскую панель Chop-Chop">
-
-						</form>
-
-						<?php } ?>
-
-
-
 					 	<table class="table table-hover table-condensed">
-
 							<?php
-
-							
-
-								
-
 								$dbusers = $database->getDBUsers();
-
-
-
 								if ($dbusers->num_rows > 0) {
-
 									$i = 0;
-
 									while($row = $dbusers->fetch_assoc()) {
-
 										$i++;
-
-							?>
-
-
-
+									?>
 									<tr>
-
 										<td class="text-left"><?=$row['LOGIN'];?></td>
-
+										<?php if ($database->meetsAccessLevel('ROOT')) { ?>
+											<td class="text-right">
+												<form action="admin-dashboard.php" method="post">
+													<input type="hidden" name="form-name" value="pretend-to-be">
+													<input type="hidden" name="pretend-to-be" value="<?=$row['ID_DB_USER'];?>">
+													<button type="submit" class="btn btn-link" data-toggle="tooltip" data-placement="left" title="Просмотреть личный кабинет">
+														<i class="fa fa-line-chart"></i>
+													</button>
+												</form>
+											</td>
+										<?php } ?>
+										<?php if ($row['IS_ACTIVE'] =='T') { ?>
+											<td class="text-right">
+												<a href="#" data-id="enabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Приостановить обслуживание">
+													<i class="fa fa-circle" ></i>
+												</a>
+											</td>
+										<?php } else  { ?>
+											<td class="text-right">
+												<a href="#" data-id="disabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Возобновить обслуживание">
+													<i class="fa fa-circle-thin"></i>
+												</a>
+											</td>
+										<?php } ?>
 									</tr>
-
 							<?php 
-
 									}
-
 								} else { ?>
-
 									<tr><td colspan="1" class="text-center">Пусто</td></tr>
-
 							<?	} ?>
-
 					 	</table>
 
-
-
 				 	</div>
-
 				</div>
-
 			<div class="col-md-8">
-
-            	<form action = "superadmin-query.php" method="post">
-
+            	<form action="superadmin-query.php" method="post">
+            		<input type="hidden" name="form-name" value="add-user">
 					<h1><i class="fa fa-user-plus"></i> Добавить клиента</h1> 
-
 					
-
 					<div class="page-wrapper close-follow">
-
 						
-
 						<h2>Компания</h2>
-
 						<div class="form-horizontal">
 
-
-
 							<div class="form-group">
-
 									<label class="col-sm-3 control-label" for="company-name">Название</label>
-
 									<div class="col-sm-9">
-
-										<input type="text" class="form-control" name="company-name" id="company-name" autocomplete="off" maxlength="255">
-
+									<input type="text" class="form-control" name="company-name" id="company-name" autocomplete="off" maxlength="255">
 									</div>
-
-
-
 							</div>
-
-
-
 							<div class="form-group">
-
 									<label class="col-sm-3 control-label" for="email">E-mail</label>							
-
 									<div class="col-sm-9">
-
 										<input type="text" class="form-control" name="email" id="email" autocomplete="off" maxlength="255">
-
 									</div>
-
 								</div>
-
 						</div>
-
 						
-
 					</div>
-
 					<div class="page-wrapper close-follow">
-
 						
-
 						<h2>Роутеры</h2>
-
 						<div class="form-horizontal">
-
 							
-
 							<div class="form-group">
-
 							  <label class="col-sm-3 control-label" for="router-login">Логин роутера</label>							
-
 								<div class="col-sm-9">
-
-									<input type="text" class="form-control" name="router-login" id="router-login" autocomplete="off" maxlength="1024">
-
+								<input type="text" class="form-control" name="router-login" id="router-login" autocomplete="off" maxlength="1024">
 								</div>
-
 							</div>
 
-
-
 							<div class="form-group">
-
 								<label class="col-sm-3 control-label" for="router-token">Токен</label>	
-
 								<div class="col-sm-9">
-
 									<div class="input-group">
-
 										<input type="text" class="form-control"
-
 											name="router-token" id="router-token" autocomplete="off" maxlength="32" readonly>
-
 						                <span class="input-group-btn">
-
 											<span class="btn btn-black" id="generate-token">
-
 												Генерировать <i class="fa fa-key"></i>
-
 											</span>
-
 						                </span>
-
 									</div>
-
 								</div>
-
 							</div>
-
-
-
 						</div>
-
-						
-
 					</div>
-
 					<div class="page-wrapper close-follow">
-
 							
-
 						<h2>Личный кабинет</h2>
-
 						<div class="form-horizontal">
-
 							<div class="form-group">
-
 							  <label class="col-sm-3 control-label" for="login">Логин</label>							
-
 								<div class="col-sm-9">
-
 									<input type="text" class="form-control" name="login" id="login" autocomplete="off" maxlength="255">
-
 								</div>
-
 							</div>
-
-
-
+							
 							<div class="form-group">
-
 								<label class="col-sm-3 control-label" for="password">Пароль</label>	
-
 								<div class="col-sm-9">
-
 									<div class="input-group">
-
 										<input type="text" class="form-control"
-
 											name="password" id="password" autocomplete="off" maxlength="32">
-
 						                <span class="input-group-btn">
-
 											<span class="btn btn-black" id="generate-password">
-
 												Генерировать <i class="fa fa-key"></i>
-
 											</span>
-
 						                </span>
-
 									</div>
-
 								</div>
-
 							</div>
-
-
-
-						</div>								
-
-				 	
-
+							
+						</div>
 				 	</div>
-
 					<div class="page-wrapper">
-
 						<div class="action-buttons-mid-way-panel only-child">
-
 							<button type="submit" class="btn btn btn-black gradient">Добавить <i class="fa fa-plus"></i></button>
-
 						</div>
-
 					</div>
-
-					
-
-					<div class="page-wrapper">
-
-						<div class="action-buttons-mid-way-panel only-child">
-
-							<button type="button" class="btn btn btn-black gradient">Сохранить <i class="fa fa-floppy-o"></i></button>
-
-							<button type="button" class="btn btn btn-red gradient">Приостановить обслуживание <i class="fa fa-toggle-off"></i></button>
-
-						</div>
-
-					</div>
-
-					
-
-					<div class="page-wrapper">
-
-						<div class="action-buttons-mid-way-panel only-child">
-
-							<button type="button" class="btn btn btn-black gradient">Активировать и сохранить <i class="fa fa-toggle-on"></i></button>
-
-						</div>
-
-					</div>
-
-				 	
-				</form>
-         	</div>
-
-    	</div>
 
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
-
+		<?php include 'includes/js/superadmin.php'; ?>
 		<script src="includes/js/superadmin-clients.js"></script>
-
-		
-
  	</body>
-
 </html>

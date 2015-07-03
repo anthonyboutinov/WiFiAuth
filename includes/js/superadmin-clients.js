@@ -14,6 +14,8 @@ $.extend({
             if ((randomNumber >=58) && (randomNumber <=64)) { continue; }
             if ((randomNumber >=91) && (randomNumber <=96)) { continue; }
             if ((randomNumber >=123) && (randomNumber <=126)) { continue; }
+            // Исключать неоднозначные символы: O, o, 0, I, i ()
+            if (randomNumber == 111 || randomNumber == 79 || randomNumber == 48 || randomNumber == 73 || randomNumber == 105) { continue; }
         }
         iteration++;
         password += String.fromCharCode(randomNumber);
@@ -22,8 +24,15 @@ $.extend({
   }
 });
 
-
 $(document).ready(function() {
+	
+	// включить подсказки
+	$('[data-toggle="tooltip"]').tooltip({'html': true});
+	
+	/* *
+	   * ГЕНЕРИРОВАНИЕ ПАРОЛЕЙ
+	   */
+
 	var generateTokenButton = $("#generate-token");
 	var generatePasswordButton = $("#generate-password");
 	
@@ -34,37 +43,108 @@ $(document).ready(function() {
 	genRouterToken();
 	
 	function genPassword() {
-		$("#password").val($.password(20,false));
+		var password = $.password(4,false)+'-'+$.password(4,false)+'-'+$.password(4,false);
+		$("#password").val(password.toUpperCase());
 	}
 	$(generatePasswordButton).click(genPassword);
 	genPassword();
 
-    // function addNewDBUser() {
 
-    // var companyName;
-    // var email;
-    // var routerToken;
-    // var login;
-    // var password;
-    // var routerLogin;
+    $("[data-id='enabled']").click(function (e) {
+        e.preventDefault();
 
-    // company = $("#company-name").val();
-    // email = $("#email").val();
-    // routerToken = $("#router-token").val();
-    // login = $("#login").val();
-    // password = $("#password").val();
-    // routerLogin = $("#router-login").
+        var idUser;
+        var password;
+        idUser = $(this).attr("data-idDBUser");
+        $('#disableModal').modal('show');
+        $('#activeClient').click( function() {
+        password =  $('#enable-password').val();
+        if(password){
+        $.ajax({
+                type: "POST",
+                url: "superadmin-query.php",
+                data:{ 
+                    'password': password,
+                    'form-name': 'superadmin-confirm'
+                },
+                success: function(msg){
 
-    // $.ajax({
-    //         type: "POST",
-    //         url: "superadmin-query.php",
-    //         data: "company=" + company + "&email=" +email+"&router="+routerToken+"&login="+login+"&password="+password+"&roterlogin="+routerLogin,
-    //         success: function(msg){
-    //           alert("Пользователь добавлен!");
-    //         }
-    //         });
-    // }
+                    if (msg == 'true' ) {
 
-    // $("#addUser").click(addNewDBUser);
+        idUser = $(this).attr("data-id-db-user");
+                     $.ajax({
+                            type: "POST",
+                            url: "superadmin-query.php",
+                            data:{ 
+                                'idUser': idUser, 
+                                'active':'F', 
+                                'form-name': 'enable-disable-user'
+                            },
+                            success: function(sg){
+                                setTimeout(function(){location.reload();}, 600);
+                            }
+                            }); 
+                    } else {
+
+                        alert('Неверный пароль, попробуйте еще раз!');
+                    }
+            }
+            }); } else {
+                alert('Введите пароль!');
+                    }
+        });
+    }).mouseenter(function() {
+        $(this).find("i").removeAttr('class').addClass('fa fa-times-circle');
+    }).mouseleave(function() {
+        $(this).find("i").removeAttr('class').addClass('fa fa-circle');
+    });
+
+    
+    $("[data-id='disabled']").click(function (e) {
+        e.preventDefault();
+
+        var idUser = $(this).attr("data-id-db-user");
+        var password;
+        $('#enableModal').modal('show');
+        $('#disactiveClient').click( function() {
+        password =  $('#disable-password').val();
+        if(password){
+        $.ajax({
+                type: "POST",
+                url: "superadmin-query.php",
+                data:{ 
+                    'password': password,
+                    'form-name': 'superadmin-confirm'
+                },
+                success: function(msg){
+
+                    if (msg == 'true' ) {
+
+                     $.ajax({
+                            type: "POST",
+                            url: "superadmin-query.php",
+                            data:{ 
+                                'idUser': idUser, 
+                                'active':'T', 
+                                'form-name': 'enable-disable-user'
+                            },
+                            success: function(sg){
+                                setTimeout(function(){location.reload();}, 600);
+                            }
+                            }); 
+                    } else {
+
+                        alert('Неверный пароль, попробуйте еще раз!');
+                    }
+            }
+            }); } else {
+                alert('Введите пароль!');
+                    }
+        });
+    }).mouseenter(function() {
+	    $(this).find("i").removeAttr('class').addClass('fa fa-dot-circle-o');
+    }).mouseleave(function() {
+	    $(this).find("i").removeAttr('class').addClass('fa fa-circle-o');
+    });
 	
 });

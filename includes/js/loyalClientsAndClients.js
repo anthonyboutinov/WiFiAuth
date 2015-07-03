@@ -56,8 +56,9 @@ function resizeScrollableTables() {
 	scrollMasking();
 }
 
-
-$(document).ready(resizeScrollableTables);
-$(window).resize(resizeScrollableTables);
-$(loyalScrollable).scroll(scrollMasking);
-$(clientsScrollable).scroll(scrollMasking);
+if (!($(clientsScrollable).find("table>tbody>tr>td:first-child")[0].hasAttribute('colspan'))) {
+	$(document).ready(resizeScrollableTables);
+	$(window).resize(resizeScrollableTables);
+	$(loyalScrollable).scroll(scrollMasking);
+	$(clientsScrollable).scroll(scrollMasking);
+}

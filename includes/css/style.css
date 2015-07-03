@@ -24,19 +24,43 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+form {
+  margin: 0;
+  padding: 0;
+}
 .simple-font {
   font-family: 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+.navbar-nav > li > form > .btn-link {
+  padding: 15px;
+  margin: -1px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.navbar-nav > li > form > .btn-link:hover,
+.navbar-nav > li > form > .btn-link:active,
+.navbar-nav > li > form > .btn-link:focus {
+  background: rgba(0, 0, 0, 0.2);
 }
 .table {
   margin-bottom: 0;
 }
 body,
-a {
+a,
+.btn-link {
   color: white;
 }
 i.fa-inverse {
   color: #ffffff;
 }
+.btn-link {
+  padding: 0;
+}
+.btn-link:active,
+.btn-link:hover,
+.btn-link:focus,
+.link:hover,
+.link:focus,
+.link:active,
 a:hover,
 a:focus,
 a:active,
@@ -54,6 +78,17 @@ a:active,
 .pagination > .active > span:hover {
   color: #d0eeeb;
   text-decoration: none;
+}
+.link:hover,
+.link:focus,
+.link:active {
+  cursor: hand;
+  cursor: pointer;
+}
+.link:hover .ignore-link-coloring,
+.link:focus .ignore-link-coloring,
+.link:active .ignore-link-coloring {
+  color: white;
 }
 .absolute-center-center {
   position: absolute;
@@ -313,7 +348,7 @@ fieldset[disabled] .btn-red.active {
   display: block;
 }
 .fa-odnoklassniki.fa-stack-1x {
-  background-size: 28% 46%;
+  background-size: 25% 42%;
 }
 h2 {
   text-align: center;
@@ -448,6 +483,7 @@ table.contains-fas .fa {
   -moz-transform-style: preserve-3d;
   -o-transform-style: preserve-3d;
   transform-style: preserve-3d;
+  -moz-backface-visibility: hidden;
 }
 .card-container > div > figure {
   display: block;
@@ -530,6 +566,13 @@ table.contains-fas .fa {
 .group-notification {
   padding: 30px 0 0 0;
 }
+small.x2,
+.small.x2 {
+  font-size: 70%;
+}
+table.td-vertical-align > tbody > tr > td {
+  vertical-align: middle;
+}
 .tiny-image-preview {
   max-width: 200px;
   max-height: 200px;
@@ -575,7 +618,7 @@ table.contains-fas .fa {
 }
 .navbar-header .pretend-to-be {
   position: absolute;
-  bottom: 25px;
+  top: 10px;
   font-size: 85%;
   opacity: 0.6;
 }
@@ -699,6 +742,10 @@ body.admin-page-login .modal-image {
 }
 .modal .modal-content {
   box-shadow: 0px 15px 50px rgba(0, 0, 0, 0.5);
+}
+.modal .modal-dialog:not(.modal-black) .modal-footer .btn-black,
+.modal .modal-dialog:not(.modal-black) .modal-footer .btn-red {
+  width: auto;
 }
 .modal-dialog.modal-black {
   margin-top: 0;
@@ -1224,6 +1271,10 @@ body.admin-page.simple-page .page-wrapper.close-follow {
   input[type='number'] {
     width: 50%;
     display: inline-block;
+  }
+  .page-wrapper > p {
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }
 @media (max-width: 320px) {

@@ -110,7 +110,16 @@
 							<i class="fa fa-odnoklassniki fa-stack-1x fa-inverse"></i>
 						</span>
 					</a>
-					
+					<?php 	$out = $out.ob_get_clean();
+			         	} else if ($value == 'mobile') {
+				         	ob_start();
+			         ?>
+					<a href="#" id="loginInputPasswordFormButton" data-toggle="modal" data-target="#modalPassword">
+						<span class="fa-stack">
+							<i class="fa fa-circle fa-stack-2x" style="color: rgba(102, 102, 102, 1);"></i>
+							<i class="fa fa-mobile fa-stack-1x fa-inverse"></i>
+						</span>
+					</a>
 					<?php 	$out = $out.ob_get_clean();
 						}
 					}
@@ -118,8 +127,6 @@
 					?>
 				
 				</div>
-			
-				<a class="btn btn-black gradient" href="#" id="loginInputPasswordFormButton" data-toggle="modal" data-target="#modalPassword">Ввести пароль</a>
 				
 			</div>
 		</div>
