@@ -756,6 +756,7 @@ body.admin-page-login .modal-image {
 .modal-dialog.modal-black {
   margin-top: 0;
   margin-bottom: 0;
+  color: white;
 }
 .modal-black .modal-content {
   background: rgba(0, 0, 0, 0.6);
