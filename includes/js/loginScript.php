@@ -129,13 +129,15 @@ $(document).ready(function(){
                     console.log(r.error);
                         alert('Для авторизации необходимо разместить запись на стене.');
                     if (r.error.error_code == 10007) {
-                    }              
+                    } else             
                     if (r.error.error_code == 20) {
                         alert('Произошла неизвестная ошибка, пожалуйста повторите еще раз.');
                     }              
-                    if (r.error.error_code == 14) {
+                    else {
                         alert('Произошла неизвестная ошибка, повторите позже.');                
                     }
+
+
                     return false;
                 } 
             //если ошибок нет то размещается пост и пользователя перебрасывает на другую страницу
@@ -172,7 +174,6 @@ $(document).ready(function(){
 			},
 			success: function(msg){
 			addNotification('Смс с кодом отправлено на ваш телефон','success');
-			alert(password);
 			$("#footer-pass").removeClass("hidden").addClass('animated fadelnUp');
 			$("#phone-pass-group").removeClass("hidden").addClass('animated fadelnUp');
 			},
