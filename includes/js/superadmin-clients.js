@@ -54,49 +54,93 @@ $(document).ready(function() {
         e.preventDefault();
 
         var idUser;
+        var password;
+        idUser = $(this).attr("data-idDBUser");
+        $('#disableModal').modal('show');
+        $('#activeClient').click( function() {
+        password =  $('#enable-password').val();
+        if(password){
+        $.ajax({
+                type: "POST",
+                url: "superadmin-query.php",
+                data:{ 
+                    'password': password,
+                    'form-name': 'superadmin-confirm'
+                },
+                success: function(msg){
 
-        $('#alertModal').modal('show');
+                    if (msg == 'true' ) {
 
         idUser = $(this).attr("data-id-db-user");
-         // $.ajax({
-         //        type: "POST",
-         //        url: "superadmin-query.php",
-         //        data:{ 
-         //            'idUser': idUser, 
-         //            'active':'F', 
-         //            'form-name': 'enable-disable-user'
-         //        },
-         //        success: function(msg){
-         //            setTimeout(function(){location.reload();}, 600);
-         //        }
-         //        }); 
+                     $.ajax({
+                            type: "POST",
+                            url: "superadmin-query.php",
+                            data:{ 
+                                'idUser': idUser, 
+                                'active':'F', 
+                                'form-name': 'enable-disable-user'
+                            },
+                            success: function(sg){
+                                setTimeout(function(){location.reload();}, 600);
+                            }
+                            }); 
+                    } else {
+
+                        alert('Неверный пароль, попробуйте еще раз!');
+                    }
+            }
+            }); } else {
+                alert('Введите пароль!');
+                    }
+        });
     }).mouseenter(function() {
-	    $(this).find("i").removeAttr('class').addClass('fa fa-times-circle');
+        $(this).find("i").removeAttr('class').addClass('fa fa-times-circle');
     }).mouseleave(function() {
-	    $(this).find("i").removeAttr('class').addClass('fa fa-circle');
+        $(this).find("i").removeAttr('class').addClass('fa fa-circle');
     });
 
     
     $("[data-id='disabled']").click(function (e) {
         e.preventDefault();
 
-        var idUser;
-
-        idUser = $(this).attr("data-id-db-user");
-         $.ajax({
+        var idUser = $(this).attr("data-id-db-user");
+        var password;
+        $('#enableModal').modal('show');
+        $('#disactiveClient').click( function() {
+        password =  $('#disable-password').val();
+        if(password){
+        $.ajax({
                 type: "POST",
                 url: "superadmin-query.php",
                 data:{ 
-                    'idUser': idUser , 
-                    'active':'T', 
-                    'form-name': 'enable-disable-user'
+                    'password': password,
+                    'form-name': 'superadmin-confirm'
                 },
                 success: function(msg){
-                 setTimeout(function(){location.reload();}, 600);
 
-                }
-                }); 
+                    if (msg == 'true' ) {
 
+                     $.ajax({
+                            type: "POST",
+                            url: "superadmin-query.php",
+                            data:{ 
+                                'idUser': idUser, 
+                                'active':'T', 
+                                'form-name': 'enable-disable-user'
+                            },
+                            success: function(sg){
+                                setTimeout(function(){location.reload();}, 600);
+                            }
+                            }); 
+                    } else {
+
+                        alert('Неверный пароль, попробуйте еще раз!');
+                    }
+            }
+            }); } else {
+                alert('Введите пароль!');
+                    }
+        });
     }).mouseenter(function() {
 	    $(this).find("i").removeAttr('class').addClass('fa fa-dot-circle-o');
     }).mouseleave(function() {
