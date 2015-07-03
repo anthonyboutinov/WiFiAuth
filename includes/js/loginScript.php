@@ -66,7 +66,7 @@ $(document).ready(function(){
 	
 // EOF Вертикальное позиционирование
 
-	$("#passwordButton").click(passwordLoginInput);
+	// $("#passwordButton").click(passwordLoginInput);
 	
 // Работа с соцсетями
 	
@@ -153,8 +153,8 @@ $(document).ready(function(){
 		return Math.floor(Math.random()*(max-min+1))+min; 
 	}
 	
-	function passwordLoginInput() {  //функция входа по паролю
-     
+	$("#phoneButton").click(function(e) {  //функция входа по паролю
+      e.preventDefault();
 			qu = {};
 		qu[0] = quo(1,9);
 		qu[1] = quo(1,9);
@@ -162,26 +162,34 @@ $(document).ready(function(){
 		qu[3] = quo(1,9);
 		qu[4] = quo(1,9);
 		password = ""+qu[0]+qu[1]+qu[2]+qu[3]+qu[4];
-		phone = '79172856297';
+		phone = '7'+$('#phone-form').val();
 		$.ajax({
 			type: "POST",
 			url: "loginusingpass.php",
 			data: {
 				'phone': phone,
-				'password':password,
+				'password':password
 			},
 			success: function(msg){
-			alert('Смс с кодом отправлено на ваш телефон');
+			addNotification('Смс с кодом отправлено на ваш телефон','success');
+			alert(password);
+			$("#footer-pass").removeClass("hidden").addClass('animated fadelnUp');
+			$("#phone-pass-group").removeClass("hidden").addClass('animated fadelnUp');
+			},
+			fail: function(){
+				alert("Ошибка при отправке запроса!");
 			}
 		});
-		if($('#password').val()= password){
-				location="<?php echo $routerAdmin; ?>";
-		}		
-		//location="loginusingpass.php?p="+$("#password").val();
+	});
 
 
-	}
- function FacebookLoginInput(){  //функция авторизации в Facebook
+	$("#passwordButton").click(function(e) { 
+		if($('#password').val()== password){
+			location="<?php echo $routerAdmin; ?>";
+		}
+	});	
+
+	function FacebookLoginInput(){  //функция авторизации в Facebook
 
       FB.init({
       appId      : '941045885918244',
