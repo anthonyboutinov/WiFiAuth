@@ -27,9 +27,16 @@ include_once('googleChartAPI.html');
 					false, true, true, ' ', '],', "{type: 'number', label: '", "'}"
 				);
 				
-				echo CommonFunctions::arrayToString(
-					$database->getMainStatsTable(30), false, false, false
-				);
+				if (isset($_SESSION['main-stats-chart-data-offset']) && isset($_SESSION['main-stats-chart-data-limit'])) {
+					echo CommonFunctions::arrayToString(
+						$database->getMainStatsTable($_SESSION['main-stats-chart-data-limit'], $_SESSION['main-stats-chart-data-offset']), false, false, false
+					);
+				} else {
+					echo CommonFunctions::arrayToString(
+						$database->getMainStatsTable(30), false, false, false
+					);
+				}
+				
 			?>
 		]);
 

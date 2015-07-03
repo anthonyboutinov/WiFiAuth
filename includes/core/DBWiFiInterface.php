@@ -713,7 +713,7 @@
 				A.ID_DB_USER='.$this->id_db_user.'
 				and DATE(A.DATE_CREATED) >= DATE_SUB(CURDATE(), INTERVAL '.$num_days.' DAY)
 			group by U.ID_LOGIN_OPTION, A.ID_DB_USER, O.SHORT_NAME, O.NAME
-			order by U.ID_LOGIN_OPTION;';
+			order by U.ID_LOGIN_OPTION';
 									
 			$result = $this->getQueryResultWithErrorNoticing($sql);
 			$out = $this->toArray($result);
