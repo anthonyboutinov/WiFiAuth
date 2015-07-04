@@ -17,6 +17,8 @@
 		}
 	}
 	
+	$settings = $database->getValuesForParentByShortName($dictionary_branches);
+	
 ?><!DOCTYPE html>
 <html lang="ru">
 	<head>
@@ -30,13 +32,22 @@
 			<h1 class="huge-cover"><i class="fa fa-cogs"></i> Настройки</h1>
 
 			<div class="row">
-				<div class="col-md-3 col-md-push-9">
+				<div class="col-md-3 col-md-push-9 hidden-sm hidden-xs">
 					<ul class="list-unstyled" role="complementary" data-spy="affix" data-offset-top="198" data-offset-bottom="200" id="affix-menu">
-						<li><a href="#POST">Рекламный пост</a></li>
-						<li><a href="#PORTAL">Портал</a></li>
-						<li><a href="#PORTAL">Отображение данных</a></li>
-						<li><a href="#PORTAL">Способы авторизации</a></li>
-						<li><a href="#PORTAL">Сменить пароль</a></li>
+						<?php
+							$prevFieldParent = null;
+							$isFirst = true;
+							foreach ($settings as $key => $value) {
+								if ($value['ID_PARENT'] != $prevFieldParent) {
+									$prevFieldParent = $value['ID_PARENT'];
+									
+								?><li><a href="#setting-group-<?=$value['ID_PARENT'];?>"><?=$value['PARENT_NAME'];?></a></li><?php
+								
+								}
+								
+							}
+						?>
+						<li><a href="#settings-password-change">Сменить пароль</a></li>
 					</ul>
 				</div>
 				<div class="col-md-9 col-md-pull-3" role="main">
@@ -49,7 +60,7 @@
 							<?php
 								$prevFieldParent = null;
 								$isFirst = true;
-								foreach ($database->getValuesForParentByShortName($dictionary_branches) as $key => $value) {
+								foreach ($settings as $key => $value) {
 									if ($value['ID_PARENT'] != $prevFieldParent) {
 									
 									if ($prevFieldParent != null) { ?>
@@ -60,7 +71,7 @@
 											} ?>
 										</div>
 									</div>
-									<?php
+										<?php
 									}
 									
 									if ($value['ID_PARENT'] != $prevFieldParent) {
@@ -68,13 +79,15 @@
 									}
 									?>
 									
-									<h2 class="<?php
+									<a name="setting-group-<?=$value['ID_PARENT'];?>">
+										<h2 class="<?php
 										if ($isFirst == true) {
 											$isFirst = false;
 										} else {
 											echo 'divide-top';
 										}
 										?>"><?=$value['PARENT_NAME'];?></h2>
+									</a>
 									<div class="form-horizontal">
 									<? } ?>
 									
@@ -177,7 +190,7 @@
 						
 						</form>
 						
-						<h2 class="divide-top">Сменить пароль</h2>
+						<a name="settings-password-change"><h2 class="divide-top">Сменить пароль</h2></a>
 						<div class="form-horizontal">
 							<form method="post">
 								<input type="hidden" name="form-name" value="admin-password">

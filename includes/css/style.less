@@ -108,6 +108,11 @@ input[type="text"] {
 	box-shadow: none;
 }
 
+select {
+	background-color: #315a78;
+	border: none;
+}
+
 .textarea-word-count {
 	margin-top: -25px;
 	margin-right: 8px;
@@ -995,7 +1000,8 @@ body.admin-page.simple-page .change-password-form {
 }
 
 .page-wrapper h2 {
-	margin-top: 0;
+	padding-top: 35px;
+	margin-top: -20px;
 }
 
 input[disabled] {
@@ -1281,19 +1287,12 @@ body.admin-page.simple-page .page-wrapper.close-follow {
 
 ul.affix, ul.affix-top {
 	margin-top: 20px;
-// 	position: fixed;
 
 	&>li>a {
 		padding-bottom: 5px;
 		padding-top: 5px;
 		display: block;
 	}
-}
-
-h1.huge-cover {
-	margin-bottom: 6px !important;
-	padding: 60px 0 60px 12% !important;
-	text-align: left !important;
 }
 
 /* COMBINED (this way it's faster) */
@@ -1316,6 +1315,12 @@ h1.huge-cover {
 	body.admin-page-login .login-options {
 		padding-left: 25%;
 		padding-right: 25%;
+	}
+	
+	h1.huge-cover {
+		margin-bottom: 6px !important;
+		padding: 60px 0 60px 12% !important;
+		text-align: left !important;
 	}
 }
 

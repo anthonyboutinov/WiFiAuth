@@ -114,6 +114,10 @@ input[type="phone"] {
 input[type="text"] {
   box-shadow: none;
 }
+select {
+  background-color: #315a78;
+  border: none;
+}
 .textarea-word-count {
   margin-top: -25px;
   margin-right: 8px;
@@ -902,7 +906,8 @@ body.admin-page.simple-page .change-password-form {
   display: inline-block;
 }
 .page-wrapper h2 {
-  margin-top: 0;
+  padding-top: 35px;
+  margin-top: -20px;
 }
 input[disabled] {
   color: #131313;
@@ -1144,11 +1149,6 @@ ul.affix-top > li > a {
   padding-top: 5px;
   display: block;
 }
-h1.huge-cover {
-  margin-bottom: 6px !important;
-  padding: 60px 0 60px 12% !important;
-  text-align: left !important;
-}
 /* COMBINED (this way it's faster) */
 @media screen and (min-width: 768px) {
   nav.navbar {
@@ -1170,6 +1170,11 @@ h1.huge-cover {
   body.admin-page-login .login-options {
     padding-left: 25%;
     padding-right: 25%;
+  }
+  h1.huge-cover {
+    margin-bottom: 6px !important;
+    padding: 60px 0 60px 12% !important;
+    text-align: left !important;
   }
 }
 @media screen and (min-width: 992px) and (max-width: 1199px) {

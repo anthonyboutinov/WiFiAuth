@@ -40,7 +40,6 @@
 									  <input type="phone" class="form-control" id="phone-form" aria-describedby="sizing-addon2">
 									   <div class="input-group-btn">
 										   <button class="btn btn-black" id="phoneButton"><i class="fa fa-arrow-circle-right"></i></button>
-									   
 									  </div>
 									</div>
 							</div>
@@ -50,7 +49,7 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-<!-- 							<a href="#" type="submit" class="btn btn-black gradient hidden" id ="passwordButton" >Войти <i class="fa fa-sign-in"></i></a> -->
+							<!-- Оставить modal-footer. Он просто пустой. -->
 						</div>
 					</div>
 				<!-- </form> -->
