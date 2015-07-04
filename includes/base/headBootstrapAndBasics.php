@@ -29,3 +29,18 @@
     }
   </style>
 <![endif]-->
+
+<script>// По визуальной оценке, на чистом JavaScript этот скрипт работает в два раза быстрее
+	window.onload = function(){
+		
+		// Hacks for Safari
+		
+		// если не Safari
+		if (!(navigator.userAgent.search("Safari") >= 0 && navigator.userAgent.search("Chrome") < 0))  {
+		   var selects = document.getElementsByTagName("select");
+		   for (var i = 0; i < selects.length; i++) {
+			   selects[i].className = selects[i].className + ' all-but-safari';
+		   }
+		}
+	};
+</script>
