@@ -1,13 +1,25 @@
 <?php
-if ($drawFullContent) {
-	$charthHeight = 300;
-	$height =  $charthHeight + 30;
-} else {
-	$charthHeight = 230;
-	$height =  $charthHeight + 30;
-}
-
-include_once('googleChartAPI.html');
+	
+	if (isset($_SESSION['main-stats-chart-data-limit'])) {
+		$temp = $_SESSION['main-stats-chart-data-limit'];
+	} else {
+		$temp = 30;
+	}
+	
+	$chartLegendValues = $database->getLoginCountByLoginOption($temp);
+	
+	
+	if (sizeof($chartLegendValues) > 0) {
+	
+		if ($drawFullContent) {
+			$charthHeight = 300;
+			$height =  $charthHeight + 30;
+		} else {
+			$charthHeight = 230;
+			$height =  $charthHeight + 30;
+		}
+	
+		include_once('googleChartAPI.html');
 ?>
 <script type="text/javascript">
 	// Set a callback to run when the Google Visualization API is loaded.
@@ -73,3 +85,4 @@ include_once('googleChartAPI.html');
 	}
 
 </script>
+<?php } ?>

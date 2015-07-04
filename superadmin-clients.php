@@ -10,16 +10,14 @@
 	<body class="admin-page simple-page">
 
 		<div class="modal fade" id="disableModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
-		  <div class="modal-dialog">
+		  <div class="modal-dialog modal-black">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		        <h4 class="modal-title">Подтвердите права для продолжения <i class="fa fa-lock"></i></h4>
+		        <h4 class="modal-title">Подтверждение действия <i class="fa fa-lock pull-right"></i></h4>
 		      </div>
 		      <div class="modal-body">
 
-		      <p> Вы хотите приостановить обслуживание пользователя.</p> 
-		      <p>Подтвердите свои права: введите пароль </p>
+		      <p>Вы пытаетесь приостановить обслуживание пользователя. Пожалуйста, введите пароль, прежде чем продолжить.</p>
 
 		      <div class="form-horizontal">
 					<div class="form-group">
@@ -32,24 +30,22 @@
 				</div>	
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-black" data-dismiss="modal">Отмена</button>
-		        <button type="submit" id="disactiveClient" class="btn btn-red">Приостановить</button>
+		        <button type="button" class="btn btn-black" data-dismiss="modal">Отменить</button>
+		        <button type="submit" id="disactiveClient" class="btn btn-red">Приостановить <i class="fa fa-ban"></i></button>
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
 		</div>
 
 		<div class="modal fade" id="enableModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
-		  <div class="modal-dialog">
+		  <div class="modal-dialog modal-black">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		        <h4 class="modal-title">Подтвердите права для продолжения <i class="fa fa-lock"></i></h4>
+		        <h4 class="modal-title">Подтверждение действия <i class="fa fa-lock pull-right"></i></h4>
 		      </div>
 		      <div class="modal-body">
 
-		      <p> Вы хотите возобновить обслуживание пользователя.</p> 
-		      <p>Подтвердите свои права: введите пароль </p>
+		      <p>Вы пытаетесь возобновить обслуживание пользователя. Пожалуйста, введите пароль, прежде чем продолжить.</p>
 
 		      <div class="form-horizontal">
 					<div class="form-group">
@@ -62,8 +58,8 @@
 				</div>	
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-black" data-dismiss="modal">Отмена</button>
-		        <button type="submit" id="activeClient" class="btn btn-red">Возобновить</button>
+		        <button type="button" class="btn btn-black" data-dismiss="modal">Отменить</button>
+		        <button type="submit" id="activeClient" class="btn btn-black">Возобновить <i class="fa fa-plus-circle"></i></button>
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->

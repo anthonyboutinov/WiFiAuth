@@ -759,8 +759,8 @@ body.admin-page-login .modal-image {
 .modal .modal-content {
   box-shadow: 0px 15px 50px rgba(0, 0, 0, 0.5);
 }
-.modal .modal-dialog:not(.modal-black) .modal-footer .btn-black,
-.modal .modal-dialog:not(.modal-black) .modal-footer .btn-red {
+.modal .modal-dialog .modal-footer .btn-black,
+.modal .modal-dialog .modal-footer .btn-red {
   width: auto;
 }
 .modal-dialog.modal-black {
@@ -770,6 +770,10 @@ body.admin-page-login .modal-image {
 }
 .modal-black .modal-content {
   background: rgba(0, 0, 0, 0.6);
+  padding-left: 40px;
+  padding-right: 40px;
+}
+.modal-black .modal-content.narrow-content {
   padding-left: 100px;
   padding-right: 100px;
 }
@@ -1342,8 +1346,8 @@ ul.affix-top > li > a {
     margin-top: 15px;
   }
   .modal-black .modal-content {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
   }
   input[type='number'] {
     width: 100%;

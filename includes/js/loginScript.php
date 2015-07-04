@@ -33,8 +33,6 @@ $(document).ready(function(){
 		var footer = $("footer.footer");
 		var loginInputPasswordForm = $("#modalPassword > .modal-dialog");
 		var loginInputPasswordFormButton = $("#loginInputPasswordFormButton");
-		var loginInputPasswordFormCloseButton = $("#modalPassword .modal-content > .modal-header > button.close");
-		var loginInputPasswordFormClickAwayArea = $("#modalPassword");
 			
 	// EOF Поиск ключевых элементов в DOM
 	
@@ -53,7 +51,7 @@ $(document).ready(function(){
 						
 		function openLoginInputPasswordForm() {
 			setTimeout(positionVertically, 200);
-			$("#password").focus();
+			$("#phone-form").focus();
 		}
 	
 	// EOF Функции

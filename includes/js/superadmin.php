@@ -14,7 +14,9 @@
 			if (fixVarTableClicked == true) {return;}
 			fixVarTableClicked = true;
 			
-			var i = $(this).find("i");
+			var i = $(this).parent().parent().parent().find("a[data-toggle='dropdown'] > i");
+			var i_old_class = $(i)[0].className;
+			alert(i_old_class);
 			$(i).removeAttr('class').addClass('fa fa-fw fa-pulse fa-spinner');
 			
 			$.ajax({
@@ -31,11 +33,16 @@
 						msg = "Не было внесено никаких изменений.";
 					}
 					addNotification(msg, 'success');
+					setTimeout(function() {$(i)[0].className = i_old_class;}, 5000);
                 },
                 error: function(){
 					$(i).removeAttr('class').addClass('fa fa-fw fa-times').parent().attr('title', 'Ошибка');
-					addNotification('Ошибка при выполнении запроса', 'danger');
+					failNotification();
 					fixVarTableClicked = false;
+					setTimeout(function() {
+						$(i)[0].className = i_old_class;
+						$(i).removeAttr('title');
+					}, 5000);
                 }
             }); 
 		});

@@ -28,7 +28,7 @@
 		<div class="modal fade" id="modalPassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-black">
 				<!-- <form> -->
-					<div class="modal-content">
+					<div class="modal-content narrow-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						</div>

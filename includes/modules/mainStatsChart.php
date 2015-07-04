@@ -1,8 +1,12 @@
-<?php if (isset($_SESSION['main-stats-chart-data-limit'])) {
-	$temp = $_SESSION['main-stats-chart-data-limit'];
-} else {
-	$temp = 30;
-}?>
+<?php
+	if (sizeof($chartLegendValues) == 0) { ?>
+		<h1><i class="fa fa-line-chart hidden-xs"></i> График авторизаций<span class="hidden-xs"> в&nbsp;сети</span></h1>
+		<div class="page-wrapper">
+			<p class="text-center">Нет данных</p>
+		</div>
+	<?php
+	} else {
+?>
 <div class="complex-h1">
 	<i class="fa fa-line-chart hidden-xs"></i>
 	<h1>График авторизаций<span class="hidden-xs"> в&nbsp;сети</span></h1>
@@ -27,13 +31,6 @@
 <!-- Legend -->
 <ul class="legend nav<?php if (!$drawFullContent) echo " not-draw-full-content";?>" id="legend">
 	<?php
-	
-	if (isset($_SESSION['main-stats-chart-data-offset']) && isset($_SESSION['main-stats-chart-data-limit'])) {
-		$chartLegendValues = $database->getLoginCountByLoginOption($_SESSION['main-stats-chart-data-limit'], $_SESSION['main-stats-chart-data-offset']);
-	} else {
-		$chartLegendValues = $database->getLoginCountByLoginOption(30); // 30 days
-	}
-	
 	for ($i = 0; $i < sizeof($chartLegendValues); $i++) {
 	?>
 	<li style="width:<?=(100/sizeof($chartLegendValues));?>%">
@@ -47,3 +44,4 @@
 	<?php } ?>
 </ul>
 <!-- EOF Legend -->
+<?php } ?>
