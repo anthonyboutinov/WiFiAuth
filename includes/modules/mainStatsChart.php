@@ -34,12 +34,15 @@
 		$chartLegendValues = $database->getLoginCountByLoginOption(30); // 30 days
 	}
 	
-	for ($i = 0; $i < $numberOfSocialNetworks; $i++) {
+	for ($i = 0; $i < sizeof($chartLegendValues); $i++) {
 	?>
-	<li style="width:<?=(100/$numberOfSocialNetworks);?>%">
+	<li style="width:<?=(100/sizeof($chartLegendValues));?>%">
 		<div class="legend-circle animated zoomIn" style="border-color: <?=$chartColors[$i];?>;"></div>
 		<div class="legend-title"><? echo $socialNetworksNames[$i];?></div>
-		<div class="legend-last-value" style="color: <?=$chartColors[$i]; ?>;"><?=CommonFunctions::NVL($chartLegendValues[$i]['PERCENTAGE'], 0);?>%</div>
+		<div class="legend-last-value" style="color: <?=$chartColors[$i]; ?>;">
+			<?=CommonFunctions::NVL($chartLegendValues[$i]['LOGIN_COUNT'], 0);?>
+			(<?=CommonFunctions::NVL($chartLegendValues[$i]['PERCENTAGE'], 0);?>%)
+		</div>
 	</li>
 	<?php } ?>
 </ul>

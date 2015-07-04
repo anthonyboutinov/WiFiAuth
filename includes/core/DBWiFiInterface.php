@@ -592,11 +592,25 @@
 		
 		var $loginOptions = null;
 		
-		public function getLoginOptions() {
+		// параметр ограничивать ли только теми, по которым были заходы пользователей
+		public function getLoginOptions($cross_with_limit_acts = false) {
 			if ($this->loginOptions != null) {
 				return $this->loginOptions;
 			}
-			$sql = 'select * from VW_CM$LOGIN_OPTION';
+			if ($cross_with_limit_acts) {
+				$sql = 'select * from VW_CM$LOGIN_OPTION';
+			} else {
+				$sql =
+				'SELECT LO.*
+				FROM VW_CM$LOGIN_OPTION LO
+				where LO.ID_LOGIN_OPTION in
+				(
+				    select U.ID_LOGIN_OPTION
+				    from CM$USER U
+				    left join SP$LOGIN_ACT LA on LA.ID_USER=U.ID_USER
+				    where LA.ID_DB_USER='.$this->id_db_user.'
+				)';
+			}
 			$this->loginOptions = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
 			return $this->loginOptions;
 		}
@@ -609,7 +623,7 @@
 		
 		public function getMainStatsTable($num_days) {
 
-			$login_options = $this->getLoginOptions();
+			$login_options = $this->getLoginOptions(true);
 
 			$sql =
 			'SELECT

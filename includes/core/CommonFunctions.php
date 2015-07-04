@@ -1,5 +1,12 @@
 <?php
 	
+	/**
+	 *	class CommonFunctions
+	 *
+	 *	Статический класс с общими полезными методами, использующимися на портале.
+	 *	
+	 *	@author Anthony Boutinov
+	 */
 	class CommonFunctions {
 		
 		/**
@@ -189,17 +196,48 @@
 			return $out;
 		}
 		
+		/**
+		 *	redirect
+		 *
+		 *	Перенаправляет на заданную страницу.
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param ($page) (string)	название страницы
+		 */
 		public static function redirect($page) {
 			$base_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
 			header("Location: $base_url/$page");
 			exit();
 		}
 		
+		/**
+		 *	startsWith
+		 *
+		 *	Проверяет, начинается ли строка $haystack со строчки $needle.
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param ($needle) (string)	Строка, которую ищем
+		 *	@param ($haystack) (string)	Строка, в которой ищем
+		 *	@return (bool)				Начинается с заданной строки или нет?
+		 */
 		public static function startsWith($needle, $haystack) {
 		    // search backwards starting from haystack length characters from the end
 		    return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
 		}
 		
+		/**
+		 *	endsWith
+		 *
+		 *	Проверяет, оканчивается ли строка $haystack строчкой $needle.
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param ($needle) (string)	Строка, которую ищем
+		 *	@param ($haystack) (string)	Строка, в которой ищем
+		 *	@return (bool)				Оканчивается заданной строкой или нет?
+		 */
 		public static function endsWith($needle, $haystack) {
 		    // search forward starting from end minus needle length characters
 		    return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
