@@ -6,6 +6,11 @@
 		</div>
 	<?php
 	} else {
+		
+		// Соц. сети и их названия
+		$loginOptions = $database->getLoginOptions();
+		$socialNetworksNames = CommonFunctions::extractSingleValueFromMultiValueArray($loginOptions, 'NAME');
+		
 ?>
 <div class="complex-h1">
 	<i class="fa fa-line-chart hidden-xs"></i>

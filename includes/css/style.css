@@ -1135,6 +1135,11 @@ body.admin-page.dashboard .complex-h1 .fa {
 body.admin-page.simple-page .page-wrapper.close-follow {
   margin-bottom: 2px;
 }
+h1.dashboard-tile {
+  margin-bottom: 30px !important;
+  padding-top: 23% !important;
+  padding-bottom: 23% !important;
+}
 /* eof DASHBOARD */
 /* eof ADMIN PAGE */
 #phoneButton {
@@ -1176,7 +1181,7 @@ ul.affix-top > li > a {
     padding-right: 25%;
   }
   h1.huge-cover {
-    margin-bottom: 6px !important;
+    margin-bottom: 15px !important;
     padding: 60px 0 60px 12% !important;
     text-align: left !important;
   }

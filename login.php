@@ -1,7 +1,9 @@
-﻿<?php	include 'includes/core/vars.php'; ?><!DOCTYPE html>
-
-<?php	
-   $post = $database->getValuesForParentByShortName('POST');
+﻿<?php
+	include 'includes/core/session.php';
+	
+	$companyName = $database->getValueByShortName('COMPANY_NAME')['VALUE'];
+	
+	$post = $database->getValuesForParentByShortName('POST');
 	
 	// Заголовок поста
 	$postTitle = $post['POST_TITLE']['VALUE'];
@@ -18,7 +20,7 @@
 	$linkFB = $post['POST_LINK_FB']['VALUE'];
 	?>
 
-<html lang="ru">
+<!DOCTYPE html><html lang="ru">
 	<head>
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
 		<title>Добро пожаловать! — <?=$companyName;?></title>

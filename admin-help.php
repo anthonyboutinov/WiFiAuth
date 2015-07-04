@@ -1,4 +1,4 @@
-<?php	include 'includes/core/vars.php'; ?><!DOCTYPE html>
+<?php include 'includes/base/admin.php'; ?><!DOCTYPE html>
 <html lang="ru">
 	<head>
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>

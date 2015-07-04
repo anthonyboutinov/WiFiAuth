@@ -1,6 +1,5 @@
 <?php
-	include 'includes/core/vars.php';
-	$protector->protectPageAdminPage();
+	include 'includes/base/admin.php';
 	$protector->protectPageForbidSuperadmin();
 	
 	$dictionary_branches = ['POST', 'GENERAL_FIELDS', 'ADMIN_DISPLAY_SETTINGS', 'LOGIN_OPTIONS', 'PASSWORD'];
@@ -33,7 +32,7 @@
 
 			<div class="row">
 				<div class="col-md-3 col-md-push-9 hidden-sm hidden-xs">
-					<ul class="list-unstyled" role="complementary" data-spy="affix" data-offset-top="198" data-offset-bottom="200" id="affix-menu">
+					<ul class="list-unstyled" role="complementary" data-spy="affix" data-offset-top="208" data-offset-bottom="200" id="affix-menu">
 						<?php
 							$prevFieldParent = null;
 							$isFirst = true;

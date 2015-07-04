@@ -1,6 +1,8 @@
 <?php
-	include 'includes/core/vars.php';
-	$protector->protectPageSetMinAccessLevel('MIN_SUPERADMIN');
+	include 'includes/core/session.php';
+// 	$protector->protectPageSetMinAccessLevel('MIN_SUPERADMIN');
+
+	$db_users_count = $database->getDBUsersCount();
 ?>
 <html lang="ru">
 	<head>
@@ -10,21 +12,28 @@
 	<body class="admin-page simple-page">
 
 		<div class="container glass-panel">
-			<?php include 'includes/base/superadmin-navbar.php'; ?>			
+			<?php include 'includes/base/superadmin-navbar.php'; ?>	
 			
-			<div class = "row">
-				<div class = "col-md-3 col-md-offset-3">
-					<h1><i class="fa fa-2x fa-users"></i><br><br>Клиенты 120</h1>
-				</div>
-				
-				<div class = "col-md-3">
-					<h1><i class="fa fa-2x fa-users"></i><br><br>Админы 12</h1>
+			<h1 class="huge-cover"><i class="fa fa-dashboard"></i> Панель администрирования</h1>
+			
+			<div class="page-wrapper">
+				<div class="row">
+					<div class="col-md-3 col-md-offset-3">
+						<a href="superadmin-clients.php">
+							<h1 class="dashboard-tile"><i class="fa fa-2x fa-users"></i><br><br>Клиенты <?=$db_users_count[0];?></h1>
+						</a>
+					</div>
+					
+					<div class="col-md-3">
+						<a href="superadmin-admins.php">
+							<h1 class="dashboard-tile"><i class="fa fa-2x fa-users"></i><br><br>Админы <?=$db_users_count[1];?></h1>
+						</a>
+					</div>
 				</div>
 			</div>
-			
+			<?php include 'includes/base/footer.php'; ?>
 		</div>
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
 		<?php include 'includes/js/superadmin.php'; ?>
-		<script src="includes/js/superadmin-clients.js"></script>
  	</body>
 </html>

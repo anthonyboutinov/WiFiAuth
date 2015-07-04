@@ -1,6 +1,12 @@
 <?php
-	include 'includes/core/vars.php';
-	$protector->protectPageAdminPage();
+	include 'includes/base/admin.php';
+	$database->prepareForDashboardTableQueries();
+		
+	// Цвета графиков (и текста в таблицах)
+	$chartColors = $database->getColors();
+	
+	// Сглаживать ли график
+	$curveMainStatsChart = $database->getValueByShortName('CURVE_CHARTS')['VALUE'];
 	
 	// Отрисовывать мини-версии модулей
 	$drawFullContent = false;

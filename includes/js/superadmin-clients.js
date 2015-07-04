@@ -62,38 +62,37 @@ $(document).ready(function() {
         $('#activeClient').click( function() {
 	        password =  $('#enable-password').val();
 	        if(password){
-	        $.ajax({
-	            type: "POST",
-	            url: "superadmin-query.php",
-	            data:{ 
-	                'password': password,
-	                'form-name': 'superadmin-confirm'
-	            },
-	            success: function(msg){
-	
-	                if (msg == 'true' ) {
-						$.ajax({
-	                        type: "POST",
-	                        url: "superadmin-query.php",
-	                        data:{ 
-	                            'idUser': idUser, 
-	                            'active':'T', 
-	                            'form-name': 'enable-disable-user'
-	                        },
-	                        success: function(msg){
-// 	                            setTimeout(function(){location.reload();}, 600);
-								location.reload();
-	                        },
-	                        fail: failNotification
-                        }); 
-	                } else {
-	                    alert('Неверный пароль, попробуйте еще раз!');
-	                }
-	            }
-	        });
+		        $.ajax({
+		            type: "POST",
+		            url: "superadmin-query.php",
+		            data:{ 
+		                'password': password,
+		                'form-name': 'superadmin-confirm'
+		            },
+		            success: function(msg){
+		                if (msg == 'true' ) {
+							$.ajax({
+		                        type: "POST",
+		                        url: "superadmin-query.php",
+		                        data:{ 
+		                            'idUser': idUser, 
+		                            'active':'T', 
+		                            'form-name': 'enable-disable-user'
+		                        },
+		                        success: function(msg){
+	// 	                            setTimeout(function(){location.reload();}, 600);
+									location.reload();
+		                        },
+		                        fail: failNotification
+	                        }); 
+		                } else {
+		                    addNotification('Неверный пароль, попробуйте еще раз!', 'danger');
+		                }
+		            }
+		        });
 	        } else {
-                alert('Введите пароль!');
-                }
+				addNotification('Введите пароль!', 'warning');
+            }
         });
     }).mouseenter(function() {
         $(this).find("i").removeAttr('class').addClass('fa fa-dot-circle-o');
@@ -110,38 +109,39 @@ $(document).ready(function() {
         idUser = $(this).attr("data-id-db-user");
         $('#disableModal').modal('show');
         $('#disactiveClient').click( function() {
-        password =  $('#disable-password').val();
-        if(password){
-        $.ajax({
-                type: "POST",
-                url: "superadmin-query.php",
-                data:{ 
-                    'password': password,
-                    'form-name': 'superadmin-confirm'
-                },
-                success: function(msg){
-                    if (msg == 'true' ) {
-						$.ajax({
-                            type: "POST",
-                            url: "superadmin-query.php",
-                            data:{ 
-                                'idUser': idUser, 
-                                'active':'F', 
-                                'form-name': 'enable-disable-user'
-                            },
-                            success: function(msg){
-	                            location.reload();
-//                                 setTimeout(function(){location.reload();}, 600);
-                            },
-	                        fail: failNotification
-                        }); 
-                    } else {
-                        addNotification('Неверный пароль, попробуйте еще раз!', 'danger');
-                    }
-            }
-            }); } else {
-                addNotification('Введите пароль!', 'warning');
-                    }
+	        password =  $('#disable-password').val();
+	        if(password){
+		        $.ajax({
+	                type: "POST",
+	                url: "superadmin-query.php",
+	                data:{ 
+	                    'password': password,
+	                    'form-name': 'superadmin-confirm'
+	                },
+	                success: function(msg){
+	                    if (msg == 'true' ) {
+							$.ajax({
+	                            type: "POST",
+	                            url: "superadmin-query.php",
+	                            data:{ 
+	                                'idUser': idUser, 
+	                                'active':'F', 
+	                                'form-name': 'enable-disable-user'
+	                            },
+	                            success: function(msg){
+		                            location.reload();
+	//                                 setTimeout(function(){location.reload();}, 600);
+	                            },
+		                        fail: failNotification
+	                        }); 
+	                    } else {
+	                        addNotification('Неверный пароль, попробуйте еще раз!', 'danger');
+	                    }
+		            }
+	            }); 
+	        } else {
+	            addNotification('Введите пароль!', 'warning');
+	        }
         });
     }).mouseenter(function() {
         $(this).find("i").removeAttr('class').addClass('fa fa-times-circle');

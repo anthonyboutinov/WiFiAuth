@@ -1,4 +1,4 @@
-<?php	include 'includes/core/vars.php'; ?><!DOCTYPE html>
+<?php	include 'includes/core/session.php'; ?><!DOCTYPE html>
 <?php
     $post = $database->getValuesForParentByShortName('POST');
 	

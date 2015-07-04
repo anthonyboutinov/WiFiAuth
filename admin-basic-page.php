@@ -1,6 +1,5 @@
 <?php
-	include 'includes/core/vars.php';
-	$protector->protectPageAdminPage();
+	include 'includes/base/admin.php';
 ?><!DOCTYPE html>
 <html lang="ru">
 	<head>

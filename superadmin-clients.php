@@ -1,6 +1,8 @@
 <?php
-	include 'includes/core/vars.php';
+	include 'includes/core/session.php';
 	$protector->protectPageSetMinAccessLevel('MANAGER');
+	
+	$database->prepareForDefaultTableQueries();
 ?>
 <html lang="ru">
 	<head>
@@ -195,12 +197,17 @@
 							</div>
 							
 						</div>
-				 	</div>
+					</div>
 					<div class="page-wrapper">
 						<div class="action-buttons-mid-way-panel only-child">
 							<button type="submit" class="btn btn btn-black gradient">Добавить <i class="fa fa-plus"></i></button>
 						</div>
 					</div>
+            	</form>
+			</div>
+			</div>
+			<?php include 'includes/base/footer.php'; ?>
+		</div>
 
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
 		<?php include 'includes/js/superadmin.php'; ?>

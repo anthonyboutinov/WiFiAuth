@@ -44,12 +44,22 @@
 			}
 		}
 		
+		protected function newSanitize(&$sql) {
+			$this->sanitize($sql);
+			if ($sql == 'NULL' || $sql == 'null' || $sql == null) {
+				$sql = "NULL";
+			} else if (!is_numeric($sql)) {
+				$sql = "'$sql'";
+			}
+		}
+		
 		protected function getHash($password) {
 			return password_hash($password, PASSWORD_BCRYPT);
 		}
 
 		protected function getQueryFirstRowResultWithErrorNoticing($sql, $variableIdentifier = null, $allowNullValue = false) {
 			$this->num_queries_performed++;
+// 			Notification::add($sql);
 			$result = $this->conn->query($sql);
 			if (!$result) {
 				Notification::add('<b>SQL error in query: </b>'.$sql, 'danger');
@@ -73,6 +83,7 @@
 		
 		protected function getQueryResultWithErrorNoticing($sql) {
 			$this->num_queries_performed++;
+// 			Notification::add($sql);
 			$result = $this->conn->query($sql);
 			if (!$result) {
 				Notification::add('<b>SQL error in query: </b>'.$sql, 'danger');

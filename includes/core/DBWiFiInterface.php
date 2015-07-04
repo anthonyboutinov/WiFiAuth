@@ -40,11 +40,6 @@
 						
 			if($this->is_valid()) {
 				$this->pretendToBe();
-				
-				// Get other data
-				$this->tablePageLimit = $this->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
-				$this->dashboardTablePreviewLimit = $this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT')['NUMBER_VALUE'];
-				
 			}
 			
 // 			Notification::add("Database interface constructor performed ".$this->num_queries_performed.' queries');
@@ -129,18 +124,25 @@
 		# ======================================================================== #
 		
 		private function setAcceccLevelAcceptedArray() {
-			$sql = 'SELECT AL.ID_ACCESS_LEVEL, AL.SHORT_NAME FROM CM$ACCESS_LEVEL AL ORDER BY AL.ORDER ASC';
-			$result = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
-			$result = CommonFunctions::extractSingleValueFromMultiValueArray($result, 'SHORT_NAME', 'ID_ACCESS_LEVEL');
 			
-			$out = array();
-			foreach ($result as $key => $value) {
-				if ($key >= $this->id_min_access_level) {
-					$out[] = $value;
+			if (isset($_COOKIE['acceccLevelAcceptedArray'])) {
+				$this->access_level_accepted = unserialize($_COOKIE['acceccLevelAcceptedArray']);
+			} else {
+			
+				$sql = 'SELECT AL.ID_ACCESS_LEVEL, AL.SHORT_NAME FROM CM$ACCESS_LEVEL AL ORDER BY AL.ORDER ASC';
+				$result = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
+				$result = CommonFunctions::extractSingleValueFromMultiValueArray($result, 'SHORT_NAME', 'ID_ACCESS_LEVEL');
+				
+				$out = array();
+				foreach ($result as $key => $value) {
+					if ($key >= $this->id_min_access_level) {
+						$out[] = $value;
+					}
 				}
+				
+				$this->access_level_accepted = $out;
+				setcookie("acceccLevelAcceptedArray", serialize($out), time() + (60 * 6)); // 6 mins
 			}
-			
-			$this->access_level_accepted = $out;
 		}
 		
 		private function getWebUserByAuthenticatingViaRouterData($router_login, $router_password) {
@@ -420,6 +422,30 @@
 		
 		# ==== КОНЕЦ PROTECTED ОБЩИЕ МЕТОДЫ ПРЕОБРАЗОВАНИЯ ДАННЫХ ==== #
 		# ===================================================================================== #
+		
+		# ======================================================================================= #
+		# ==== ПОЛУЧЕНИЕ ДАННЫХ О OFFSET, LIMIT ДЛЯ ВСЕХ ТАБЛИЦ ==== #
+		# ======================================================================================= #
+
+		
+		public function prepareForDashboardTableQueries() {
+			$this->dashboardTablePreviewLimit = $this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT')['NUMBER_VALUE'];
+		}
+		
+		public function prepareForDefaultTableQueries() {
+			$this->tablePageLimit = $this->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
+		}
+		
+		public function getDashboardTablePreviewLimit() {
+			return $this->dashboardTablePreviewLimit;
+		}
+		
+		public function getTablePageLimit() {
+			return $this->tablePageLimit;
+		}
+		
+		# ==== КОНЕЦ ПОЛУЧЕНИЕ ДАННЫХ О OFFSET, LIMIT ДЛЯ ВСЕХ ТАБЛИЦ ==== #
+		# ======================================================================================= #
 		
 		
 		/**
@@ -946,6 +972,17 @@
                     WHERE SHORT_NAME = "COMPANY_NAME")
 					ORDER BY B.VALUE ASC';
 			return  $this->getQueryResultWithErrorNoticing($sql);
+		}
+		
+		public function getDBUsersCount($count_deactivated = false) {
+			$sql =
+			'select count(ID_DB_USER) as COUNT from CM$DB_USER where IS_SUPERADMIN=\'F\' '.
+			'union select count(ID_DB_USER) as COUNT from CM$DB_USER where IS_SUPERADMIN=\'T\'';
+			if ($count_deactivated == false) {
+				$sql = $sql.' and IS_ACTIVE=\'T\'';
+			}
+			$array = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
+			return CommonFunctions::extractSingleValueFromMultiValueArray($array, 'COUNT');
 		}
 		
 		protected function insertVarValue($id_dictionary, $value, $db_db_user, $echo_sql = false) {

@@ -22,6 +22,7 @@
 		 *	@param ($offset) (number)	Новое значение сдвига таблицы
 		 *	@return (string)			description
 		 */
+/*
 		public static function changeOffsetLink($is_desktop, $offset) {
 			$out = '?';
 			if (!$is_desktop) {
@@ -29,6 +30,7 @@
 			}
 			return $out.'offset='.$offset;
 		}
+*/
 		
 		/**
 		 *	NVL
@@ -42,7 +44,7 @@
 		 *	
 		 *	@param ($value) (mixed)			Входное значение, которое может не существовать (=== null)
 		 *	@param ($replacement) (mixed)	(Опционально) Значение, которое подставить, если первый параметр окажется null
-		 *	@return (type)			description
+		 *	@return (mixed)					Возвращаемое значение
 		 */
 		public static function NVL($value, $replacement = '') {
 			return $value === null ? $replacement : $value;

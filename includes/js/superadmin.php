@@ -16,7 +16,6 @@
 			
 			var i = $(this).parent().parent().parent().find("a[data-toggle='dropdown'] > i");
 			var i_old_class = $(i)[0].className;
-			alert(i_old_class);
 			$(i).removeAttr('class').addClass('fa fa-fw fa-pulse fa-spinner');
 			
 			$.ajax({
