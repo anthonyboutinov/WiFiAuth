@@ -125,6 +125,7 @@
 		
 		private function setAcceccLevelAcceptedArray() {
 			
+			// Достать значения из куки, если есть
 			if (isset($_COOKIE['acceccLevelAcceptedArray'])) {
 				$this->access_level_accepted = unserialize($_COOKIE['acceccLevelAcceptedArray']);
 			} else {
@@ -141,6 +142,8 @@
 				}
 				
 				$this->access_level_accepted = $out;
+				
+				// Запомнить значения на 6 минут, чтобы не спрашивать БД при каждой загрузке страницы
 				setcookie("acceccLevelAcceptedArray", serialize($out), time() + (60 * 6)); // 6 mins
 			}
 		}
@@ -213,6 +216,15 @@
 			Notification::add("Логин и(или) пароль неверны", 'danger');
 		}
 		
+		/**
+		 *	resetFailedLoginAtteptFields
+		 *
+		 *	Сбрасывает поля, связанные с отметками о неверных вводах пароля пользователем
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param ($id_db_user) (int)	id DB_USER
+		 */
 		private function resetFailedLoginAtteptFields($id_db_user) {
 			// Сбросить счетчики неверных паролей
 			$sql =
@@ -225,6 +237,17 @@
 			$this->getQueryResultWithErrorNoticing($sql);
 		}
 		
+		/**
+		 *	setWebUser
+		 *
+		 *	Производит авторизацию клиента (в Личный Кабинет).
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param ($web_user) (string)			Логин
+		 *	@param ($web_password) (string)		Пароль
+		 *	@return (bool)						Возвращает false, если авторизация не прошла, и true, если прошла успешно
+		 */
 		private function setWebUser($web_user, $web_password) {
 			$this->sanitize($web_user);
 			$this->sanitize($web_password);
@@ -335,7 +358,18 @@
 				return false;
 			}
 		}
-				
+		
+		/**
+		 *	pretendToBe
+		 *
+		 *	Функция «притвориться...» — позволяет суперадмину производить
+		 *	операции от лица клиента с заданным идентификатором.
+		 *	Данные получаются из $_POST массива, если они есть.
+		 *	Чтобы вызвать эту функцию, необходимо отправить форму pretend-to-be
+		 *	на любую страницу портала.
+		 *	
+		 *	@author Anthony Boutinov
+		 */
 		private function pretendToBe() {
 			if (isset($_POST['form-name']) && $_POST['form-name'] == 'pretend-to-be' && isset($_POST['pretend-to-be'])) {
 				$_SESSION['pretend-to-be'] = $_POST['pretend-to-be'];
@@ -350,6 +384,19 @@
 			}
 		}
 		
+		/**
+		 *	getMixedDBUserID
+		 *
+		 *	Возвращает id DB_USER. Если не включена опция «Притвориться...»
+		 *	и работа ведется от лица суперадмин, то возвращается его id.
+		 *	Если работа ведется от лица суперадмин и он «притворяется» клиентом,
+		 *	то возвращается id заданного клиента.
+		 *	Если работа ведется от лица клиента, то возвращается его id.
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@return (int)			ID_DB_USER
+		 */
 		protected function getMixedDBUserID() {
 			if (!isset($_SESSION['pretend-to-be']) && $this->id_db_user_editor) {
 				return $this->id_db_user_editor;
@@ -367,7 +414,16 @@
 		# ============================================================= #
 
 		
-		
+		/**
+		 *	getValueByShortName
+		 *
+		 *	Получить значение из SP$VAR по SHORT_NAME
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param ($short_name) (string)	SHORT_NAME
+		 *	@return (array)					Массив из одной строки таблицы SP$VAR
+		 */
 		public function getValueByShortName($short_name) {
 			$this->sanitize($short_name);
 			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY IN (SELECT D.ID_DICTIONARY FROM CM$DICTIONARY D WHERE SHORT_NAME="'.$short_name.'") AND V.ID_DB_USER='.$this->getMixedDBUserID();
@@ -380,73 +436,21 @@
 			return $result;
 		}
 		
+		/**
+		 *	getValueByID
+		 *
+		 *	Получить значение из SP$VAR по ID_DICTIONARY
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param ($id) (int)		ID_DICTIONARY
+		 *	@return (array)			Массив из одной строки таблицы SP$VAR
+		 */
 		public function getValueByID($id) {
 			$this->sanitize($id);
 			$sql = 'SELECT V.VALUE, CONVERT(V.VALUE, SIGNED) AS NUMBER_VALUE, V.BLOB_VALUE, V.ID_VAR FROM SP$VAR V WHERE V.ID_DICTIONARY='.$id.' AND V.ID_DB_USER='.$this->getMixedDBUserID();
 			return $this->getQueryFirstRowResultWithErrorNoticing($sql, $id);
 		}
-		
-		# ==== КОНЕЦ ПОЛУЧЕНИЕ ДАННЫХ ИЗ СЛОВАРЯ ==== #
-		# ============================================================= #
-		
-		# ===================================================================================== #
-		# ==== PROTECTED ОБЩИЕ МЕТОДЫ ПРЕОБРАЗОВАНИЯ ДАННЫХ ==== #
-		# ===================================================================================== #
-		
-		protected function sanitizeFromTo(&$from, &$to) {
-			$this->sanitize($from);
-			if ($to == null) {
-				$to = $this->tablePageLimit;
-			} else {
-				$this->sanitize($to);
-			}
-		}
-		
-		protected function appendToSQLIsOrInArrayOfValues($values, &$sql) {
-			if (is_array($values)) {
-				$sql = $sql.' in (';
-				$isFirst = true;
-				foreach ($values as $value) {
-					if ($isFirst) {
-						$isFirst = false;	
-					} else {
-						$sql = $sql.', ';
-					}
-					$sql = $sql.'\''.$value.'\'';
-				}
-				$sql = $sql.')';
-			} else {
-				$sql = $sql.'="'.$values.'"';
-			}
-		}
-		
-		# ==== КОНЕЦ PROTECTED ОБЩИЕ МЕТОДЫ ПРЕОБРАЗОВАНИЯ ДАННЫХ ==== #
-		# ===================================================================================== #
-		
-		# ======================================================================================= #
-		# ==== ПОЛУЧЕНИЕ ДАННЫХ О OFFSET, LIMIT ДЛЯ ВСЕХ ТАБЛИЦ ==== #
-		# ======================================================================================= #
-
-		
-		public function prepareForDashboardTableQueries() {
-			$this->dashboardTablePreviewLimit = $this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT')['NUMBER_VALUE'];
-		}
-		
-		public function prepareForDefaultTableQueries() {
-			$this->tablePageLimit = $this->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
-		}
-		
-		public function getDashboardTablePreviewLimit() {
-			return $this->dashboardTablePreviewLimit;
-		}
-		
-		public function getTablePageLimit() {
-			return $this->tablePageLimit;
-		}
-		
-		# ==== КОНЕЦ ПОЛУЧЕНИЕ ДАННЫХ О OFFSET, LIMIT ДЛЯ ВСЕХ ТАБЛИЦ ==== #
-		# ======================================================================================= #
-		
 		
 		/**
 		 *	getValuesForParentByShortName
@@ -461,8 +465,7 @@
 		 *	@return (array)										сложный массив, где каждая строка результата доступна по ключу SHORT_NAME
 		 */
 		public function getValuesForParentByShortName($short_names) {
-			$this->sanitize($short_names);
-			$short_name = $short_names;
+			$this->newSanitize($short_names);
 			
 			$sql =
 			'SELECT
@@ -488,7 +491,7 @@
 						SELECT T.ID_DICTIONARY
 						FROM CM$DICTIONARY T
 						WHERE T.SHORT_NAME';
-			$this->appendToSQLIsOrInArrayOfValues($short_name, $sql);
+			$this->appendToSQLIsOrInArrayOfValues($short_names, $sql);
 			$sql = $sql.'
 					)
 				)
@@ -501,7 +504,6 @@
 		
 		public function getDataTypesForParentByShortName($short_names) {
 			$this->sanitize($short_names);
-			$short_name = $short_names;
 			
 			$sql = '
 			select
@@ -512,12 +514,102 @@
 			left join CM$DICTIONARY DT on DT.ID_DICTIONARY=D.ID_DATA_TYPE
 			where D.ID_PARENT IN (
 				SELECT P.ID_DICTIONARY FROM CM$DICTIONARY P where P.SHORT_NAME';
-			$this->appendToSQLIsOrInArrayOfValues($short_name, $sql);
+			$this->appendToSQLIsOrInArrayOfValues($short_names, $sql);
 			$sql = $sql.') order by D.ORDER ASC';
 						
 			$result = $this->getQueryResultWithErrorNoticing($sql);
 			return $this->keyRowsByColumn('SHORT_NAME', $result);
 		}
+		
+		# ==== КОНЕЦ ПОЛУЧЕНИЕ ДАННЫХ ИЗ СЛОВАРЯ ==== #
+		# ============================================================= #
+
+
+		# ===================================================================================== #
+		# ==== PROTECTED ОБЩИЕ МЕТОДЫ ПРЕОБРАЗОВАНИЯ ДАННЫХ ==== #
+		# ===================================================================================== #
+		
+		/**
+		 *	sanitizeFromTo
+		 *
+		 *	Санитизировать одновременно обе переменные: from и to
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param (&$from) (type)	переменная from
+		 *	@param (&$to) (type)	переменная to
+		 */
+		protected function sanitizeFromTo(&$from, &$to) {
+			$this->sanitize($from);
+			if ($to == null) {
+				$to = $this->tablePageLimit;
+			} else {
+				$this->sanitize($to);
+			}
+		}
+		
+		/**
+		 *	appendToSQLIsOrInArrayOfValues
+		 *
+		 *	Добавляет в $sql «равно ...» или «в массиве значений (...)»
+		 *	для заданного значения, которое может быть либо строкой или 
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param (name) (type)	description
+		 *	@return (type)			description
+		 */
+		protected function appendToSQLIsOrInArrayOfValues($values, &$sql) {
+			if (is_array($values)) {
+				$sql = $sql.' in (';
+				$isFirst = true;
+				foreach ($values as $value) {
+					if ($isFirst) {
+						$isFirst = false;	
+					} else {
+						$sql = $sql.', ';
+					}
+					$sql = $sql.$value;
+				}
+				$sql = $sql.')';
+			} else {
+				$sql = $sql.'='.$values;
+			}
+		}
+		
+		# ==== КОНЕЦ PROTECTED ОБЩИЕ МЕТОДЫ ПРЕОБРАЗОВАНИЯ ДАННЫХ ==== #
+		# ===================================================================================== #
+
+
+		# ======================================================================================= #
+		# ==== ПОЛУЧЕНИЕ ДАННЫХ О OFFSET, LIMIT ДЛЯ ВСЕХ ТАБЛИЦ ==== #
+		# ======================================================================================= #
+		
+		public function prepareForDashboardTableQueries() {
+			$this->dashboardTablePreviewLimit = $this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT')['NUMBER_VALUE'];
+		}
+		
+		public function prepareForDefaultTableQueries() {
+			$this->tablePageLimit = $this->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
+		}
+		
+		public function getDashboardTablePreviewLimit() {
+			return $this->dashboardTablePreviewLimit;
+		}
+		
+		public function getTablePageLimit() {
+			return $this->tablePageLimit;
+		}
+		
+		# ==== КОНЕЦ ПОЛУЧЕНИЕ ДАННЫХ О OFFSET, LIMIT ДЛЯ ВСЕХ ТАБЛИЦ ==== #
+		# ======================================================================================= #
+
+
+		# ========================================================================== #
+		# ==== ПОЛУЧЕНИЕ ОБЫЧНЫХ ДАННЫХ ИЗ ТАБЛИЦ ==== #
+		# ========================================================================== #
+
+		
 		
 		public function getLoginActs($from = 0, $to = null) {
 			$this->sanitizeFromTo($from, $to);
@@ -641,6 +733,15 @@
 			return $this->loginOptions;
 		}
 		
+		/**
+		 *	getColors
+		 *
+		 *	Получить цвета (цветовую схему).
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@return (array)			Простой массив с CSS цветами
+		 */
 		public function getColors() {
 			$sql = 'select * from VW_CM$COLOR';
 			$result = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
@@ -792,6 +893,9 @@
 			return $out;
 			
 		}
+
+		# ==== КОНЕНЦ ПОЛУЧЕНИЕ ОБЫЧНЫХ ДАННЫХ ИЗ ТАБЛИЦ ==== #
+		# ========================================================================== #
 		
 		
 		# =================================================================== #
