@@ -25,32 +25,115 @@
 			
 		}
 		
-		protected function sanitize(&$sql) {
+		private function wrapSanitizedValue(&$sql, $do_return = false) {
+			if ($sql == 'NULL' || $sql == 'null' || $sql == null) {
+				if ($do_return == true) {
+					return "NULL";
+				} else {
+					$sql = "NULL";
+				}
+			} else if (!is_numeric($sql)) {
+				if ($do_return == true) {
+					return "'$sql'";
+				} else {
+					$sql = "'$sql'";
+				}
+			}
+		}
+		
+		/**
+		 *	newSanitize
+		 *
+		 *	Новая функция санитизации. Кроме прочего оборачивает значение
+		 *	в кавычки, если это строка (и она не "NULL"). Если передается null,
+		 *	возаращается строка NULL. Если число, то оно не оборачивается
+		 *	кавычками. Если это массив из вышеперечисленного, делает это
+		 *	для каждого значения массива.
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param (&$sql) (string | number | null | array)		Значение для санитизации
+		 *	@param ($do_return) (bool)							Возвращать ли новое значение (true) или изменять саму
+		 *															переменную (false). Поведение по умолчанию: изменять саму переменную.
+ 		 *	@param ($max_length) (int)							Ограничение на длину значения. По умолчанию, 2048 символов.
+		 *	@return (typeof($sql))								Возаращаемое значение. По умолчанию, функция ничего не возвращает.
+		 */
+		private function innerSanitize(&$sql, $wrap_values, $do_return, $max_length = null) {
+			
+			if (!isset($wrap_values)) {
+				$wrap_values = true;
+			}
+			if (!isset($do_return)) {
+				$do_return = false;
+			}
+			if (!(isset($max_length))) {
+				$max_length = 2048;
+			}
+			
 			if (is_array($sql)) {
-				$maxLength = 2048;
+				if ($do_return == true) {
+					die('DEBUG: $do_return == true не поддерживается для массивов!');
+				}
 				foreach ($sql as $key => $value) {
 					$val = $this->conn->real_escape_string($value);
-					if (strlen($val) > $maxLength) {
+					if (strlen($val) > $max_length) {
 						Notification::add(
 							'<b>Warning</b>: trying to sanitize data which is '.
 							length($val).' characters long! Data truncated', 'warning'
 						);
-						$val = substr($val, 0, $maxLength);
+						$val = substr($val, 0, $max_length);
 					}
-					$sql[$key] = $val;
+					$sql[$key] = $this->wrapSanitizedValue($val, true);
 				}
 			} else {
+				if (strlen($sql) > $max_length) {
+					Notification::add(
+						'<b>Warning</b>: trying to sanitize data which is '.
+						length($sql).' characters long! Data truncated', 'warning'
+					);
+					$sql = substr($sql, 0, $max_length);
+				}
 				$sql = $this->conn->real_escape_string($sql);
+				
+				if ($wrap_values == true) {
+					return $this->wrapSanitizedValue($sql, $do_return);
+				} else {
+					return $sql;
+				}
 			}
 		}
 		
-		protected function newSanitize(&$sql) {
-			$this->sanitize($sql);
-			if ($sql == 'NULL' || $sql == 'null' || $sql == null) {
-				$sql = "NULL";
-			} else if (!is_numeric($sql)) {
-				$sql = "'$sql'";
-			}
+		/**
+		 *	sanitize
+		 *
+		 *	Старая версия санитизации данных.
+		 *	Используйте новую версию.
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param (&$sql) (string | number | null | array)		Значение для санитизации
+		 *	@param ($max_length) (int)							Ограничение на длину значения. По умолчанию, 2048 символов.
+		 *	@return (typeof($sql))								Возаращаемое значение. По умолчанию, функция ничего не возвращает.
+		 */
+		protected function sanitize(&$sql, $max_length = null) {
+			$this->innerSanitize($sql, false, false, $max_length);
+		}
+		
+		/**
+		 *	newSanitize
+		 *
+		 *	Санитизация данных.
+		 *	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param (&$sql) (string | number | null | array)		Значение для санитизации
+		 *	@param ($max_length) (int)							Ограничение на длину значения. По умолчанию, 2048 символов.
+		 *	@param ($do_return) (bool)							Возвращать ли новое значение (true) или изменять саму
+		 *															переменную (false). Поведение по умолчанию: изменять саму переменную.
+		 *	@return (typeof($sql))								Возаращаемое значение. По умолчанию, функция ничего не возвращает.
+		 */
+		protected function newSanitize(&$sql, $max_length = null, $do_return = false) {
+			return $this->innerSanitize($sql, true, $do_return, $max_length);
 		}
 		
 		protected function getHash($password) {
@@ -111,12 +194,6 @@
 			}
 			return $out;
 		}
-		
-		/*
-public function getMoreOf($function, $from, $to) {
-			return call_user_func($function, $from, $to);
-		}
-*/
 		
 	}
 

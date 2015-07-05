@@ -1,12 +1,12 @@
 <?php
+	session_start();
+	
 	/**
 	 *	Задавать переменную $current_page_is_not_protected = true для страниц,
 	 *	для посещения которых не требуется авторизация (кроме страницы
 	 *	WifiCaptivePortal и страницы формы авторизации).
 	 */
-		
-	session_start();
-	
+			
 	require 'db_config.php';
 	require 'DBWiFiInterface.php';
 	

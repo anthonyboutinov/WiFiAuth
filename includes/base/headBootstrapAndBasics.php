@@ -42,7 +42,7 @@
 			   selects[i].className = selects[i].className + ' all-but-safari';
 		   }
 		} else {
-			var _body = document.getElementsByTagName("body")[0];
+			var _body = document.getElementsByTagName("body.admin-page-login")[0];
 			_body.className = _body.className + ' safari-only';
 		}
 	};
