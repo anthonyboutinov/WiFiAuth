@@ -26,12 +26,17 @@
 		 *	
 		 *	@author Anthony Boutinov
 		 *	
-		 *	@param ($msg) (string)	Сообщение
-		 *	@param ($kind) (string)	Тип сообщения. По умолчанию, 'warning'.
+		 *	@param ($msg) (string)							Сообщение
+		 *	@param ($kind) (string)							Тип сообщения. По умолчанию, 'warning'.
+ 		 *	@param ($remove_repeating_whitespaces) (bool)	Убрать ли из сообщения повторяющиеся символы пробела. По умолчанию, 'true'.
 		 */	
-		public static function add($msg, $kind = 'info') {
+		public static function add($msg, $kind = null, $remove_trailing_whitespaces = true) {
 			
-			if ($kind == 'error') {
+			if (!isset($kind)) {
+				$kind = 'info';
+			}
+			
+			else if ($kind == 'error') {
 				$kind = 'danger';
 			}
 			
@@ -39,8 +44,10 @@
 				$msg = print_r($msg, true);
 			} else {
 				
-				// убрать повторяющиеся пробелы
-				$msg = preg_replace('/\s+/', ' ',$msg);
+				if ($remove_trailing_whitespaces == true) {
+					// убрать повторяющиеся пробелы
+					$msg = preg_replace('/\s+/', ' ',$msg);
+				}
 			
 				// обрамляет SQL код в теги <pre></pre>, если замечает его
 				$lookupForSQL = ['select', 'insert into'];

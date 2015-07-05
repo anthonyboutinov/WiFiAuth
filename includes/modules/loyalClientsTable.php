@@ -19,7 +19,7 @@
 		$offset = 0;
 	}
 	
-	$limit = $drawFullContent ? $database->tablePageLimit : $database->dashboardTablePreviewLimit;
+	$limit = $drawFullContent ? $database->getTablePageLimit() : $database->getDashboardTablePreviewLimit();
 	
 	$topUsers = $database->getTopUsers($offset, $limit);
 

@@ -21,7 +21,7 @@
 		$offset = 0;
 	}
 	
-	$limit = $drawFullContent ? $database->tablePageLimit : $database->dashboardTablePreviewLimit;
+	$limit = $drawFullContent ? $database->getTablePageLimit() : $database->getDashboardTablePreviewLimit();
 	
 	$users = $database->getLoginActs($offset, $limit);
 

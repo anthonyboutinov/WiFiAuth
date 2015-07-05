@@ -19,15 +19,31 @@
 				<?php if ($database->meetsAccessLevel('MANAGER')) { ?>
 				<li><a href="superadmin-clients.php"><i class="fa fa-fw fa-users"></i> Клиенты</a></li>
 				<?php } ?>
+				
 				<?php if ($database->meetsAccessLevel('ROOT')) { ?>
-				<li><a href="#" id="fix-var-table"><i class="fa fa-fw fa-wrench"></i> Починить SP$VAR</a></li>
-				<?php } ?>
-				<li><a href="wiki/" target="_blank"><i class="fa fa-fw fa-book"></i> Вики</a></li>
-				<li><a href="https://trello.com/b/21S8biIL/re-spot" target="_blank"><i class="fa fa-fw fa-trello"></i> Trello</a></li>
+				<li class="dropdown">
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-fw fa-database"></i> Обслуживание БД <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+
+						<li><a href="#" id="fix-var-table"><i class="fa fa-fw fa-wrench"></i> Починить SP$VAR</a></li>
+								
+					</ul>
+		        </li>
+		        <?php } ?>
+		        
+		        <li class="dropdown">
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-fw fa-briefcase"></i> Инструменты <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+
+						<li><a href="wiki/" target="_blank"><i class="fa fa-fw fa-book"></i> Вики</a></li>
+						<li><a href="https://trello.com/b/21S8biIL/re-spot" target="_blank"><i class="fa fa-fw fa-trello"></i> Trello</a></li>
+								
+					</ul>
+		        </li>
 	            
 				<li class="divider visible-xs-block"></li>
 
-<!-- 				<li><a href="superadmin-settings.php"><i class="fa fa-fw fa-cog"></i> Настройки</a></li> -->
+<!-- 				<li><a href="superadmin-settings.php"><i class="fa fa-fw fa-cogs"></i> Настройки</a></li> -->
 				<li><a href="admin-logout.php"><i class="fa fa-fw fa-sign-out"></i> Выйти</a></li>
         
 			</ul>

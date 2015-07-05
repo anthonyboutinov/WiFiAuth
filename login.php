@@ -1,7 +1,9 @@
-﻿<?php	include 'includes/core/vars.php'; ?><!DOCTYPE html>
-
-<?php	
-   $post = $database->getValuesForParentByShortName('POST');
+﻿<?php
+	include 'includes/core/session.php';
+	
+	$companyName = $database->getValueByShortName('COMPANY_NAME')['VALUE'];
+	
+	$post = $database->getValuesForParentByShortName('POST');
 	
 	// Заголовок поста
 	$postTitle = $post['POST_TITLE']['VALUE'];
@@ -18,7 +20,7 @@
 	$linkFB = $post['POST_LINK_FB']['VALUE'];
 	?>
 
-<html lang="ru">
+<!DOCTYPE html><html lang="ru">
 	<head>
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
 		<title>Добро пожаловать! — <?=$companyName;?></title>
@@ -28,29 +30,28 @@
 		<div class="modal fade" id="modalPassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-black">
 				<!-- <form> -->
-					<div class="modal-content">
+					<div class="modal-content narrow-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						</div>
 						<div class="modal-body">
 							<div class="form-group">
-								<label  for="phone">Номер телефона</label>
+								<label  for="phone">Введите&nbsp;номер&nbsp;телефона,<br>чтобы&nbsp;получить код&nbsp;для&nbsp;входа:</label>
 									<div class="input-group">
 									  <span class="input-group-addon" id="sizing-addon2">+7</span>
 									  <input type="phone" class="form-control" id="phone-form" aria-describedby="sizing-addon2">
 									   <div class="input-group-btn">
 										   <button class="btn btn-black" id="phoneButton"><i class="fa fa-arrow-circle-right"></i></button>
-									   
 									  </div>
 									</div>
 							</div>
 							<div class="form-group hidden" id="phone-pass-group">
-								<label  for="password">Пароль</label>
-								<input type="text" class="form-control position-relative" id="password" >
+								<label for="password">Введите&nbsp;4&#8209;значный&nbsp;код, доставленный&nbsp;по&nbsp;СМС:</label>
+								<input type="text" class="form-control position-relative" id="password" maxlength="4">
 							</div>
 						</div>
-						<div class="modal-footer hidden" id="footer-pass">
-							<a href="#" type="submit" class="btn btn-black gradient" id ="passwordButton" >Войти <i class="fa fa-sign-in"></i></a>
+						<div class="modal-footer">
+							<!-- Оставить modal-footer. Он просто пустой. -->
 						</div>
 					</div>
 				<!-- </form> -->

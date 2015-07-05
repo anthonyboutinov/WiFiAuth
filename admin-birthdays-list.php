@@ -1,6 +1,6 @@
 <?php
-	include 'includes/core/vars.php';
-	$protector->protectPageAdminPage();
+	include 'includes/base/admin.php';
+	$database->prepareForDefaultTableQueries();
 ?><!DOCTYPE html>
 <html lang="ru">
 	<head>

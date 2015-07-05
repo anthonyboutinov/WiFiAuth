@@ -24,6 +24,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+body.safari-only {
+  overflow-y: hidden;
+  position: relative;
+}
 form {
   margin: 0;
   padding: 0;
@@ -98,15 +102,25 @@ a:active,
   right: 0;
   margin: auto;
 }
+.nav > li > a:focus,
+.nav > li > a:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
 input[type="text"],
 input[type="number"],
 input[type="url"],
 input[type="color"],
-input[type="password"] {
+input[type="password"],
+input[type="email"],
+input[type="phone"] {
   font-family: 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 input[type="text"] {
   box-shadow: none;
+}
+select.all-but-safari {
+  background-color: #315a78;
+  border: none;
 }
 .textarea-word-count {
   margin-top: -25px;
@@ -749,8 +763,8 @@ body.admin-page-login .modal-image {
 .modal .modal-content {
   box-shadow: 0px 15px 50px rgba(0, 0, 0, 0.5);
 }
-.modal .modal-dialog:not(.modal-black) .modal-footer .btn-black,
-.modal .modal-dialog:not(.modal-black) .modal-footer .btn-red {
+.modal .modal-dialog .modal-footer .btn-black,
+.modal .modal-dialog .modal-footer .btn-red {
   width: auto;
 }
 .modal-dialog.modal-black {
@@ -760,6 +774,10 @@ body.admin-page-login .modal-image {
 }
 .modal-black .modal-content {
   background: rgba(0, 0, 0, 0.6);
+  padding-left: 40px;
+  padding-right: 40px;
+}
+.modal-black .modal-content.narrow-content {
   padding-left: 100px;
   padding-right: 100px;
 }
@@ -896,7 +914,8 @@ body.admin-page.simple-page .change-password-form {
   display: inline-block;
 }
 .page-wrapper h2 {
-  margin-top: 0;
+  padding-top: 35px;
+  margin-top: -20px;
 }
 input[disabled] {
   color: #131313;
@@ -1120,8 +1139,29 @@ body.admin-page.dashboard .complex-h1 .fa {
 body.admin-page.simple-page .page-wrapper.close-follow {
   margin-bottom: 2px;
 }
+h1.dashboard-tile {
+  margin-bottom: 30px !important;
+  padding-top: 23% !important;
+  padding-bottom: 23% !important;
+}
 /* eof DASHBOARD */
 /* eof ADMIN PAGE */
+#phoneButton {
+  min-width: 99px;
+}
+.affix {
+  top: 40px;
+}
+ul.affix,
+ul.affix-top {
+  margin-top: 20px;
+}
+ul.affix > li > a,
+ul.affix-top > li > a {
+  padding-bottom: 5px;
+  padding-top: 5px;
+  display: block;
+}
 /* COMBINED (this way it's faster) */
 @media screen and (min-width: 768px) {
   nav.navbar {
@@ -1143,6 +1183,11 @@ body.admin-page.simple-page .page-wrapper.close-follow {
   body.admin-page-login .login-options {
     padding-left: 25%;
     padding-right: 25%;
+  }
+  h1.huge-cover {
+    margin-bottom: 15px !important;
+    padding: 60px 0 60px 12% !important;
+    text-align: left !important;
   }
 }
 @media screen and (min-width: 992px) and (max-width: 1199px) {
@@ -1310,8 +1355,8 @@ body.admin-page.simple-page .page-wrapper.close-follow {
     margin-top: 15px;
   }
   .modal-black .modal-content {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
   }
   input[type='number'] {
     width: 100%;

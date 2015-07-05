@@ -1,8 +1,17 @@
-<?php if (isset($_SESSION['main-stats-chart-data-limit'])) {
-	$temp = $_SESSION['main-stats-chart-data-limit'];
-} else {
-	$temp = 30;
-}?>
+<?php
+	if (sizeof($chartLegendValues) == 0) { ?>
+		<h1><i class="fa fa-line-chart hidden-xs"></i> График авторизаций<span class="hidden-xs"> в&nbsp;сети</span></h1>
+		<div class="page-wrapper">
+			<p class="text-center">Нет данных</p>
+		</div>
+	<?php
+	} else {
+		
+		// Соц. сети и их названия
+		$loginOptions = $database->getLoginOptions();
+		$socialNetworksNames = CommonFunctions::extractSingleValueFromMultiValueArray($loginOptions, 'NAME');
+		
+?>
 <div class="complex-h1">
 	<i class="fa fa-line-chart hidden-xs"></i>
 	<h1>График авторизаций<span class="hidden-xs"> в&nbsp;сети</span></h1>
@@ -11,7 +20,7 @@
 		<select id="main-stats-chart-period">
 			<option value="365"<?php if ($temp == 365) {echo ' selected';} ?>>1 год</option>
 			<option value="183"<?php if ($temp == 183) {echo ' selected';} ?>>6 месяцев</option>
-			<option value="92"<?php if ($temp == 92) {echo ' selected';} ?>>3 месяца</option>
+			<option value="61"<?php if ($temp == 61) {echo ' selected';} ?>>2 месяца</option>
 			<option value="30"<?php if ($temp == 30) {echo ' selected';} ?>>1 месяц</option>
 		</select>
 	</span>
@@ -27,16 +36,17 @@
 <!-- Legend -->
 <ul class="legend nav<?php if (!$drawFullContent) echo " not-draw-full-content";?>" id="legend">
 	<?php
-	
-	$chartLegendValues = $database->getLoginCountByLoginOption(30); // 30 days
-	
-	for ($i = 0; $i < $numberOfSocialNetworks; $i++) {
+	for ($i = 0; $i < sizeof($chartLegendValues); $i++) {
 	?>
-	<li style="width:<?=(100/$numberOfSocialNetworks);?>%">
+	<li style="width:<?=(100/sizeof($chartLegendValues));?>%">
 		<div class="legend-circle animated zoomIn" style="border-color: <?=$chartColors[$i];?>;"></div>
 		<div class="legend-title"><? echo $socialNetworksNames[$i];?></div>
-		<div class="legend-last-value" style="color: <?=$chartColors[$i]; ?>;"><?=CommonFunctions::NVL($chartLegendValues[$i]['PERCENTAGE'], 0);?>%</div>
+		<div class="legend-last-value" style="color: <?=$chartColors[$i]; ?>;">
+			<?=CommonFunctions::NVL($chartLegendValues[$i]['LOGIN_COUNT'], 0);?>
+			(<?=CommonFunctions::NVL($chartLegendValues[$i]['PERCENTAGE'], 0);?>%)
+		</div>
 	</li>
 	<?php } ?>
 </ul>
 <!-- EOF Legend -->
+<?php } ?>

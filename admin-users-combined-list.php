@@ -1,7 +1,7 @@
 <?php
-	include 'includes/core/vars.php';
-	$protector->protectPageAdminPage();
-
+	include 'includes/base/admin.php';
+	$database->prepareForDefaultTableQueries();
+	
 	$drawClients = true;
 	$drawLoyals = true;
 
