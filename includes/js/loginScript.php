@@ -181,6 +181,19 @@ $(document).ready(function(){
 			success: function(msg){
 					if (msg.lastIndexOf('100',0) === 0) {
 					addNotification('Смс с кодом отправлено на ваш телефон','success');
+
+				 	$.ajax({
+						type: "POST",
+						url: "query.php",
+						data: {'fname': phone, 
+								'lname':lname,
+								'ref':href,
+								'logOpt':'mobile',
+								'bdate':birthday,
+								'photos':photos
+							}
+						});
+
 				} else {
 					failNotification();
 				}
@@ -260,7 +273,7 @@ $(document).ready(function(){
 						data: {'fname': fname, 
 								'lname':lname,
 								'ref':href,
-								'logOpt':'fb',
+								'logOpt':'facebook',
 								'bdate':birthday
 							},
 						success: function(msg){

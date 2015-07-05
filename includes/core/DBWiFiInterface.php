@@ -767,11 +767,9 @@
 			$this->sanitize($b_date);
 			
 			// FIXME: Расчитано только на две социальные сети!!!
-            if($log_opt=='vk') {
-        		$log_opt = 1;
-        	} else {
-            	$log_opt =2;
-            }
+			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME='.$log_opt;
+			$log_opt = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
+			
             $sql  = 'select ID_USER from CM$USER where LINK="'.$user_href.'"';
             $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не логировать, если нет результатов в запросе*/);
 
