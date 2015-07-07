@@ -43,7 +43,9 @@
 		   }
 		} else {
 			var _body = document.getElementsByTagName("body.admin-page-login")[0];
-			_body.className = _body.className + ' safari-only';
+			if (_body !== undefined) {
+				_body.className = _body.className + ' safari-only';
+			}
 		}
 	};
 </script>
