@@ -211,8 +211,6 @@ $(document).ready(function(){
 					'text':password
 				},
 			success: function(msg){
-
-				alert(msg);
 				
 				if (msg.lastIndexOf('100',0) === 0) {
 
@@ -223,11 +221,7 @@ $(document).ready(function(){
 						url: "query.php",
 						data: {'phone': phone, 
 							   'logOpt':'mobile'
-							},
-						success: function (resp){
-
-							alert(resp);
-						}
+							}
 
 						});
 
