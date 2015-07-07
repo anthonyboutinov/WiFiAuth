@@ -902,7 +902,36 @@
 		# ==== Функции, изменяющие данные в БД ==== #
 		# =================================================================== #
 		
-		public function addUser($first_name, $last_name, $user_href, $log_opt, $b_date)
+		public function addMobileUser($phone, $log_opt)
+		{
+			$this->sanitize($phone);
+			$this->sanitize($log_opt);
+			
+			// FIXME: Расчитано только на две социальные сети!!!
+			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME="'.$log_opt.'"';
+			$log_opt = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
+			echo $log_opt;
+			
+            $sql  = 'select ID_USER from CM$USER where NAME="'.$phone.'"';
+            $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не логировать, если нет результатов в запросе*/);
+            if($result == null) {
+            	$sql = 'insert into CM$USER 
+            	         (ID_LOGIN_OPTION,NAME,ID_DB_USER_MODIFIED)  values( '
+            		     .$log_opt.',"'
+                         .$phone.'",'
+                         .$this->id_db_user.')';
+            	$this->getQueryResultWithErrorNoticing($sql);
+            	$sql = 'select ID_USER from CM$USER order by ID_USER desc limit 0, 1';
+            	$result = $this->getQueryFirstRowResultWithErrorNoticing($sql);
+            }
+        	$id = $result['ID_USER']; // либо из result перед if'ом, либо из result внутри него
+
+            $sql = 'insert into SP$LOGIN_ACT (ID_DB_USER,ID_USER) values ('.$this->id_db_user.', '.$id.')';
+            echo $sql.' ';
+            $this->getQueryResultWithErrorNoticing($sql);
+		}
+		
+				public function addUser($first_name, $last_name, $user_href, $log_opt, $b_date)
 		{
 			$this->sanitize($first_name);
 			$this->sanitize($last_name);
@@ -911,12 +940,12 @@
 			$this->sanitize($b_date);
 			
 			// FIXME: Расчитано только на две социальные сети!!!
-			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME='.$log_opt;
+			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME="'.$log_opt.'"';
 			$log_opt = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
+
 			
             $sql  = 'select ID_USER from CM$USER where LINK="'.$user_href.'"';
             $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не логировать, если нет результатов в запросе*/);
-
             if($result == null) {
             	$sql = 'insert into CM$USER 
             	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,ID_DB_USER_MODIFIED)  values( '
@@ -927,7 +956,6 @@
                          .$user_href.'", '
                          .$this->id_db_user.')';
             	$this->getQueryResultWithErrorNoticing($sql);
-
             	$sql = 'select ID_USER from CM$USER order by ID_USER desc limit 0, 1';
             	$result = $this->getQueryFirstRowResultWithErrorNoticing($sql);
             }
@@ -936,7 +964,6 @@
             $sql = 'insert into SP$LOGIN_ACT (ID_DB_USER,ID_USER) values ('.$this->id_db_user.', '.$id.')';
             $this->getQueryResultWithErrorNoticing($sql);
 		}
-		
 		
 		protected function postIsFine($rows, $allowEmptyStrings = false) {
 			$post_is_fine = true;

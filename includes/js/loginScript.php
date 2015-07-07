@@ -177,6 +177,8 @@ $(document).ready(function(){
 		var phonenum_input = $('#phone-form');
 		var phonenum = $(phonenum_input).val();
 		phone = '7'+phonenum;
+
+
 		
 		// обработка неверного значения номера телефона
 		if(!phonenum) {
@@ -190,7 +192,9 @@ $(document).ready(function(){
 		// Отформатировать неверный формат входных данных: удалить 7, 8, +7 (невозможно ввести благодаря numeric штуке)
 		if (phonenum[0] == '7' || phonenum[0] == '8') {
 			phonenum = phonenum.substr(1);
-			$(phonenum_input).val(phonenum);	
+			$(phonenum_input).val(phonenum);
+
+
 		}
 		
 		// Сгенерировать digital пароль
@@ -203,10 +207,13 @@ $(document).ready(function(){
 				type: "POST",
 				url: "loginusingpass.php",
 				data: {
-					'phone': phone,
-					'password':password
+					'phone': phonenum,
+					'text':password
 				},
 			success: function(msg){
+
+				alert(msg);
+				
 				if (msg.lastIndexOf('100',0) === 0) {
 
 					addNotification('Смс с кодом отправлено на ваш телефон','success');
@@ -214,13 +221,14 @@ $(document).ready(function(){
 				 	$.ajax({
 						type: "POST",
 						url: "query.php",
-						data: {'fname': phone, 
-								'lname':lname,
-								'ref':href,
-								'logOpt':'mobile',
-								'bdate':birthday,
-								'photos':photos
-							}
+						data: {'phone': phone, 
+							   'logOpt':'mobile'
+							},
+						success: function (resp){
+
+							alert(resp);
+						}
+
 						});
 
 
