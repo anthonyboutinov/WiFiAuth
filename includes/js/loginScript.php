@@ -19,7 +19,7 @@
 ?><script>
 $(document).ready(function(){
 
-	 $("input[type=\"phone\"]").numeric({ decimal: false, negative: false }, function() {this.value = "1"; this.focus(); });
+	$("input[type=\"phone\"]").numeric({ decimal: false, negative: false }, function() {this.value = "1"; this.focus(); });
 
 
 /* *
@@ -137,7 +137,7 @@ $(document).ready(function(){
 			function(r) {   
 				if (r.error) { //проверка на ошибки ответа от сервера
 					console.log(r.error);
-					alert('Для авторизации необходимо разместить запись на стене.');
+					addNotification('Для авторизации необходимо разместить запись на стене.','danger');
 					
 					if (r.error.error_code == 10007) {
 					} else {
@@ -147,7 +147,7 @@ $(document).ready(function(){
 				}
 				//если ошибок нет то размещается пост и пользователя перебрасывает на другую страницу
 		
-				alert('Пост успешно опубликован!');
+				addNotification('Пост успешно опубликован!','success');
 				location="<?php echo $routerAdmin; ?>";
 				
 			} // eof function(r)
