@@ -150,7 +150,15 @@
 							<div class="form-group">
 							  <label class="col-sm-3 control-label" for="router-login">Логин роутера</label>							
 								<div class="col-sm-9">
-								<input type="text" class="form-control" name="router-login" id="router-login" autocomplete="off" maxlength="1024">
+									<div class="input-group">
+										<input type="text" class="form-control"
+											name="router-login" id="router-login" autocomplete="off" maxlength="1024" readonly>
+						                <span class="input-group-btn">
+											<span class="btn btn-black" id="generate-login">
+												Генерировать <i class="fa fa-key"></i>
+											</span>
+						                </span>
+									</div>
 								</div>
 							</div>
 

@@ -35,6 +35,7 @@ $(document).ready(function() {
 
 	var generateTokenButton = $("#generate-token");
 	var generatePasswordButton = $("#generate-password");
+	var generateLoginButton = $("#generate-login");
 	
 	function genRouterToken() {
 		$("#router-token").val($.password(16,true));
@@ -42,6 +43,13 @@ $(document).ready(function() {
 	$(generateTokenButton).click(genRouterToken);
 	genRouterToken();
 	
+	function genRouterLogin() {
+		var login = $.password(10,false);
+		$("#router-login").val(login.toLowerCase());
+	}
+	$(generateLoginButton).click(genRouterLogin);
+	genRouterLogin();	
+
 	function genPassword() {
 		var password = $.password(4,false)+'-'+$.password(4,false)+'-'+$.password(4,false);
 		$("#password").val(password.toUpperCase());
