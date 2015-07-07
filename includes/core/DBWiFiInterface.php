@@ -743,7 +743,14 @@
 		 *	@return (array)			Простой массив с CSS цветами
 		 */
 		public function getColors() {
-			$sql = 'select * from VW_CM$COLOR';
+			$sql = 
+			'select 
+			D.NAME as COLOR
+			from CM$DICTIONARY D where D.ID_PARENT in (
+				SELECT N.ID_DICTIONARY
+				from CM$DICTIONARY N
+				WHERE N.SHORT_NAME=\'CHART_COLORS_DEFAULT\'
+			) ORDER BY D.ORDER ASC';
 			$result = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
 			return CommonFunctions::extractSingleValueFromMultiValueArray($result, 'COLOR');
 		}
