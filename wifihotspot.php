@@ -2,7 +2,7 @@
 <html lang="ru">
 	<head>
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
-		<title>Обработка данных... — <?=$database->getValueByShortName('COMPANY_NAME')['VALUE'];;?></title>
+		<title>Обработка данных... — <?=$database->getValueByShortName('COMPANY_NAME')['VALUE'];?></title>
 	</head>
 	<body class="admin-page-login login-page">		
 	  <div class="container">

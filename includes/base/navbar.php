@@ -19,7 +19,8 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="admin-dashboard.php"><i class="fa fa-fw fa-dashboard"></i> Главная</a></li>
+				<li class="hidden-xs hidden-sm"><a href="admin-dashboard.php"><i class="fa fa-fw fa-dashboard"></i> Главная</a></li>
+				<li class="visible-xs-block visible-sm-block"><a href="admin-dashboard.php?mobile"><i class="fa fa-fw fa-dashboard"></i> Главная</a></li>
 	            
 				<li class="divider visible-xs-block"></li>
 			
