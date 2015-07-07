@@ -68,10 +68,11 @@
 				
 				
 				$years_leftover = $row['DAYS_UNTIL'] % 10;
+				$years_leftover_second = $row['DAYS_UNTIL'] % 100  > 10 && $row['DAYS_UNTIL'] % 100 < 15;
 				if ($desktop) {
 					$russian_days_ending = (
 						$years_leftover == 1 ? 'день' : (
-							$years_leftover > 1 && $years_leftover < 5 ? 'дня' : 'дней'
+							($years_leftover > 1 && $years_leftover < 5) && !$years_leftover_second ? 'дня' : 'дней'
 						)
 					);
 				} else {
@@ -79,9 +80,10 @@
 				}
 				
 				$will_turn_leftover = $row['WILL_TURN'] % 10;
+				$will_turn_leftover_second = $row['WILL_TURN'] % 100  > 10 && $row['WILL_TURN'] % 100 < 15;
 				$russian_years_ending = (
 					$will_turn_leftover == 1 ? ($desktop ? 'год' : 'г') : (
-						$will_turn_leftover > 1 && $will_turn_leftover < 5 ? ($desktop ? 'года' : 'г') : ($desktop ? 'лет' : 'л')
+						($will_turn_leftover > 1 && $will_turn_leftover < 5) && !$will_turn_leftover_second ? ($desktop ? 'года' : 'г') : ($desktop ? 'лет' : 'л')
 					)
 				);
 				
@@ -110,7 +112,14 @@
 					<span class="fa-stack"><i class="fa fa-<?=$row['LOGIN_OPTION_SHORT_NAME'];?>"></i></span>
 					<span class="sr-only"><?=$row['LOGIN_OPTION_NAME'];?></span>
 				</td>
-				<td class="text-left"><a href="<?=$row['LINK'];?>" target="blank"><?=$row['NAME'];?></a></td>
+				<td class="text-left"><a href="<?=$row['LINK'];?>" target="blank"><?php
+					if ($desktop) {
+						echo $row['NAME'];
+					} else {
+						$exploded_name = explode(' ',trim($row['NAME']));
+						echo $exploded_name[0].'<br>'.$exploded_name[1];
+					}
+					?></a></td>
 				<?php if ($drawFullContent) { ?><td class="text-<?=$desktop ? 'right' : 'right';?>">
 					<?php
 						echo $row['BIRTHDAY'];

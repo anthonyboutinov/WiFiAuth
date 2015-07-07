@@ -35,7 +35,7 @@
 				// Ничего не делать, база данных подключена.
 				
 			} else {
-				die('Error: DBWiFiTinterface constructor received bad parameters');
+				die('DEBUG Error: DBWiFiTinterface constructor received bad parameters');
 			}
 						
 			if($this->is_valid()) {
@@ -143,8 +143,8 @@
 				
 				$this->access_level_accepted = $out;
 				
-				// Запомнить значения на 6 минут, чтобы не спрашивать БД при каждой загрузке страницы
-				setcookie("acceccLevelAcceptedArray", serialize($out), time() + (60 * 6)); // 6 mins
+				// Запомнить значения на 10 минут, чтобы не спрашивать БД при каждой загрузке страницы
+				setcookie("acceccLevelAcceptedArray", serialize($out), time() + (60 * 10)); // 10 mins
 			}
 		}
 		
@@ -873,7 +873,7 @@
 			
 			$i = 0;
 			foreach ($out as $value) {
-				$value['PERCENTAGE'] = (int)($value['LOGIN_COUNT'] / $total_count * 100);
+				$value['PERCENTAGE'] = (int)(($value['LOGIN_COUNT'] / $total_count * 100) * 10) / 10;
 				$out[$i++] = $value;
 			}
 			

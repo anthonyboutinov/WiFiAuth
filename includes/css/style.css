@@ -1162,6 +1162,9 @@ ul.affix-top > li > a {
   padding-top: 5px;
   display: block;
 }
+.col-contains-checkbox {
+  margin-top: -6px;
+}
 /* COMBINED (this way it's faster) */
 @media screen and (min-width: 768px) {
   nav.navbar {

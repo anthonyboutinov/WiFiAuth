@@ -64,6 +64,9 @@ $(document).ready(function () {
 	}
 	
 	setTimeout(correctHeight, 350);
+	setTimeout(correctHeight, 600);
+	setTimeout(correctHeight, 1500);
+	setTimeout(correctHeight, 4000);
 	$(window).resize(correctHeight);
 	
 });

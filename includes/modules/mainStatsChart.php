@@ -19,8 +19,8 @@
 	<span class="options">
 		<select id="main-stats-chart-period">
 			<option value="365"<?php if ($temp == 365) {echo ' selected';} ?>>1 год</option>
-			<option value="182"<?php if ($temp == 182) {echo ' selected';} ?>>6 месяцев</option>
-			<option value="63"<?php if ($temp == 63) {echo ' selected';} ?>>2 месяца</option>
+			<option value="183"<?php if ($temp == 183) {echo ' selected';} ?>>6 месяцев</option>
+			<option value="62"<?php if ($temp == 62) {echo ' selected';} ?>>2 месяца</option>
 			<option value="30"<?php if ($temp == 30) {echo ' selected';} ?>>1 месяц</option>
 			<option value="14"<?php if ($temp == 14) {echo ' selected';} ?>>2 недели</option>
 		</select>

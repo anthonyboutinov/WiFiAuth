@@ -91,8 +91,8 @@
 									<? } ?>
 									
 										<div class="form-group">
-											<label class="col-sm-4 control-label" for="<?=$key;?>"><?=$value['NAME'];?></label>
-											<div class="col-sm-8">
+											<label class="col-sm-4 control-label<?php if ($value['DATA_TYPE'] == 'checkbox') { echo ' col-xs-10'; } ?>" for="<?=$key;?>"><?=$value['NAME'];?></label>
+											<div class="col-sm-8<?php if ($value['DATA_TYPE'] == 'checkbox') { echo ' col-xs-2 col-contains-checkbox'; } ?>">
 												<?php
 													
 													
