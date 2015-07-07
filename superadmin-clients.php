@@ -118,7 +118,8 @@
 				 	</div>
 				</div>
 			<div class="col-md-8">
-            	<form action="superadmin-query.php" method="post">
+			<?php include 'includes/modules/superadminClientsModule.php' ?>
+<!--             	<form action="superadmin-query.php" method="post">
             		<input type="hidden" name="form-name" value="add-user">
 					<h1><i class="fa fa-user-plus"></i> Добавить клиента</h1> 
 					
@@ -211,7 +212,7 @@
 							<button type="submit" class="btn btn btn-black gradient">Добавить <i class="fa fa-plus"></i></button>
 						</div>
 					</div>
-            	</form>
+            	</form> -->
 			</div>
 			</div>
 			<?php include 'includes/base/footer.php'; ?>
