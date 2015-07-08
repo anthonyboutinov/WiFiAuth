@@ -302,10 +302,10 @@
 					return $this->processVerifiedUser($result, $web_user);
 					
 				} else /* Если пароли не совпдают */ {
-
+					
 					// Если уже были неверные попытки ввода пароля
 					if ($result['NUM_FAILED_ATTEMPTS'] != null) {
-
+						
 						// Если эти попытки были давно
 						if ($result['LAST_FAILED_ATTEMPT_WAS_LONG_AGO'] == 'T') {
 							// То сбросить счетчики неверных паролей
@@ -1304,25 +1304,41 @@
 				$login = $this->getQueryFirstRowResultWithErrorNoticing($sql)['LOGIN'];
 			}
 			
-			return ['TOKEN' => $password_restore_token, 'LOGIN' => $login];
+			return ['PASSWORD_RESET_TOKEN' => $password_restore_token, 'LOGIN' => $login];
 		}
 		
 		public function checkPasswordResetToken($login, $token) {
 			$this->newSanitize($login);
-			$this->newSanitize($token);
+			$this->sanitize($token);
 			
 			$sql = 'select PASSWORD_RESET_TOKEN from CM$DB_USER where LOGIN='.$login;
 			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, null, true);
-			
 			if (!$result) {
 				return false;
 			} else {
-				if (password_verify($token, $result['PASSWORD_RESET_TOKEN'])) {
-					return true;
-				} else {
-					return false;
-				}
+				return password_verify($token, $result['PASSWORD_RESET_TOKEN']);
 			}
+		}
+		
+		public function setNewPasswordUsingResetPasswordToken($login, $token, $newPassword) {
+			if (!$this->checkPasswordResetToken($login, $token)) {
+				return false;
+			}
+			$this->newSanitize($login);
+			$this->sanitize($newPassword);
+			
+			$sql =
+			'update CM$DB_USER set
+				PASSWORD=\''.password_hash($newPassword, PASSWORD_BCRYPT).'\',
+				NUM_FAILED_ATTEMPTS=NULL,
+				LAST_FAILED_ATTEMPT=NULL,
+				UNLOCK_AT=NULL,
+				PASSWORD_RESET_TOKEN=NULL,
+				ID_DB_USER_MODIFIED=ID_DB_USER
+			where LOGIN='.$login;
+			
+			$this->getQueryResultWithErrorNoticing($sql);
+			return true;
 		}
 
 		# ==== КОНЕЦ ВОССТАНОВЛЕНИЕ ПАРОЛЯ ==== #
