@@ -1246,9 +1246,87 @@
 			return true;
 			
 		}
-		
+				
 		# ==== КОНЕЦ Функции, изменяющие данные в БД ==== #
 		# =================================================================== #
+		
+		
+		
+		# =================================================== #
+		# ==== ВОССТАНОВЛЕНИЕ ПАРОЛЯ ==== #
+		# =================================================== #
+		
+		public function initiatePasswordReset($login_or_email) {
+			$is_email = filter_var($login_or_email, FILTER_VALIDATE_EMAIL);
+			$this->sanitize($login_or_email);
+			
+			$password_restore_token = CommonFunctions::generateRandomString(64);
+			$this->sanitize($password_restore_token);
+			$sql =
+			'update CM$DB_USER set PASSWORD_RESET_TOKEN=\''.password_hash($password_restore_token, PASSWORD_BCRYPT).
+			'\' where ';
+			if ($is_email) {
+				$sql = $sql.'ID_DB_USER=(
+					select ID_DB_USER
+					from SP$VAR
+					where
+						VALUE=\''.$login_or_email.'\'
+						and ID_DICTIONARY=(
+							select ID_DICTIONARY
+							from CM$DICTIONARY
+							where SHORT_NAME=\'EMAIL\'
+						)
+				)';
+			} else {
+				$sql = $sql.'login=\''.$login_or_email.'\'';
+			}
+			
+			Notification::add($sql);
+			$this->getQueryResultWithErrorNoticing($sql);
+			
+			$login = $login_or_email;
+			
+			if ($is_email) {
+				$sql =
+				'select LOGIN
+				from CM$DB_USER
+				where ID_DB_USER=(
+					select ID_DB_USER
+					from SP$VAR
+					where
+						VALUE=\''.$login_or_email.'\'
+						and ID_DICTIONARY=(
+							select ID_DICTIONARY
+							from CM$DICTIONARY
+							where SHORT_NAME=\'EMAIL\'
+						)
+				)';
+				$login = $this->getQueryFirstRowResultWithErrorNoticing($sql)['LOGIN'];
+			}
+			
+			return ['TOKEN' => $password_restore_token, 'LOGIN' => $login];
+		}
+		
+		public function checkPasswordResetToken($login, $token) {
+			$this->newSanitize($login);
+			$this->newSanitize($token);
+			
+			$sql = 'select PASSWORD_RESET_TOKEN from CM$DB_USER where LOGIN='.$login;
+			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, null, true);
+			
+			if (!$result) {
+				return false;
+			} else {
+				if (password_verify($token, $result['PASSWORD_RESET_TOKEN'])) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+
+		# ==== КОНЕЦ ВОССТАНОВЛЕНИЕ ПАРОЛЯ ==== #
+		# =================================================== #
 		
 	}
 ?>

@@ -31,6 +31,24 @@ $(document).ready(function() {
    * Модал Забыл пароль
  */
 	
+	$("#forget-password-recovery-button").click(function(e) {
+		e.preventDefault();
+		
+		$.ajax({
+			type: "POST",
+			url: "admin-login.php",
+			data: {
+				'form-name': 'forget-password-recovery-screen',
+				'login': $("#login").val()
+			},
+			success: function(msg){
+				$("#main-area").html(msg).addClass('animated fadeInUp');
+			},
+			fail: failNotification
+		});
+		
+		
+	});
 	
 	
 });
