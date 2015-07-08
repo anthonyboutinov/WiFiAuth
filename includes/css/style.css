@@ -800,6 +800,16 @@ body.admin-page-login .modal-image {
   padding-top: 0;
   padding-bottom: 60px;
 }
+.popover {
+  background: rgba(0, 0, 0, 0.6);
+}
+.popover .popover-title {
+  background: rgba(0, 0, 0, 0.6);
+}
+.popover .arrow::after {
+  color: rgba(0, 0, 0, 0.6);
+  border-right-color: rgba(0, 0, 0, 0.6) !important;
+}
 /* eof ADMIN PAGE LOGIN */
 /* ADMIN PAGE */
 body.admin-page h1 {

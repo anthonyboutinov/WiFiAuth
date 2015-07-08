@@ -28,6 +28,8 @@ $(document).ready(function() {
 	
 	// включить подсказки
 	$('[data-toggle="tooltip"]').tooltip({'html': true});
+	// включить информеры
+	$('[data-toggle="popover"]').popover({'html': true});
 	
 	/* *
 	   * ГЕНЕРИРОВАНИЕ ПАРОЛЕЙ
@@ -156,8 +158,7 @@ $(document).ready(function() {
     }).mouseleave(function() {
 		$(this).find("i").removeAttr('class').addClass('fa fa-circle');
     });
-    
-    
+  
     
 /* *
    * ВЕРТИКАЛЬНОЕ ПОЗИЦИОНИРОВАНИЕ

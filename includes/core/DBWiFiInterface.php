@@ -1100,14 +1100,18 @@
 		}
 		
 		public function getDBUsers() {
-			$sql='SELECT  B.VALUE AS COMPANY_NAME, D.* FROM CM$DB_USER D, SP$VAR B 
+			$sql='SELECT  C.VALUE AS EMAIL,  B.VALUE AS COMPANY_NAME, D.* FROM CM$DB_USER D, SP$VAR B , SP$VAR C
 					WHERE D.IS_SUPERADMIN=\'F\' 
 					AND D.ID_DB_USER = B.ID_DB_USER
+                                        AND D.ID_DB_USER = C.ID_DB_USER
 					AND B.ID_DICTIONARY = (SELECT ID_DICTIONARY 
 					FROM CM$DICTIONARY
                     WHERE SHORT_NAME = "COMPANY_NAME")
+                    AND C.ID_DICTIONARY = (SELECT ID_DICTIONARY 
+					FROM CM$DICTIONARY
+                    WHERE SHORT_NAME = "EMAIL")
 					ORDER BY B.VALUE ASC';
-			return  $this->getQueryResultWithErrorNoticing($sql);
+			return  $this->getQueryResultWithErrorNoticing($sql); 
 		}
 		
 		public function getDBUsersCount($count_deactivated = false) {

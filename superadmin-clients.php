@@ -7,6 +7,8 @@
 <html lang="ru">
 	<head>
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
+		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
+		<script src="includes/js/superadmin-clients.js"></script>
 		<title>Добавление клиента — Панель администрирования Re[Spot]</title>
 	</head>
 	<body class="admin-page simple-page">
@@ -66,6 +68,8 @@
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
 		</div>
+
+
 		
 		<div class="container glass-panel">
 			<?php include 'includes/base/superadmin-navbar.php'; ?>			
@@ -82,7 +86,13 @@
 										$i++;
 									?>
 									<tr>
-										<td class="text-left"><?=$row['COMPANY_NAME'];?></td>
+										<td class="text-left"><a data-toggle="popover" data-placement="right" 
+										data-title="Информация о клиенте"  
+										data-content='Логин:&nbsp;<?=$row['LOGIN'];?> <br>
+														Email:&nbsp;<?=$row['EMAIL'];?> <br>
+														Логин&nbsp;роутера:&nbsp;<?=$row['ROUTER_LOGIN'];?> <br>
+														Пароль&nbsp;роутера:&nbsp;<?=$row['ROUTER_PASSWORD'];?> <br>'>
+										<?=$row['COMPANY_NAME'];?></a></td>
 										<?php if ($database->meetsAccessLevel('ROOT')) { ?>
 											<td class="text-right">
 												<form action="admin-dashboard.php" method="post">
@@ -118,108 +128,12 @@
 				 	</div>
 				</div>
 			<div class="col-md-8">
-			<?php include 'includes/modules/superadminClientsModule.php' ?>
-<!--             	<form action="superadmin-query.php" method="post">
-            		<input type="hidden" name="form-name" value="add-user">
-					<h1><i class="fa fa-user-plus"></i> Добавить клиента</h1> 
-					
-					<div class="page-wrapper close-follow">
-						
-						<h2>Компания</h2>
-						<div class="form-horizontal">
-
-							<div class="form-group">
-									<label class="col-sm-3 control-label" for="company-name">Название</label>
-									<div class="col-sm-9">
-									<input type="text" class="form-control" name="company-name" id="company-name" autocomplete="off" maxlength="255">
-									</div>
-							</div>
-							<div class="form-group">
-									<label class="col-sm-3 control-label" for="email">E-mail</label>							
-									<div class="col-sm-9">
-										<input type="text" class="form-control" name="email" id="email" autocomplete="off" maxlength="255">
-									</div>
-								</div>
-						</div>
-						
-					</div>
-					<div class="page-wrapper close-follow">
-						
-						<h2>Роутеры</h2>
-						<div class="form-horizontal">
-							
-							<div class="form-group">
-							  <label class="col-sm-3 control-label" for="router-login">Логин роутера</label>							
-								<div class="col-sm-9">
-									<div class="input-group">
-										<input type="text" class="form-control"
-											name="router-login" id="router-login" autocomplete="off" maxlength="1024" readonly>
-						                <span class="input-group-btn">
-											<span class="btn btn-black" id="generate-login">
-												Генерировать <i class="fa fa-key"></i>
-											</span>
-						                </span>
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-sm-3 control-label" for="router-token">Токен</label>	
-								<div class="col-sm-9">
-									<div class="input-group">
-										<input type="text" class="form-control"
-											name="router-token" id="router-token" autocomplete="off" maxlength="32" readonly>
-						                <span class="input-group-btn">
-											<span class="btn btn-black" id="generate-token">
-												Генерировать <i class="fa fa-key"></i>
-											</span>
-						                </span>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="page-wrapper close-follow">
-							
-						<h2>Личный кабинет</h2>
-						<div class="form-horizontal">
-							<div class="form-group">
-							  <label class="col-sm-3 control-label" for="login">Логин</label>							
-								<div class="col-sm-9">
-									<input type="text" class="form-control" name="login" id="login" autocomplete="off" maxlength="255">
-								</div>
-							</div>
-							
-							<div class="form-group">
-								<label class="col-sm-3 control-label" for="password">Пароль</label>	
-								<div class="col-sm-9">
-									<div class="input-group">
-										<input type="text" class="form-control"
-											name="password" id="password" autocomplete="off" maxlength="32">
-						                <span class="input-group-btn">
-											<span class="btn btn-black" id="generate-password">
-												Генерировать <i class="fa fa-key"></i>
-											</span>
-						                </span>
-									</div>
-								</div>
-							</div>
-							
-						</div>
-					</div>
-					<div class="page-wrapper">
-						<div class="action-buttons-mid-way-panel only-child">
-							<button type="submit" class="btn btn btn-black gradient">Добавить <i class="fa fa-plus"></i></button>
-						</div>
-					</div>
-            	</form> -->
+				<?php include 'includes/modules/superadminClientsModule.php' ?> 
 			</div>
 			</div>
 			<?php include 'includes/base/footer.php'; ?>
 		</div>
-
-		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
 		<?php include 'includes/js/superadmin.php'; ?>
-		<script src="includes/js/superadmin-clients.js"></script>
+		
  	</body>
 </html>
