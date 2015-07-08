@@ -77,18 +77,13 @@
 			$result = $this->getQueryResultWithErrorNoticing($sql);
 			if ($result->num_rows == 1) {
 				while($row = $result->fetch_assoc()) {
-
 					if( password_verify($password,$row['PASSWORD'])){
-
 						echo 'true';
 					} else {
 						echo 'false';
 					}
-
 				}
 			}
-
-
 		}
 
 		public function meetsAccessLevel($accl_short_name) {

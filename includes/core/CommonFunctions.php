@@ -265,7 +265,7 @@
 		}
 		
 		public static function supportsModernCSS() {
-			return !CommonFunctions::isOldAndroid('3.0.0');
+			return !CommonFunctions::isOldAndroid('2.3');
 		}
 	}
 

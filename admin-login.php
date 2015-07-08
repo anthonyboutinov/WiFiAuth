@@ -45,33 +45,6 @@
 		</div>
 	<?php include 'includes/base/footer.php'; ?>
 	<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
-	<script>
-				
-		$(document).ready(function() {	
-			
-			// Сфокусироваться на нужном поле при загрузке страницы
-			var loginField = $("#login");
-			if ($(loginField).attr('value') == '') {
-				$(loginField).focus();
-			} else {
-				$("#password").focus();
-			}
-						
-			function reorderToLogin() {
-				$("#login").css('z-index', '5');
-				$("#password").css('z-index', '4');
-			}
-			
-			function reorderToPassword() {
-				$("#login").css('z-index', '4');
-				$("#password").css('z-index', '5');
-			}
-			
-			reorderToLogin();
-			$(loginField).focusin(reorderToLogin);
-			$("#password").focusin(reorderToPassword);
-		});
-		
-	</script>
+	<script type="text/javascript" src="includes/js/admin-login.js"></script>
 	</body>
 </html>

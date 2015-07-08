@@ -11,6 +11,7 @@
 	</head>
 	<body class="admin-page simple-page">
 
+	<?php if ($database->meetsAccessLevel('PRIV_MANAGER')) { ?>
 		<div class="modal fade" id="disableModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
 		  <div class="modal-dialog modal-black">
 		    <div class="modal-content">
@@ -66,6 +67,7 @@
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
 		</div>
+	<?php } ?>
 		
 		<div class="container glass-panel">
 			<?php include 'includes/base/superadmin-navbar.php'; ?>			
@@ -83,6 +85,7 @@
 									?>
 									<tr>
 										<td class="text-left"><?=$row['COMPANY_NAME'];?></td>
+										
 										<?php if ($database->meetsAccessLevel('ROOT')) { ?>
 											<td class="text-right">
 												<form action="admin-dashboard.php" method="post">
@@ -93,31 +96,34 @@
 													</button>
 												</form>
 											</td>
-										<?php } ?>
-										<?php if ($database->meetsAccessLevel('PRIV_MANAGER')) { ?>
-											<?php if ($row['IS_ACTIVE'] =='T') { ?>
+										<?php }
+											
+										if ($database->meetsAccessLevel('PRIV_MANAGER')) { 
+											
+											if ($row['IS_ACTIVE'] =='T') { ?>
 												<td class="text-right">
 													<a href="#" data-id="enabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Приостановить обслуживание">
 														<i class="fa fa-circle" ></i>
 													</a>
 												</td>
-											<?php } else  { ?>
+											<?php } else { ?>
 												<td class="text-right">
 													<a href="#" data-id="disabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Возобновить обслуживание">
 														<i class="fa fa-circle-thin"></i>
 													</a>
 												</td>
-											<?php } ?>
-										<?php } ?>
+											<?php }
+												
+										} ?>
 									</tr>
 							<?php 
 									}
 								} else { ?>
 									<tr><td colspan="1" class="text-center">Пусто</td></tr>
 							<?	} ?>
-					 	</table>
+						</table>
 
-				 	</div>
+					</div>
 				</div>
 			<div class="col-md-8">
             	<form action="superadmin-query.php" method="post">
