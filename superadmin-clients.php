@@ -94,18 +94,20 @@
 												</form>
 											</td>
 										<?php } ?>
-										<?php if ($row['IS_ACTIVE'] =='T') { ?>
-											<td class="text-right">
-												<a href="#" data-id="enabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Приостановить обслуживание">
-													<i class="fa fa-circle" ></i>
-												</a>
-											</td>
-										<?php } else  { ?>
-											<td class="text-right">
-												<a href="#" data-id="disabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Возобновить обслуживание">
-													<i class="fa fa-circle-thin"></i>
-												</a>
-											</td>
+										<?php if ($database->meetsAccessLevel('PRIV_MANAGER')) { ?>
+											<?php if ($row['IS_ACTIVE'] =='T') { ?>
+												<td class="text-right">
+													<a href="#" data-id="enabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Приостановить обслуживание">
+														<i class="fa fa-circle" ></i>
+													</a>
+												</td>
+											<?php } else  { ?>
+												<td class="text-right">
+													<a href="#" data-id="disabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Возобновить обслуживание">
+														<i class="fa fa-circle-thin"></i>
+													</a>
+												</td>
+											<?php } ?>
 										<?php } ?>
 									</tr>
 							<?php 

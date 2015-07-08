@@ -144,7 +144,7 @@
 				$this->access_level_accepted = $out;
 				
 				// Запомнить значения на 10 минут, чтобы не спрашивать БД при каждой загрузке страницы
-				setcookie("acceccLevelAcceptedArray", serialize($out), time() + (60 * 10)); // 10 mins
+				setcookie("acceccLevelAcceptedArray", serialize($out), 0); // 10 mins
 			}
 		}
 		
@@ -914,16 +914,15 @@
 			$this->sanitize($phone);
 			$this->sanitize($log_opt);
 			
-			// FIXME: Расчитано только на две социальные сети!!!
 			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME="'.$log_opt.'"';
 			$log_opt = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
 			echo $log_opt;
 			
             $sql  = 'select ID_USER from CM$USER where NAME="'.$phone.'"';
-            $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не логировать, если нет результатов в запросе*/);
+            $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не выдавать ошибку, если нет результатов в запросе*/);
             if($result == null) {
             	$sql = 'insert into CM$USER 
-            	         (ID_LOGIN_OPTION,NAME,ID_DB_USER_MODIFIED)  values( '
+            	         (ID_LOGIN_OPTION,NAME,ID_DB_USER_MODIFIED)  values('
             		     .$log_opt.',"'
                          .$phone.'",'
                          .$this->id_db_user.')';
@@ -938,7 +937,7 @@
             $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
-				public function addUser($first_name, $last_name, $user_href, $log_opt, $b_date)
+		public function addUser($first_name, $last_name, $user_href, $log_opt, $b_date)
 		{
 			$this->sanitize($first_name);
 			$this->sanitize($last_name);
@@ -946,16 +945,14 @@
 			$this->sanitize($log_opt);
 			$this->sanitize($b_date);
 			
-			// FIXME: Расчитано только на две социальные сети!!!
 			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME="'.$log_opt.'"';
 			$log_opt = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
 
-			
             $sql  = 'select ID_USER from CM$USER where LINK="'.$user_href.'"';
-            $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не логировать, если нет результатов в запросе*/);
+            $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не выдавать ошибку, если нет результатов в запросе*/);
             if($result == null) {
             	$sql = 'insert into CM$USER 
-            	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,ID_DB_USER_MODIFIED)  values( '
+            	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,ID_DB_USER_MODIFIED)  values('
             		     .$log_opt.', STR_TO_DATE("'
             			 .$b_date.'","%d.%m.%Y "),"'
                          .$first_name.' '
