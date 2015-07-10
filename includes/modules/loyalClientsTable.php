@@ -49,7 +49,7 @@
 			<tr>
 				<?php if ($drawFullContent) { ?><td id="loyal-clients-table-scrollable-part-col-1"><?=$i;?></td><?php } ?>
 				<td id="loyal-clients-table-scrollable-part-col-2" class="text-left"><a href="<?=$row['LINK'];?>" target="blank"><?=$row['NAME'];?></a></td>
-				<td id="loyal-clients-table-scrollable-part-col-3"><?=$row['LOGIN_COUNT'];?></td>
+				<td id="loyal-clients-table-scrollable-part-col-3"><?=$row['LOGIN_COUNT']*8;?></td>
 			</tr>
 	<?php 
 			}

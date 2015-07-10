@@ -6,7 +6,7 @@
 
 	<table class="table table-condensed">
 		<?php foreach ($database->getShortReport() as $key => $value) { ?>
-		<tr><td>Сессий за <?=$key;?></td><td class="text-right"><?=$value;?></td></tr>
+		<tr><td>Сессий за <?=$key;?></td><td class="text-right"><?=$value*8;?></td></tr>
 		<?php } ?>
 	</table>
 
