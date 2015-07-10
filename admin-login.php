@@ -25,12 +25,10 @@
 			$mail->Body    = "Для смены пароля перейдите по ссылке:\n$password_reset_link\n\nСообщение сгенерировано автоматически.";
 			
 			if(!$mail->send()) {
-			    Notification::add('Невозможно отправить сообщение.<br>Mailer Error: ' . $mail->ErrorInfo, 'danger');
+			    Notification::add('Невозможно отправить сообщение.<br>Ошибка Mailer: ' . $mail->ErrorInfo, 'danger');
 			} else {
-			    Notification:add('Сообщение отправлено', 'success');
+			    Notification::add('Сообщение для сброса пароля отправлено на <strong>'.$responce['EMAIL'].'</strong>', 'success');
 			}
-			
-			exit();
 			
 		}
 		
@@ -40,7 +38,7 @@
 			if (isset($_POST['LOGIN']) && isset($_POST['PASSWORD_RESET_TOKEN'])) {
 				
 				if ($_POST['password'] != $_POST['repeat-password']) {
-					die("Ошибка: Пароли не совпадают!");
+					Notification::add("Ошибка: Пароли не совпадают!", 'danger');
 				}
 				
 				$responce = $database->setNewPasswordUsingResetPasswordToken($_POST['LOGIN'], $_POST['PASSWORD_RESET_TOKEN'], $_POST['password']);
@@ -48,11 +46,11 @@
 				if ($responce) {
 					Notification::add('Пароль успешно изменен! Теперь вы можете войти в Личный кабинет.', 'success');
 				} else {
-					die('Ошибка: Переданы недействительные параметры.');
+					Notification::add('Ошибка: Переданы недействительные данные.', 'danger');
 				}
 				
 			} else {
-				die('Ошибка: Переданы недействительные параметры.');
+				Notification::add('Ошибка: Переданы недействительные данные.', 'danger');
 			}
 			
 		}
@@ -67,7 +65,7 @@
 			include 'includes/modules/admin-login-resetPassword.php';
 			exit();
 		} else {
-			die('Ошибка: Переданы недействительные параметры.');
+			Notification::add('Ошибка: Переданы недействительные данные.', 'danger');
 		}
 		
 	}

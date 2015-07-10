@@ -500,8 +500,8 @@
 		public function getDataTypesForParentByShortName($short_names) {
 			$this->sanitize($short_names);
 			
-			$sql = '
-			select
+			$sql =
+			'select
 				D.ID_DICTIONARY,
 				D.SHORT_NAME,
 				DT.NAME as DATA_TYPE
