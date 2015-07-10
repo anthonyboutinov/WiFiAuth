@@ -42,6 +42,7 @@
 		</div>
 	<?php include 'includes/base/footer.php'; ?>
 	<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
+	<script type="text/javascript" src="includes/js/jquery.alphanum.js"></script>
 	<script type="text/javascript" src="includes/js/admin-login.js"></script>
 	</body>
 </html>

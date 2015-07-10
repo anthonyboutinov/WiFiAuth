@@ -931,6 +931,8 @@
 			$this->sanitize($phone);
 			$this->sanitize($log_opt);
 			
+			$phone = '+'.$phone;
+			
 			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME="'.$log_opt.'"';
 			$log_opt = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
 			echo $log_opt;
@@ -939,8 +941,9 @@
             $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не выдавать ошибку, если нет результатов в запросе*/);
             if($result == null) {
             	$sql = 'insert into CM$USER 
-            	         (ID_LOGIN_OPTION,NAME,ID_DB_USER_MODIFIED)  values('
+            	         (ID_LOGIN_OPTION,LINK,NAME,ID_DB_USER_MODIFIED)  values('
             		     .$log_opt.',"'
+            		     .'tel:'.$phone.',"'
                          .$phone.'",'
                          .$this->id_db_user.')';
             	$this->getQueryResultWithErrorNoticing($sql);

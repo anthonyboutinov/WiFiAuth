@@ -28,6 +28,18 @@ $(document).ready(function() {
 	}
 	
 /* *
+   * Ограничение вводимых данных
+ */
+
+ 	$("#login").alphanum({
+	 	allow: '-_',
+	    allowSpace: false,
+	    allowNumeric: true,
+	    allowOtherCharSets: false
+	});
+
+	
+/* *
    * Модал Забыл пароль
  */
 	
