@@ -144,7 +144,7 @@
 							<div class="form-group">
 									<label class="col-sm-3 control-label" for="email">E-mail</label>							
 									<div class="col-sm-9">
-										<input type="text" class="form-control" name="email" id="email" autocomplete="off" maxlength="255">
+										<input type="email" class="form-control" name="email" id="email" autocomplete="off" maxlength="255">
 									</div>
 								</div>
 						</div>
@@ -227,6 +227,7 @@
 
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
 		<?php include 'includes/js/superadmin.php'; ?>
+		<script type="text/javascript" src="includes/js/jquery.alphanum.js"></script>
 		<script src="includes/js/superadmin-clients.js"></script>
  	</body>
 </html>

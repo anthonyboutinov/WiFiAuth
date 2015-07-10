@@ -196,5 +196,32 @@ $(document).ready(function() {
 		$(window).resize(positionVertically);
 	
 	// EOF Привязки к дейсвтиям
+	
+	
+	
+/* *
+   * Ограничение вводимых данных
+ */
+
+ 	$("#login").alphanum({
+	 	allow: '-_',
+	    allowSpace: false,
+	    allowNumeric: true,
+	    allowOtherCharSets: false
+	});
+	
+	$("#router-login").alphanum({
+	    allowSpace: false,
+	    allowNumeric: true,
+	    allowOtherCharSets: false,
+	    allowUpper: false
+	});
+	
+	$("input[type='email']").alphanum({
+	 	allow: '-_@.',
+	    allowSpace: false,
+	    allowNumeric: true,
+	    allowOtherCharSets: false
+	});
 
 });

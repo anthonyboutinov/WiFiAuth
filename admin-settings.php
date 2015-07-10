@@ -257,6 +257,7 @@
 		<?php } ?>
 		
 		<script src="includes/js/jquery.numeric.min.js"></script>
+		<script type="text/javascript" src="includes/js/jquery.alphanum.js"></script>
 		<script>
 			$(document).ready(function() {
 				
@@ -369,6 +370,18 @@
 				        }
 				    });
 				}
+				
+				
+				/* *
+				   * Ограничение вводимых данных
+				 */
+				
+				 	$("input[type='email']").alphanum({
+					 	allow: '-_@.',
+					    allowSpace: false,
+					    allowNumeric: true,
+					    allowOtherCharSets: false
+					});
 				
 			});
 		</script>

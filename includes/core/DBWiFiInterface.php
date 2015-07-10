@@ -1326,7 +1326,12 @@
 							where SHORT_NAME=\'EMAIL\'
 						)
 				)';
-				$login = $this->getQueryFirstRowResultWithErrorNoticing($sql)['LOGIN'];
+				$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, null, true);
+				if (!$result) {
+					return false;
+				} else {
+					$login = $result['LOGIN'];
+				}
 			} else {
 				$sql =
 				'select VALUE as EMAIL from SP$VAR
@@ -1337,7 +1342,12 @@
 						select ID_DICTIONARY from CM$DICTIONARY
 						where SHORT_NAME=\'EMAIL\'
 					)';
-				$email = $this->getQueryFirstRowResultWithErrorNoticing($sql)['EMAIL'];
+				$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, null, true);
+				if (!$result) {
+					return false;
+				} else {
+					$email = $result['EMAIL'];
+				}
 			}
 			
 			return ['PASSWORD_RESET_TOKEN' => $password_restore_token, 'LOGIN' => $login, 'EMAIL' => $email];

@@ -14,3 +14,15 @@
 
 	</form>
 </div>
+<script>
+/* *
+   * Ограничение вводимых данных
+ */
+
+ 	$("#login").alphanum({
+	 	allow: '-_',
+	    allowSpace: false,
+	    allowNumeric: true,
+	    allowOtherCharSets: false
+	});
+</script>

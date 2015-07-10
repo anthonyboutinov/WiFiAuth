@@ -16,18 +16,22 @@
 				die('DEBUG Error: no form data!');
 			}
 			$responce = $database->initiatePasswordReset($_POST['login']);
-			$password_reset_link = $BASE_URL.'admin-login.php?l='.$responce['LOGIN'].'&t='.$responce['PASSWORD_RESET_TOKEN'];
-			
-			require_once('includes/core/mail_config.php');
-			
-			$mail->addAddress($responce['EMAIL']); 
-			$mail->Subject = "Сброс пароля — Re[Spot]";
-			$mail->Body    = "Для смены пароля перейдите по ссылке:\n$password_reset_link\n\nСообщение сгенерировано автоматически.";
-			
-			if(!$mail->send()) {
-			    Notification::add('Невозможно отправить сообщение.<br>Ошибка Mailer: ' . $mail->ErrorInfo, 'danger');
+			if (!$responce) {
+				Notification::add('Пользователь с таким логином/email не найден.', 'danger');
 			} else {
-			    Notification::add('Сообщение для сброса пароля отправлено на <strong>'.$responce['EMAIL'].'</strong>', 'success');
+				$password_reset_link = $BASE_URL.'admin-login.php?l='.$responce['LOGIN'].'&t='.$responce['PASSWORD_RESET_TOKEN'];
+				
+				require_once('includes/core/mail_config.php');
+				
+				$mail->addAddress($responce['EMAIL']); 
+				$mail->Subject = "Сброс пароля — Re[Spot]";
+				$mail->Body    = "Для смены пароля перейдите по ссылке:\n$password_reset_link\n\nСообщение сгенерировано автоматически.";
+				
+				if(!$mail->send()) {
+				    Notification::add('Невозможно отправить сообщение.<br>Ошибка Mailer: ' . $mail->ErrorInfo, 'danger');
+				} else {
+				    Notification::add('Сообщение для сброса пароля отправлено на <strong>'.$responce['EMAIL'].'</strong>', 'success');
+				}
 			}
 			
 		}
