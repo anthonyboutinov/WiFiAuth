@@ -849,7 +849,7 @@
 				WHERE A.DATE BETWEEN DATE_SUB(CURDATE(), INTERVAL '.$num_days.' DAY) AND CURDATE() 
 			) D
 			ORDER BY D.DATE DESC) U';
-			Notification::add($sql);
+// 			Notification::add($sql);
 						
 			return $this->toArray($this->getQueryResultWithErrorNoticing($sql));
 		}
