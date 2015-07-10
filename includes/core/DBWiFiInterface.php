@@ -756,7 +756,28 @@
 
 			$sql =
 			'SELECT
-				DATE_FORMAT(D.DATE, "new Date(%Y, %m, %d)") AS JSON_DATE,';			
+				CONCAT(U.JSON_DATE_BEGINNING, U.JSON_DATE_MIDDLE, U.JSON_DATE_END) as JSON_DATE,';
+				
+			$isFirst = true;
+			foreach ($login_options as $login_option) {
+				$name = $login_option['NAME'];
+				
+				if ($isFirst === true) {
+					$isFirst = false;
+				} else {
+					$sql = $sql.',';
+				}
+				
+				$sql = $sql.'U.'.$login_option['SHORT_NAME'];
+				
+			}
+	
+				
+			$sql = $sql.' FROM (
+			SELECT
+				DATE_FORMAT(D.DATE, \'new Date(%Y, \') AS JSON_DATE_BEGINNING,
+	            DATE_FORMAT(D.DATE, \'%m\') - 1 AS JSON_DATE_MIDDLE,
+	            DATE_FORMAT(D.DATE, \', %d)\') AS JSON_DATE_END,';			
 			
 			$isFirst = true;
 			foreach ($login_options as $login_option) {
@@ -827,7 +848,8 @@
 					) A
 				WHERE A.DATE BETWEEN DATE_SUB(CURDATE(), INTERVAL '.$num_days.' DAY) AND CURDATE() 
 			) D
-			ORDER BY D.DATE DESC';
+			ORDER BY D.DATE DESC) U';
+			Notification::add($sql);
 						
 			return $this->toArray($this->getQueryResultWithErrorNoticing($sql));
 		}

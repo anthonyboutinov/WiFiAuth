@@ -18,16 +18,16 @@
 			$responce = $database->initiatePasswordReset($_POST['login']);
 			$password_reset_link = $BASE_URL.'admin-login.php?l='.$responce['LOGIN'].'&t='.$responce['PASSWORD_RESET_TOKEN'];
 			
-// 			$mail->addAddress($responce['EMAIL']); 
-			$mail->addAddress('anton4488@gmail.com'); 
+			require_once('includes/core/mail_config.php');
+			
+			$mail->addAddress($responce['EMAIL']); 
 			$mail->Subject = "Сброс пароля — Re[Spot]";
 			$mail->Body    = "Для смены пароля перейдите по ссылке:\n$password_reset_link\n\nСообщение сгенерировано автоматически.";
 			
 			if(!$mail->send()) {
-			    echo 'Невозможно отправить сообщение.<br>';
-			    echo 'Mailer Error: ' . $mail->ErrorInfo;
+			    Notification::add('Невозможно отправить сообщение.<br>Mailer Error: ' . $mail->ErrorInfo, 'danger');
 			} else {
-			    echo 'Сообщение отправлено';
+			    Notification:add('Сообщение отправлено', 'success');
 			}
 			
 			exit();
