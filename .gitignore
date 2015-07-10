@@ -1,2 +1,4 @@
 
 includes/core/db_config.php
+
+includes/core/mail_config.php

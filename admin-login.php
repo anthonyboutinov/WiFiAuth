@@ -15,12 +15,21 @@
 			if (!isset($_POST['login'])) {
 				die('DEBUG Error: no form data!');
 			}
-			if ($database == false) {
-				die("false");
-			}
 			$responce = $database->initiatePasswordReset($_POST['login']);
 			$password_reset_link = $BASE_URL.'admin-login.php?l='.$responce['LOGIN'].'&t='.$responce['PASSWORD_RESET_TOKEN'];
-			echo $password_reset_link;
+			
+// 			$mail->addAddress($responce['EMAIL']); 
+			$mail->addAddress('anton4488@gmail.com'); 
+			$mail->Subject = "Сброс пароля — Re[Spot]";
+			$mail->Body    = "Для смены пароля перейдите по ссылке:\n$password_reset_link\n\nСообщение сгенерировано автоматически.";
+			
+			if(!$mail->send()) {
+			    echo 'Невозможно отправить сообщение.<br>';
+			    echo 'Mailer Error: ' . $mail->ErrorInfo;
+			} else {
+			    echo 'Сообщение отправлено';
+			}
+			
 			exit();
 			
 		}
@@ -63,5 +72,6 @@
 		
 	}
 	
+	// Страница по умолчанию
 	include 'includes/modules/admin-login-default.php';
 ?>

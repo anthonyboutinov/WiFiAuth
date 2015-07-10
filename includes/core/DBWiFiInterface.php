@@ -1279,14 +1279,14 @@
 				)';
 			} else {
 				$sql = $sql.'login=\''.$login_or_email.'\'';
-			}
-			
-			Notification::add($sql);
+			}			
 			$this->getQueryResultWithErrorNoticing($sql);
 			
 			$login = $login_or_email;
+			$email = $login_or_email;
 			
 			if ($is_email) {
+				$email = $login_or_email;
 				$sql =
 				'select LOGIN
 				from CM$DB_USER
@@ -1302,9 +1302,20 @@
 						)
 				)';
 				$login = $this->getQueryFirstRowResultWithErrorNoticing($sql)['LOGIN'];
+			} else {
+				$sql =
+				'select VALUE as EMAIL from SP$VAR
+				where ID_DB_USER=(
+						select ID_DB_USER from CM$DB_USER
+						where LOGIN=\''.$login_or_email.'\'
+					) and ID_DICTIONARY=(
+						select ID_DICTIONARY from CM$DICTIONARY
+						where SHORT_NAME=\'EMAIL\'
+					)';
+				$email = $this->getQueryFirstRowResultWithErrorNoticing($sql)['EMAIL'];
 			}
 			
-			return ['PASSWORD_RESET_TOKEN' => $password_restore_token, 'LOGIN' => $login];
+			return ['PASSWORD_RESET_TOKEN' => $password_restore_token, 'LOGIN' => $login, 'EMAIL' => $email];
 		}
 		
 		public function checkPasswordResetToken($login, $token) {
