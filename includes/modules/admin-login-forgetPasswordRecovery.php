@@ -20,7 +20,7 @@
  */
 
  	$("#login").alphanum({
-	 	allow: '-_',
+	 	allow: '-_@.',
 	    allowSpace: false,
 	    allowNumeric: true,
 	    allowOtherCharSets: false
