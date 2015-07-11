@@ -55,7 +55,7 @@
 		<div class="legend-circle animated zoomIn" style="border-color: <?=$chartColors[$i];?>;"></div>
 		<div class="legend-title"><? echo $socialNetworksNames[$i];?></div>
 		<div class="legend-last-value" style="color: <?=$chartColors[$i]; ?>;">
-			<?=CommonFunctions::NVL($chartLegendValues[$i]['LOGIN_COUNT'], 0)*8;?>
+			<?=CommonFunctions::NVL($chartLegendValues[$i]['LOGIN_COUNT'], 0);?>
 			(<?=CommonFunctions::NVL($chartLegendValues[$i]['PERCENTAGE'], 0);?>%)
 		</div>
 	</li>
