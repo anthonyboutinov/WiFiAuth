@@ -1175,6 +1175,11 @@ ul.affix-top > li > a {
 .col-contains-checkbox {
   margin-top: -6px;
 }
+.visible-xxs-inline,
+.visible-xxs-block,
+.visible-xxs-inline-block {
+  display: none!important;
+}
 /* COMBINED (this way it's faster) */
 @media screen and (min-width: 768px) {
   nav.navbar {
@@ -1356,6 +1361,15 @@ ul.affix-top > li > a {
   /* iPhone screen, portrait orientation */
   .hidden-xxs {
     display: none !important;
+  }
+  .visible-xxs-inline {
+    display: inline !important;
+  }
+  .visible-xxs-block {
+    display: block !important;
+  }
+  .visible-xxs-inline-block {
+    display: inline-block !important;
   }
   .ad {
     max-width: 320px;
