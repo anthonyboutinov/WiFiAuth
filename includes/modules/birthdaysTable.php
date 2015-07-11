@@ -12,12 +12,12 @@
 		$_COOKIE['birthdays-intellectual-view'] = $intellectual_view;
 	}
 	
-	$intellectual_view_min_threshold = 1;
-	
 	$limit = $drawFullContent ? $database->getTablePageLimit() : $database->getDashboardTablePreviewLimit();
 	$birthdays = $database->getBirthdays(0, $limit, $intellectual_view);
 	
-	$dislay_as_flipcard = (CommonFunctions::supportsModernCSS() &&  $birthdays->num_rows >= $intellectual_view_min_threshold && (!$drawFullContent || !$desktop));
+	$intellectual_view_min_threshold = 5;
+	$allow_intellectual_view = $birthdays->num_rows >= $intellectual_view_min_threshold;
+	$dislay_as_flipcard = (CommonFunctions::supportsModernCSS() && (!$drawFullContent || !$desktop) && $allow_intellectual_view);
 
 ?>
 
@@ -27,18 +27,20 @@
     <figure class="front">
 <?php } ?>
 
-<h1 class="flip-birthdays-card<?php if ($birthdays->num_rows >= $intellectual_view_min_threshold) {echo ' link';} ?>">
+<h1 class="flip-birthdays-card<?php if ($dislay_as_flipcard) {echo ' link';} ?>">
 	<span class="ignore-link-coloring"><i class="fa fa-birthday-cake"></i> Дни рождения</span>
-	<span class="options">
-		<?php if (!$dislay_as_flipcard) { ?>
-		<a href="#" id="intellectual-view-toggle">
-			<i class="fa fa-toggle-<?=(($intellectual_view == true) ? 'on' : 'off');?>"></i><span class="hidden-xs"> Умная сортировка</span>
-		</a>
-		<i class="fa fa-question" id="option-help" data-toggle="tooltip" data-placement="left" title="
-			В&nbsp;таком представлении записи сортируются в&nbsp;соответсвтии с&nbsp;уровнем лояльности клиентов и&nbsp;близости их&nbsp;дня&nbsp;рождения.
-		"></i>
-		<?php } else if ($birthdays->num_rows >= $intellectual_view_min_threshold) { ?><i class="fa fa-cogs"></i><?php } ?>
-	</span>
+	<?php if ($allow_intellectual_view) { ?>
+		<span class="options">
+			<?php if (!$dislay_as_flipcard) { ?>
+			<a href="#" id="intellectual-view-toggle">
+				<i class="fa fa-toggle-<?=(($intellectual_view == true) ? 'on' : 'off');?>"></i><span class="hidden-xs"> Умная сортировка</span>
+			</a>
+			<i class="fa fa-question" id="option-help" data-toggle="tooltip" data-placement="left" title="
+				В&nbsp;таком представлении записи сортируются в&nbsp;соответсвтии с&nbsp;уровнем лояльности клиентов и&nbsp;близости их&nbsp;дня&nbsp;рождения.
+			"></i>
+			<?php } else if ($dislay_as_flipcard) { ?><i class="fa fa-cogs"></i><?php } ?>
+		</span>
+	<?php } ?>
 </h1>
 <div class="page-wrapper">
 	

@@ -224,5 +224,10 @@ $(document).ready(function() {
 	    allowNumeric: true,
 	    allowOtherCharSets: false
 	});
+	
+	
+	$(".superadmin-clients-popover-container > a").click(function(e) {
+		e.preventDefault();
+	});
 
 });

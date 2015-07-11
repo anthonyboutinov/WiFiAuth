@@ -87,12 +87,12 @@
 										$i++;
 									?>
 									<tr>
-										<td class="text-left"><a data-toggle="popover" data-placement="right" 
+										<td class="text-left superadmin-clients-popover-container"><a href="#" data-toggle="popover" data-placement="right" 
 										data-title="Информация о клиенте"  
-										data-content='Логин:&nbsp;<?=$row['LOGIN'];?> <br>
-														Email:&nbsp;<?=$row['EMAIL'];?> <br>
-														Логин&nbsp;роутера:&nbsp;<?=$row['ROUTER_LOGIN'];?> <br>
-														Пароль&nbsp;роутера:&nbsp;<?=$row['ROUTER_PASSWORD'];?> <br>'>
+										data-content='<table class="no-word-wrap"><tr><td>Логин:</td><td><?=$row['LOGIN'];?></td></tr>
+											<tr><td>Email:</td><td><?=$row['EMAIL'];?></td></tr>
+											<tr><td>Логин&nbsp;роутера:</td><td><?=$row['ROUTER_LOGIN'];?></td></tr>
+											<tr><td>Пароль&nbsp;роутера:</td><td><?=htmlentities($row['ROUTER_PASSWORD'], ENT_QUOTES);?></td></tr></table>'>
 										<?=$row['COMPANY_NAME'];?></a></td>
 
 										<?php if ($database->meetsAccessLevel('ROOT')) { ?>

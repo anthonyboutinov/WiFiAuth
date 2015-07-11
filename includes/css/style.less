@@ -483,6 +483,28 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#26ffffff', e
 	line-height: 20px;
 }
 
+.no-word-wrap {
+	white-space: nowrap;
+}
+
+.superadmin-clients-popover-container .popover {
+	max-width: none;
+	font-family: Fontatigo, 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
+	
+	& tr>td {
+		padding-top: 5px;
+		padding-bottom: 5px;
+		
+		&:first-child {
+			padding-right: 15px;
+		}
+		
+		&:last-child {
+			font-family: 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
+		}
+	}
+}
+
 .card-container { 
 	height: auto;
 	position: relative;
@@ -871,17 +893,14 @@ body.admin-page-login {
 }
 
 .popover {
-
+	padding: 0;
 	background: rgba(0,0,0,0.6);
 
-
 	& .popover-title{
-
 		background: rgba(0,0,0,0.6);
+		border-bottom: none;
 	}
-
 	& .arrow::after {
-
 		color: rgba(0,0,0,0.6);
 		border-right-color: rgba(0,0,0,0.6) !important;
 	}
