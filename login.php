@@ -101,11 +101,6 @@
 							ob_start();
 					?>
 			         <a href="#">
-			         <!-- <a href="#" id="VKLoginButton"> -->
-				        <!-- <span class="fa-stack">
-							<i class="fa fa-circle fa-stack-2x" style="color: #5596c9;"></i>
-							<i class="fa fa-vk fa-stack-1x fa-inverse"></i>
-						</span> -->
 						<script type="text/javascript">
 							document.write(VK.Share.button({
 					  		url: 'https://vk.com/chopchopkazan',
