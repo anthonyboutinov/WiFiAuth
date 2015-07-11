@@ -56,7 +56,8 @@
 					
 					<!-- Birthdays Table -->
 					<?php include 'includes/modules/birthdaysTable.php'; ?>
-					<a class="dashboard-more-info animated fadeInUp" href="admin-birthdays-list.php">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
+					<a class="hidden-xs dashboard-more-info animated fadeInUp" href="admin-birthdays-list.php">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
+					<a class="visible-xs-block dashboard-more-info animated fadeInUp" href="admin-birthdays-list.php?mobile">Подробнее <i class="fa fa-chevron-circle-right"></i></a>
 				</div>
 				
 				<div class="col-md-4 col-sm-12 col-md-pull-8">
