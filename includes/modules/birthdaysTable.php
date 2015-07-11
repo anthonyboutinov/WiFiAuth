@@ -120,6 +120,7 @@
 						echo $exploded_name[0].'<br>'.$exploded_name[1];
 					}
 					?></a></td>
+				<?php if ($drawFullContent) { ?><td class="text-right">
 					<?php
 						echo $row['BIRTHDAY'];
 						if (!$desktop) { 
