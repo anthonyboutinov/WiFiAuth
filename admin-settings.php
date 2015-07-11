@@ -228,8 +228,12 @@
 			</div><!-- eof .row -->
 			<?php	include 'includes/base/footer.php'; ?>
 		</div>
-		<?php include 'includes/base/jqueryAndBootstrapScripts.html';
-		if (isset($addFileScript) && $addFileScript) { ?>
+		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
+		<script type="text/javascript" src="includes/js/jquery.numeric.min.js"></script>
+		<script type="text/javascript" src="includes/js/jquery.alphanum.js"></script>
+		<script type="text/javascript" src="includes/js/admin-settings.js"></script>
+		<script>$(document).ready(function() {<?=$additionalScripts;?>});</script>
+		<?php if (isset($addFileScript) && $addFileScript) { ?>
 			<script>// Добавление названия справа от кнопки Добавить... в областях выбора файлов при выборе файла для загрузки
 				
 				$(document).on('change', '.btn-file :file', function() {
@@ -239,7 +243,7 @@
 				  input.trigger('fileselect', [numFiles, label]);
 				});
 				
-				$(document).ready( function() {
+				$(document).ready(function() {
 				    $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
 				        
 				        var input = $(this).parents('.input-group').find(':text'),
@@ -247,19 +251,13 @@
 				        
 				        if( input.length ) {
 				            input.val(log);
-				        } else {
-				            if( log ) alert(log);
+				        } else if(log) {
+							alert(log);
 				        }
 				        
 				    });
 				});
 			</script>
 		<?php } ?>
-		
-		<script type="text/javascript" src="includes/js/jquery.numeric.min.js"></script>
-		<script type="text/javascript" src="includes/js/jquery.alphanum.js"></script>
-		<script type="text/javascript" src="includes/js/admin-settings.js"></script>
-		<script>$(document).ready(function() {<?=$additionalScripts;?>});</script>
-
 	</body>
 </html>

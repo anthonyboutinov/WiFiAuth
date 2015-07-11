@@ -1,3 +1,21 @@
+/* *
+   * Textarea restrictions
+ */
+ 
+function update_textarea_word_count(txt, word_count) {
+	var maxLen = 200;
+	
+	var len = txt.val().length;
+	if (len > maxLen) {
+		$(word_count).addClass("bg-danger");
+		$(submitButtons).attr('disabled', 'disabled');
+	} else {
+		$(word_count).removeClass("bg-danger");
+		$("#admin-settings-form button[type=\"submit\"]").removeAttr('disabled');
+	}
+	$(word_count).html(maxLen - len);
+}
+
 $(document).ready(function() {
 	
 /* *
@@ -13,28 +31,7 @@ $(document).ready(function() {
 	setTimeout(function(){
 		$("i.fa[class^=\"text\"]").remove();
 	}, 8000);
-	
-/* *
-   * Textarea restrictions
- */
-	
-	var submitButtons = $("#admin-settings-form button[type=\"submit\"]");				
-	
-	function update_textarea_word_count(txt, word_count) {
-		var maxLen = 200;
-		
-		var len = txt.val().length;
-		if (len > maxLen) {
-			$(word_count).addClass("bg-danger");
-			$(submitButtons).attr('disabled', 'disabled');
-		} else {
-			$(word_count).removeClass("bg-danger");
-			$(submitButtons).removeAttr('disabled');
-		}
-		$(word_count).html(maxLen - len);
-	}	
-	
-	
+
 /* *
    * All submit buttons restrictions and view changes
  */

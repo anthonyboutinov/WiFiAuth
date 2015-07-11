@@ -54,13 +54,23 @@ $(document).ready(function () {
 	
 	// коррекция высот (задержка нужна, потому что иначе высота неправильно высчитывается)
 	function correctHeight() {
-		var fheight = 0;
+		var front_height = 0;
+		var back_height = 0;
 		$("#birthdays-card > figure.front").children().each(function() {
-			fheight += $(this).outerHeight() + parseInt($(this).css('margin-bottom'));
+			front_height += $(this).outerHeight() + parseInt($(this).css('margin-bottom'));
 		})
-		$("#birthdays-card > figure > .back").css('height', fheight);
-		$("#birthdays-card > figure.back .page-wrapper").css('height', $("#birthdays-card > figure.front .page-wrapper").outerHeight());
-		$("#birthdays-card").parent().css('height', fheight);
+		$("#birthdays-card > figure.back").children().each(function() {
+			back_height += $(this).outerHeight() + parseInt($(this).css('margin-bottom'));
+		})
+		if (back_height > front_height) {
+			$("#birthdays-card > figure > .front").css('height', back_height);
+			$("#birthdays-card > figure.front .page-wrapper").css('height', $("#birthdays-card > figure.back .page-wrapper").outerHeight());
+			$("#birthdays-card").parent().css('height', back_height);
+		} else {
+			$("#birthdays-card > figure > .back").css('height', front_height);
+			$("#birthdays-card > figure.back .page-wrapper").css('height', $("#birthdays-card > figure.front .page-wrapper").outerHeight());
+			$("#birthdays-card").parent().css('height', front_height);
+		}
 	}
 	
 	setTimeout(correctHeight, 350);
