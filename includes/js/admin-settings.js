@@ -49,7 +49,7 @@ $(document).ready(function() {
 		});
 		
 		if (fileExtensionError == true) {
-			addNotification('Загружаемый файл должен быть изображением (*.png, *.jpg, *.jpeg, *.gif)!', 'danger');
+			addNotification('Загружаемый файл должен быть изображением (.png, .jpg, .jpeg, .gif)!', 'danger');
 			e.preventDefault();
 		} else {
 			
