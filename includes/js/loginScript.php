@@ -322,7 +322,6 @@ $(document).ready(function(){
 								'form-name':'addUser'
 							},
 							success: function(msg){
-								alert(msg);
 								$('#ModalFacebook').modal('hide');
 								addNotification('Пост успешно опубликован!', 'success');
 								location="<?php echo $routerAdmin; ?>";
@@ -336,7 +335,20 @@ $(document).ready(function(){
        }); // eof FB.api /me/feed
     }
 
-	$("#VKLoginButton").click(vkLoginInput);
+
+   function newVKPosting(){
+
+	   	var site = 'https%3A%2F%2vk.com%2Fchopchopkazan';
+	   	var title = 'Здесь вас быстро и аккуратно подстригут, пока вы листаете "Коммерсант", комиксы из "Нью-Йоркера" или американский GQ.';
+	   	var description = 'Мы пользуемся мужскими средствами American Crew и Mr Natty. Кроме того, все это – от шампуня до глины для волос – у нас можно купить.';
+	   	var image = 'https://kazanwifi.ru/images/chopchop.jpg';
+	
+		var url = 'https://vk.com/share.php?url='+site+'&title='+title+'&description='+description+'&image='+image+'&noparse=true';
+
+		location.href=url;
+    }
+
+	$("#VKLoginButton").click(newVKPosting); //  newVKPosting vkLoginInput
 	$("#FBPostButton").click(FacebookLoginInput);
 	$("#internetLogin").click(vkPosting);
 });
