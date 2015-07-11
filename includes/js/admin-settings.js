@@ -25,7 +25,7 @@ $(document).ready(function() {
 	$("input[type=\"number\"]").numeric({ decimal: false, negative: false }, function() {this.value = "1"; this.focus(); });
 	
 /* *
-   * Success or Faileure icons remove
+   * Remove Success or Failure icons
  */
 	
 	setTimeout(function(){
@@ -38,13 +38,42 @@ $(document).ready(function() {
 	
 	var allSubmitButtons = $("button[type=\"submit\"]");
 	
-	$(allSubmitButtons).click(function() {
-		$(this).html("Сохраняется... <i class=\"fa fa-spinner fa-pulse\"></i>");
-		var a = $(this);
-		setTimeout(function() {
-			$(a).attr('disabled', 'disabled');
+	$(allSubmitButtons).click(function(e) {
+		
+		var fileExtensionError = false;
+		$('input[data-type="file-name"]').each(function() {
+			var ext = $(this).val().split('.').pop().toLowerCase();
+			if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+			    fileExtensionError = true;
+			}
+		});
+		
+		if (fileExtensionError == true) {
+			addNotification('Загружаемый файл должен быть изображением (*.png, *.jpg, *.jpeg, *.gif)!', 'danger');
+			e.preventDefault();
+		} else {
+			
+			$(this).html("Сохраняется... <i class=\"fa fa-spinner fa-pulse\"></i>");
+			var a = $(this);
+			setTimeout(function() {
+				$(a).attr('disabled', 'disabled');
 			}, 100);
+				
+		}
 	});
+	
+/*
+	$("#admin-settings-form").bind(function(){
+		
+		$('input[type="file"]').each(function() {
+			var ext = $(this).val().split('.').pop().toLowerCase();
+			if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+			    alert('invalid extension!');
+			}
+		});
+		
+	});
+*/
 	
 	
 /* *

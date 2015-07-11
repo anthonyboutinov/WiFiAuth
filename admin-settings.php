@@ -117,7 +117,7 @@
 																	value="<?=$value['VALUE'];?>">
 															</span>
 										                </span>
-														<input type="text" class="form-control" readonly>
+														<input type="text" class="form-control" readonly data-type="file-name">
 													</div>
 													<?php
 												}
