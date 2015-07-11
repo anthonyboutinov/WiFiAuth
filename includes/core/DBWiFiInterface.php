@@ -77,18 +77,13 @@
 			$result = $this->getQueryResultWithErrorNoticing($sql);
 			if ($result->num_rows == 1) {
 				while($row = $result->fetch_assoc()) {
-
 					if( password_verify($password,$row['PASSWORD'])){
-
 						echo 'true';
 					} else {
 						echo 'false';
 					}
-
 				}
 			}
-
-
 		}
 
 		public function meetsAccessLevel($accl_short_name) {
@@ -144,7 +139,7 @@
 				$this->access_level_accepted = $out;
 				
 				// Запомнить значения на 10 минут, чтобы не спрашивать БД при каждой загрузке страницы
-				setcookie("acceccLevelAcceptedArray", serialize($out), time() + (60 * 10)); // 10 mins
+				setcookie("acceccLevelAcceptedArray", serialize($out), 0); // 10 mins
 			}
 		}
 		
@@ -307,10 +302,10 @@
 					return $this->processVerifiedUser($result, $web_user);
 					
 				} else /* Если пароли не совпдают */ {
-
+					
 					// Если уже были неверные попытки ввода пароля
 					if ($result['NUM_FAILED_ATTEMPTS'] != null) {
-
+						
 						// Если эти попытки были давно
 						if ($result['LAST_FAILED_ATTEMPT_WAS_LONG_AGO'] == 'T') {
 							// То сбросить счетчики неверных паролей
@@ -505,8 +500,8 @@
 		public function getDataTypesForParentByShortName($short_names) {
 			$this->sanitize($short_names);
 			
-			$sql = '
-			select
+			$sql =
+			'select
 				D.ID_DICTIONARY,
 				D.SHORT_NAME,
 				DT.NAME as DATA_TYPE
@@ -761,7 +756,28 @@
 
 			$sql =
 			'SELECT
-				DATE_FORMAT(D.DATE, "new Date(%Y, %m, %d)") AS JSON_DATE,';			
+				CONCAT(U.JSON_DATE_BEGINNING, U.JSON_DATE_MIDDLE, U.JSON_DATE_END) as JSON_DATE,';
+				
+			$isFirst = true;
+			foreach ($login_options as $login_option) {
+				$name = $login_option['NAME'];
+				
+				if ($isFirst === true) {
+					$isFirst = false;
+				} else {
+					$sql = $sql.',';
+				}
+				
+				$sql = $sql.'U.'.$login_option['SHORT_NAME'];
+				
+			}
+	
+				
+			$sql = $sql.' FROM (
+			SELECT
+				DATE_FORMAT(D.DATE, \'new Date(%Y, \') AS JSON_DATE_BEGINNING,
+	            DATE_FORMAT(D.DATE, \'%m\') - 1 AS JSON_DATE_MIDDLE,
+	            DATE_FORMAT(D.DATE, \', %d)\') AS JSON_DATE_END,';			
 			
 			$isFirst = true;
 			foreach ($login_options as $login_option) {
@@ -832,7 +848,8 @@
 					) A
 				WHERE A.DATE BETWEEN DATE_SUB(CURDATE(), INTERVAL '.$num_days.' DAY) AND CURDATE() 
 			) D
-			ORDER BY D.DATE DESC';
+			ORDER BY D.DATE DESC) U';
+// 			Notification::add($sql);
 						
 			return $this->toArray($this->getQueryResultWithErrorNoticing($sql));
 		}
@@ -914,17 +931,19 @@
 			$this->sanitize($phone);
 			$this->sanitize($log_opt);
 			
-			// FIXME: Расчитано только на две социальные сети!!!
+			$phone = '+'.$phone;
+			
 			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME="'.$log_opt.'"';
 			$log_opt = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
 			echo $log_opt;
 			
             $sql  = 'select ID_USER from CM$USER where NAME="'.$phone.'"';
-            $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не логировать, если нет результатов в запросе*/);
+            $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не выдавать ошибку, если нет результатов в запросе*/);
             if($result == null) {
             	$sql = 'insert into CM$USER 
-            	         (ID_LOGIN_OPTION,NAME,ID_DB_USER_MODIFIED)  values( '
+            	         (ID_LOGIN_OPTION,LINK,NAME,ID_DB_USER_MODIFIED)  values('
             		     .$log_opt.',"'
+            		     .'tel:'.$phone.',"'
                          .$phone.'",'
                          .$this->id_db_user.')';
             	$this->getQueryResultWithErrorNoticing($sql);
@@ -938,7 +957,7 @@
             $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
-				public function addUser($first_name, $last_name, $user_href, $log_opt, $b_date)
+		public function addUser($first_name, $last_name, $user_href, $log_opt, $b_date)
 		{
 			$this->sanitize($first_name);
 			$this->sanitize($last_name);
@@ -946,16 +965,14 @@
 			$this->sanitize($log_opt);
 			$this->sanitize($b_date);
 			
-			// FIXME: Расчитано только на две социальные сети!!!
 			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME="'.$log_opt.'"';
 			$log_opt = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
 
-			
             $sql  = 'select ID_USER from CM$USER where LINK="'.$user_href.'"';
-            $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не логировать, если нет результатов в запросе*/);
+            $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не выдавать ошибку, если нет результатов в запросе*/);
             if($result == null) {
             	$sql = 'insert into CM$USER 
-            	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,ID_DB_USER_MODIFIED)  values( '
+            	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,ID_DB_USER_MODIFIED)  values('
             		     .$log_opt.', STR_TO_DATE("'
             			 .$b_date.'","%d.%m.%Y "),"'
                          .$first_name.' '
@@ -1258,9 +1275,124 @@
 			return true;
 			
 		}
-		
+				
 		# ==== КОНЕЦ Функции, изменяющие данные в БД ==== #
 		# =================================================================== #
+		
+		
+		
+		# =================================================== #
+		# ==== ВОССТАНОВЛЕНИЕ ПАРОЛЯ ==== #
+		# =================================================== #
+		
+		public function initiatePasswordReset($login_or_email) {
+			$is_email = filter_var($login_or_email, FILTER_VALIDATE_EMAIL);
+			$this->sanitize($login_or_email);
+			
+			$password_restore_token = CommonFunctions::generateRandomString(64);
+			$this->sanitize($password_restore_token);
+			$sql =
+			'update CM$DB_USER set PASSWORD_RESET_TOKEN=\''.password_hash($password_restore_token, PASSWORD_BCRYPT).
+			'\' where ';
+			if ($is_email) {
+				$sql = $sql.'ID_DB_USER=(
+					select ID_DB_USER
+					from SP$VAR
+					where
+						VALUE=\''.$login_or_email.'\'
+						and ID_DICTIONARY=(
+							select ID_DICTIONARY
+							from CM$DICTIONARY
+							where SHORT_NAME=\'EMAIL\'
+						)
+				)';
+			} else {
+				$sql = $sql.'login=\''.$login_or_email.'\'';
+			}			
+			$this->getQueryResultWithErrorNoticing($sql);
+			
+			$login = $login_or_email;
+			$email = $login_or_email;
+			
+			if ($is_email) {
+				$email = $login_or_email;
+				$sql =
+				'select LOGIN
+				from CM$DB_USER
+				where ID_DB_USER=(
+					select ID_DB_USER
+					from SP$VAR
+					where
+						VALUE=\''.$login_or_email.'\'
+						and ID_DICTIONARY=(
+							select ID_DICTIONARY
+							from CM$DICTIONARY
+							where SHORT_NAME=\'EMAIL\'
+						)
+				)';
+				$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, null, true);
+				if (!$result) {
+					return false;
+				} else {
+					$login = $result['LOGIN'];
+				}
+			} else {
+				$sql =
+				'select VALUE as EMAIL from SP$VAR
+				where ID_DB_USER=(
+						select ID_DB_USER from CM$DB_USER
+						where LOGIN=\''.$login_or_email.'\'
+					) and ID_DICTIONARY=(
+						select ID_DICTIONARY from CM$DICTIONARY
+						where SHORT_NAME=\'EMAIL\'
+					)';
+				$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, null, true);
+				if (!$result) {
+					return false;
+				} else {
+					$email = $result['EMAIL'];
+				}
+			}
+			
+			return ['PASSWORD_RESET_TOKEN' => $password_restore_token, 'LOGIN' => $login, 'EMAIL' => $email];
+		}
+		
+		public function checkPasswordResetToken($login, $token) {
+			$this->newSanitize($login);
+			$this->sanitize($token);
+			
+			$sql = 'select PASSWORD_RESET_TOKEN from CM$DB_USER where LOGIN='.$login;
+			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql, null, true);
+			if (!$result) {
+				return false;
+			} else {
+				return password_verify($token, $result['PASSWORD_RESET_TOKEN']);
+			}
+		}
+		
+		public function setNewPasswordUsingResetPasswordToken($login, $token, $newPassword) {
+			if (!$this->checkPasswordResetToken($login, $token)) {
+				return false;
+			}
+			$this->newSanitize($login);
+			$this->sanitize($newPassword);
+			
+			$sql =
+			'update CM$DB_USER set
+				PASSWORD=\''.password_hash($newPassword, PASSWORD_BCRYPT).'\',
+				NUM_FAILED_ATTEMPTS=NULL,
+				LAST_FAILED_ATTEMPT=NULL,
+				UNLOCK_AT=NULL,
+				PASSWORD_RESET_TOKEN=NULL,
+				ID_DB_USER_MODIFIED=ID_DB_USER
+			where LOGIN='.$login;
+			
+			$this->getQueryResultWithErrorNoticing($sql);
+			return true;
+		}
+
+		# ==== КОНЕЦ ВОССТАНОВЛЕНИЕ ПАРОЛЯ ==== #
+		# =================================================== #
 		
 	}
 ?>

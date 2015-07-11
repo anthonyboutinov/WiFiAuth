@@ -1312,6 +1312,12 @@ ul.affix-top > li > a {
     font-size: 14px;
     text-align: center;
   }
+  body.admin-page.dashboard h1 i.fa {
+    font-size: inherit;
+    top: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
   .legend .legend-title {
     font-size: 10px;
   }
@@ -1340,6 +1346,10 @@ ul.affix-top > li > a {
   .page-wrapper > p {
     padding-left: 10px;
     padding-right: 10px;
+  }
+  .sub-notification {
+    padding-top: 15px;
+    padding-bottom: 15px;
   }
 }
 @media (max-width: 320px) {

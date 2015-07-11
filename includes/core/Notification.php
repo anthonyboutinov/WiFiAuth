@@ -27,7 +27,7 @@
 		 *	@author Anthony Boutinov
 		 *	
 		 *	@param ($msg) (string)							Сообщение
-		 *	@param ($kind) (string)							Тип сообщения. По умолчанию, 'warning'.
+		 *	@param ($kind) (string)							Тип сообщения. По умолчанию, 'info'.
  		 *	@param ($remove_repeating_whitespaces) (bool)	Убрать ли из сообщения повторяющиеся символы пробела. По умолчанию, 'true'.
 		 */	
 		public static function add($msg, $kind = null, $remove_trailing_whitespaces = true) {

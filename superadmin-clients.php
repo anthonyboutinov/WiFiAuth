@@ -13,6 +13,7 @@
 	</head>
 	<body class="admin-page simple-page">
 
+	<?php if ($database->meetsAccessLevel('PRIV_MANAGER')) { ?>
 		<div class="modal fade" id="disableModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
 		  <div class="modal-dialog modal-black">
 		    <div class="modal-content">
@@ -69,7 +70,7 @@
 		  </div><!-- /.modal-dialog -->
 		</div>
 
-
+	<?php } ?>
 		
 		<div class="container glass-panel">
 			<?php include 'includes/base/superadmin-navbar.php'; ?>			
@@ -93,6 +94,7 @@
 														Логин&nbsp;роутера:&nbsp;<?=$row['ROUTER_LOGIN'];?> <br>
 														Пароль&nbsp;роутера:&nbsp;<?=$row['ROUTER_PASSWORD'];?> <br>'>
 										<?=$row['COMPANY_NAME'];?></a></td>
+
 										<?php if ($database->meetsAccessLevel('ROOT')) { ?>
 											<td class="text-right">
 												<form action="admin-dashboard.php" method="post">
@@ -103,29 +105,34 @@
 													</button>
 												</form>
 											</td>
-										<?php } ?>
-										<?php if ($row['IS_ACTIVE'] =='T') { ?>
-											<td class="text-right">
-												<a href="#" data-id="enabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Приостановить обслуживание">
-													<i class="fa fa-circle" ></i>
-												</a>
-											</td>
-										<?php } else  { ?>
-											<td class="text-right">
-												<a href="#" data-id="disabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Возобновить обслуживание">
-													<i class="fa fa-circle-thin"></i>
-												</a>
-											</td>
-										<?php } ?>
+										<?php }
+											
+										if ($database->meetsAccessLevel('PRIV_MANAGER')) { 
+											
+											if ($row['IS_ACTIVE'] =='T') { ?>
+												<td class="text-right">
+													<a href="#" data-id="enabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Приостановить обслуживание">
+														<i class="fa fa-circle" ></i>
+													</a>
+												</td>
+											<?php } else { ?>
+												<td class="text-right">
+													<a href="#" data-id="disabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Возобновить обслуживание">
+														<i class="fa fa-circle-thin"></i>
+													</a>
+												</td>
+											<?php }
+												
+										} ?>
 									</tr>
 							<?php 
 									}
 								} else { ?>
 									<tr><td colspan="1" class="text-center">Пусто</td></tr>
 							<?	} ?>
-					 	</table>
+						</table>
 
-				 	</div>
+					</div>
 				</div>
 			<div class="col-md-8">
 				<?php include 'includes/modules/superadminClientsModule.php' ?> 
@@ -134,6 +141,8 @@
 			<?php include 'includes/base/footer.php'; ?>
 		</div>
 		<?php include 'includes/js/superadmin.php'; ?>
-		
+		<script type="text/javascript" src="includes/js/jquery.alphanum.js"></script>
+		<script src="includes/js/superadmin-clients.js"></script>
+
  	</body>
 </html>

@@ -17,7 +17,7 @@
 	$limit = $drawFullContent ? $database->getTablePageLimit() : $database->getDashboardTablePreviewLimit();
 	$birthdays = $database->getBirthdays(0, $limit, $intellectual_view);
 	
-	$dislay_as_flipcard = ($birthdays->num_rows >= $intellectual_view_min_threshold && (!$drawFullContent || !$desktop));
+	$dislay_as_flipcard = (CommonFunctions::supportsModernCSS() &&  $birthdays->num_rows >= $intellectual_view_min_threshold && (!$drawFullContent || !$desktop));
 
 ?>
 

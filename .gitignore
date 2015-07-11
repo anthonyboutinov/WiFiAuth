@@ -1,3 +1,5 @@
 
 includes/core/db_config.php
 qqq.php
+includes/core/mail_config.php
+

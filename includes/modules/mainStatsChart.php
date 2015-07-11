@@ -25,7 +25,7 @@
 		<select id="main-stats-chart-period">
 			<option value="365"<?php if ($temp == 365) {echo ' selected';} ?>>1 год</option>
 			<option value="183"<?php if ($temp == 183) {echo ' selected';} ?>>6 месяцев</option>
-			<option value="62"<?php if ($temp == 62) {echo ' selected';} ?>>2 месяца</option>
+			<option value="92"<?php if ($temp == 92) {echo ' selected';} ?>>3 месяца</option>
 			<option value="30"<?php if ($temp == 30) {echo ' selected';} ?>>1 месяц</option>
 			<option value="14"<?php if ($temp == 14) {echo ' selected';} ?>>2 недели</option>
 		</select>
@@ -48,7 +48,7 @@
 		<div class="legend-circle animated zoomIn" style="border-color: <?=$chartColors[$i];?>;"></div>
 		<div class="legend-title"><? echo $socialNetworksNames[$i];?></div>
 		<div class="legend-last-value" style="color: <?=$chartColors[$i]; ?>;">
-			<?=CommonFunctions::NVL($chartLegendValues[$i]['LOGIN_COUNT'], 0);?>
+			<?=CommonFunctions::NVL($chartLegendValues[$i]['LOGIN_COUNT'], 0)*8;?>
 			(<?=CommonFunctions::NVL($chartLegendValues[$i]['PERCENTAGE'], 0);?>%)
 		</div>
 	</li>

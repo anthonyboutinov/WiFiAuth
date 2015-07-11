@@ -1,77 +1,79 @@
 <?php	
 	include 'includes/core/session.php';
-?>
-<!DOCTYPE html>
-<html lang="ru">
-	<head>
-		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
-		<title>Вход в систему</title>
-	</head>
-	<body class="admin-page-login">
-
-		<div class="container absolute-center-center">
-			<div class="glass-panel">
-			
-				<i class="fa fa-5x fa-wifi margin-bottom"></i>
-				<h1>Вход в систему</h1>
-				<div class="form">
-					<form method="post">
-						<input type="hidden" name="form-name" value="login">
-				
-						<div class="form-group vertically-concatinated top">
-							<label class="sr-only" for="login">Логин</label>
-							<input type="text" class="form-control position-relative" id="login" name="login" placeholder="Логин" value="<?=isset($_COOKIE['remember_me']) ? $_COOKIE['remember_me'] : '';?>">
-						</div>
-				
-						<div class="form-group vertically-concatinated bottom">
-							<label class="sr-only" for="password">Пароль</label>
-							<input type="password" class="form-control position-relative" id="password" name="password" placeholder="Пароль">
-						</div>
-				
-						<div class="checkbox">
-								<input type="checkbox" name="remember-me" id="remember-me" name="remember-me" value="1"<?=isset($_COOKIE['remember_me']) ? ' checked' : '';?>><label for="remember-me">Запомнить меня</label>
-						</div>
-				
-						<button type="submit" class="btn btn-lg btn-black gradient">Войти <i class="fa fa-sign-in"></i></button>
-				
-					</form>
-				</div>
-				
-				<div class="margin-top">
-					<a href="#" id="forgot-password-button">Забыли пароль?</a>
-				</div>
-				
-			</div>
-		</div>
-	<?php include 'includes/base/footer.php'; ?>
-	<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
-	<script>
-				
-		$(document).ready(function() {	
-			
-			// Сфокусироваться на нужном поле при загрузке страницы
-			var loginField = $("#login");
-			if ($(loginField).attr('value') == '') {
-				$(loginField).focus();
-			} else {
-				$("#password").focus();
-			}
-						
-			function reorderToLogin() {
-				$("#login").css('z-index', '5');
-				$("#password").css('z-index', '4');
-			}
-			
-			function reorderToPassword() {
-				$("#login").css('z-index', '4');
-				$("#password").css('z-index', '5');
-			}
-			
-			reorderToLogin();
-			$(loginField).focusin(reorderToLogin);
-			$("#password").focusin(reorderToPassword);
-		});
+	
+	if (isset($_POST['form-name'])) {
 		
-	</script>
-	</body>
-</html>
+		// Экран восстановления пароля
+		if ($_POST['form-name'] == 'forget-password-recovery-screen') {
+			include 'includes/modules/admin-login-forgetPasswordRecovery.php';
+			exit();
+		}
+		
+		// Обработка формы восстановления пароля
+		else if ($_POST['form-name'] == 'forget-password-recovery') {
+			
+			if (!isset($_POST['login'])) {
+				die('DEBUG Error: no form data!');
+			}
+			$responce = $database->initiatePasswordReset($_POST['login']);
+			if (!$responce) {
+				Notification::add('Пользователь с таким логином/email не найден.', 'danger');
+			} else {
+				$password_reset_link = $BASE_URL.'admin-login.php?l='.$responce['LOGIN'].'&t='.$responce['PASSWORD_RESET_TOKEN'];
+				
+				require_once('includes/core/mail_config.php');
+				
+				$mail->addAddress($responce['EMAIL']); 
+				$mail->Subject = "Сброс пароля — Re[Spot]";
+				$mail->Body    = "Для смены пароля перейдите по ссылке:\n$password_reset_link\n\nСообщение сгенерировано автоматически.";
+				
+				if(!$mail->send()) {
+				    Notification::add('Невозможно отправить сообщение.<br>Ошибка Mailer: ' . $mail->ErrorInfo, 'danger');
+				} else {
+				    Notification::add('Сообщение для сброса пароля отправлено на <strong>'.$responce['EMAIL'].'</strong>', 'success');
+				}
+			}
+			
+		}
+		
+		// Обработка формы задания нового пароля
+		else if ($_POST['form-name'] == 'password-reset-set-new') {
+			
+			if (isset($_POST['LOGIN']) && isset($_POST['PASSWORD_RESET_TOKEN'])) {
+				
+				if ($_POST['password'] != $_POST['repeat-password']) {
+					Notification::add("Ошибка: Пароли не совпадают!", 'danger');
+				}
+				
+				$responce = $database->setNewPasswordUsingResetPasswordToken($_POST['LOGIN'], $_POST['PASSWORD_RESET_TOKEN'], $_POST['password']);
+				
+				if ($responce) {
+					Notification::add('Пароль успешно изменен! Теперь вы можете войти в Личный кабинет.', 'success');
+				} else {
+					Notification::add('Ошибка: Переданы недействительные данные.', 'danger');
+				}
+				
+			} else {
+				Notification::add('Ошибка: Переданы недействительные данные.', 'danger');
+			}
+			
+		}
+		
+	}
+	// Если загружается страница задания нового пароля
+	else if (isset($_GET['l']) && isset($_GET['t'])) {
+		
+		$responce = $database->checkPasswordResetToken($_GET['l'], $_GET['t']);
+		
+		if ($responce) {
+			include 'includes/modules/admin-login-resetPassword.php';
+			exit();
+		} else {
+			Notification::add('Ошибка: Переданы недействительные данные.', 'danger');
+		}
+		
+	}
+	
+	// Страница по умолчанию
+	include 'includes/modules/admin-login-default.php';
+?>

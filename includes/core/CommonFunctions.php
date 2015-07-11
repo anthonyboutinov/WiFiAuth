@@ -245,6 +245,38 @@
 		    return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
 		}
 		
+		/**
+		 * Is Old Android
+		 *
+		 * Check to see it the user agent is Android and if so then
+		 * check the version number to see if it is lower than 4.0.0
+		 * or passed parameter
+		 *
+		 *	@author https://gist.github.com/Abban
+		 *
+		 * @param  string $version
+		 * @return boolean
+		 */
+		public static function isOldAndroid($version = '4.0.0'){
+			if(strstr($_SERVER['HTTP_USER_AGENT'], 'Android')){
+				preg_match('/Android (\d+(?:\.\d+)+)[;)]/', $_SERVER['HTTP_USER_AGENT'], $matches);
+				return version_compare($matches[1], $version, '<=');
+			}
+		}
+		
+		public static function supportsModernCSS() {
+			return !CommonFunctions::isOldAndroid('2.3');
+		}
+		
+		public static function generateRandomString($length = 10) {
+		    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		    $charactersLength = strlen($characters);
+		    $randomString = '';
+		    for ($i = 0; $i < $length; $i++) {
+		        $randomString .= $characters[rand(0, $charactersLength - 1)];
+		    }
+		    return $randomString;
+		}
 	}
 
 ?>

@@ -17,6 +17,9 @@
 	$id_cli = null;
 	$remember_me = false;
 	
+	$BASE_URL_NO_SLASH = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+	$BASE_URL = $BASE_URL_NO_SLASH.'/';
+	
 	$routerAdmin = 'http://192.168.88.1/wifi.html';
 	
 	$wifiCaptivePageMainPage = 'login.php';
@@ -35,33 +38,24 @@
 	// Если находится на странице авторизации
 	if (basename($_SERVER['PHP_SELF']) == $adminLoginPage) { 
 		
-		// Если принимаются данные формы
-		if (isset($_POST['form-name'])) {
-			if ($_POST['form-name'] == 'login' && isset($_POST['login']) && isset($_POST['password'])) {
-				// Если выполняется вход
-				$cli_login = $_POST['login'];
-				$cli_password = $_POST['password'];
+		// Если принимаются данные формы выполнения входа
+		if (isset($_POST['form-name'])
+			&& $_POST['form-name'] == 'login' && isset($_POST['login']) && isset($_POST['password'])) {
 				
-				if (isset($_POST['remember-me'])) {
-					$remember_me = true;
-				} else {
-					unset($_COOKIE['remember-me']);
-				    setcookie('remember-me', '', time() - 3600, '/');
-				}
-				
-			} else if ($_POST['form-name'] == 'forgot-password') {
-				Notification::add('DEBUG (includes/core/session.php): НЕ РЕАЛИЗОВАНО! Выполняетя 1 шаг восстановления пароля (отправка заявки)', 'warning');
-				
-				// Если выполняетя 1 шаг восстановления пароля (отправка заявки)
-				// ...
-			}
-		} else {
+			$cli_login = $_POST['login'];
+			$cli_password = $_POST['password'];
 			
-			// Иначе, если даные формы не принимаются, то
-			if (isset($_SESSION['id_cli'])) {
-				// Если авторизован, взять ID из сессии
-				$id_cli = $_SESSION['id_cli'];
+			if (isset($_POST['remember-me'])) {
+				$remember_me = true;
+			} else {
+				unset($_COOKIE['remember-me']);
+			    setcookie('remember-me', '', time() - 3600, '/');
 			}
+			
+		}
+		else // Иначе, если даные формы не принимаются && Если авторизован, взять ID из сессии
+		if (isset($_SESSION['id_cli'])) {
+			$id_cli = $_SESSION['id_cli'];
 		}
 	
 	} else
@@ -75,8 +69,7 @@
 			// Запомнить, на какой странице пользователь хотел получить доступ
 			$return_to_page_after_authentication = "{$_SERVER['REQUEST_URI']}";
 			// Перевести на страницу авторизации
-			$base_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
-			header("Location: $base_url/$adminLoginPage?r=$return_to_page_after_authentication");
+			header("Location: $BASE_URL"."$adminLoginPage?r=$return_to_page_after_authentication");
 			exit();
 			
 		} else {
@@ -120,7 +113,7 @@
 	}
 	
 	// Если есть данные для входа или страница не защищена (в последнем просто подключается к бд) 
-	if (($router_login && $router_pasword) || ($cli_login && $cli_password) || $id_cli || (isset($current_page_is_not_protected) && $current_page_is_not_protected)) {
+	if (($router_login && $router_pasword) || ($cli_login && $cli_password) || $id_cli || (isset($current_page_is_not_protected) && $current_page_is_not_protected) || (!$router_login && !$router_pasword && !$cli_login && !$cli_password && !$id_cli)) {
 		$database = new DBWiFiInterface($servername, $username, $password, $dbname, $router_login, $router_pasword, $cli_login, $cli_password, $id_cli);
 		
 		// Если пользователь валиден
@@ -141,16 +134,14 @@
 			
 			// Если надо редиректнуть в другое место, то сделать это
 			if (isset($_GET['r']) && $_GET['r'] != '') {
-				$base_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
-				header("Location: $base_url".$_GET['r']); /* Redirect browser */
+				header("Location: $BASE_URL_NO_SLASH".$_GET['r']); /* Redirect browser */
 				exit();
 			}
 			
 			// Если вошел на странице логина и никуда не надо редиректить, то перейти на главную страницу
 			if (basename($_SERVER['PHP_SELF']) == $adminLoginPage) {
 				$to = $database->is_superadmin() ? $superadminMainPage : $adminMainPage;
-				$base_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
-				header("Location: $base_url/$to"); /* Redirect browser */
+				header("Location: $BASE_URL"."$to"); /* Redirect browser */
 				exit();
 			}
 			
