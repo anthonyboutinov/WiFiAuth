@@ -22,7 +22,23 @@
 		$logOpt =$_POST['logOpt'];
 	
 		$database->addMobileUser($phone,$logOpt); 
-	}
+	} 
+	// else if($_POST['form-name']=='shareVK'){
+
+	// 		$url = $_POST['site'];
+	// 		$title = $_POST['title'];
+	// 		$description = $_POST['description'];
+	// 		$image = $_POST['image'];
+	// 		$noparse = $_POST['noparse'];
+
+	// 		if( $curl = curl_init() ) {
+	// 		curl_setopt($curl, CURLOPT_URL, "http://vk.com/share.php?url=$url&title=$title&description=$description&image=$image&noparse=$noparse");
+	// 		curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+	// 		$out = curl_exec($curl);
+	// 		echo $out;
+	// 		curl_close($curl);
+	// 	}
+	// }
 
 }
 
