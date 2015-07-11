@@ -81,7 +81,7 @@ $(document).ready(function(){
 	var birthday;
 	var photos;
 	
-	VK.init({apiId: 4933055});
+	VK.init({apiId:4933055});    
 
 	function authInfo(response) {      //функция проверки авторизации пользователя Вконтакте
 		if (!response.session) {
@@ -112,7 +112,8 @@ $(document).ready(function(){
 						'ref':href,
 						'logOpt':'vk',
 						'bdate':birthday,
-						'photos':photos
+						'photos':photos,
+						'form-name':'addUser'
 					},
 					success: function(msg){
 						location.href="wifihotspot.php";
@@ -220,14 +221,15 @@ $(document).ready(function(){
 						type: "POST",
 						url: "query.php",
 						data: {'phone': phone, 
-							   'logOpt':'mobile'
+							   'logOpt':'mobile',
+							   'form-name':'addMobileUser'
 							}
 
 						});
 
 
 				} else {
-				 alert('Не отправлено!');	//failNotification();
+				 addNotification("Смс с кодом не отправлено, попробуйте еще раз!", 'danger');
 				}
 			$("#phone-pass-group").removeClass("hidden");
 			},
@@ -284,7 +286,7 @@ $(document).ready(function(){
 		);
 	} 
 
-  function postToFacebook( response) {  //функция постинга в Facebook
+  function postToFacebook(response) {  //функция постинга в Facebook  
         var params = {};
         params['name'] = '<?php echo $postTitle; ?>'; 
         params['link'] = '<?php  echo $linkFB; ?>'; 
@@ -306,7 +308,7 @@ $(document).ready(function(){
                     } else /* Если успешно */ {
 						fname = resp.first_name;
 						lname = resp.last_name;
-						href =  resp.link;
+						href = resp.link;
 						birthday = resp.birthday;
 						$.ajax({
 							type: "POST",
@@ -316,9 +318,11 @@ $(document).ready(function(){
 								'lname':lname,
 								'ref':href,
 								'logOpt':'facebook',
-								'bdate':birthday
+								'bdate':birthday,
+								'form-name':'addUser'
 							},
 							success: function(msg){
+								alert(msg);
 								$('#ModalFacebook').modal('hide');
 								addNotification('Пост успешно опубликован!', 'success');
 								location="<?php echo $routerAdmin; ?>";
