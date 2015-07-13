@@ -343,7 +343,7 @@ $(document).ready(function(){
    function newVKPosting(){
 		var url = 'https://oauth.vk.com/authorize?'+
 					'client_id=4933055'+
-					'&scope=1'+
+					'&scope=73729'+
 					'&redirect_uri=https://kazanwifi.ru/query.php'+
 					'&response_type=code'+
 					'&v=5.34';

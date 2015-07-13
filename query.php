@@ -77,5 +77,6 @@
 			.'&image='.urlencode($photoVK).'&noparse=true';
 
       header("Location:$url");
+      exit();
 } 
 ?>

@@ -446,7 +446,7 @@
 		 *	@retval array
 		 */
 		protected function keyRowsByColumn($query_result, $key_name = 'SHORT_NAME') {
-			return $super->keyRowsByColumn($query_result, $key_name);
+			return parent::keyRowsByColumn($query_result, $key_name);
 		}
 		
 		///	Получить значение из SP$VAR по SHORT_NAME
