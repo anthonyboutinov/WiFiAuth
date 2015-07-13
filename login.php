@@ -111,7 +111,7 @@
 							// },
 							// {type: 'custom', text: ''}));
 						</script>
-						<span class="fa-stack"><i class="fa fa-circle fa-stack-2x" style="color: #5596c9;"></i><i class="fa fa-vk fa-stack-1x fa-inverse"></i></span>
+						<span class="fa-stack"  ><i class="fa fa-circle fa-stack-2x" style="color: #5596c9;"></i><i class="fa fa-vk fa-stack-1x fa-inverse"></i></span>
 			         </a>
 			         <?php 	$out = $out.ob_get_clean();
 			         	} else if ($value == 'facebook') {

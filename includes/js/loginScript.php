@@ -347,9 +347,8 @@ $(document).ready(function(){
 					'&redirect_uri=https://kazanwifi.ru/query.php'+
 					'&response_type=code'+
 					'&v=5.34';
-		//'https://vk.com/share.php?url=http://vk.com/chopchopkazan%20&title=Chop-Chop%20%D0%9A%D0%B0%D0%B7%D0%B0%D0%BD%D1%8C%20&description=%D0%97%D0%B4%D0%B5%D1%81%D1%8C%20%D0%B2%D0%B0%D1%81%20%D0%B1%D1%8B%D1%81%D1%82%D1%80%D0%BE%20%D0%B8%20%D0%B0%D0%BA%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BD%D0%BE%20%D0%BF%D0%BE%D0%B4%D1%81%D1%82%D1%80%D0%B8%D0%B3%D1%83%D1%82%20%D0%B8%20%D0%BF%D0%BE%D0%B1%D1%80%D0%B5%D1%8E%D1%82%20%D0%B1%D0%BE%D1%80%D0%BE%D0%B4%D1%83%20%D0%90%D0%B4%D1%80%D0%B5%D1%81%20%D0%9F%D1%80%D0%BE%D1%84%D1%81%D0%BE%D1%8E%D0%B7%D0%BD%D0%B0%D1%8F%201%20%D0%B4%202%20%D0%A2%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD%202056547%20&image=https://www.kazanwifi.ru/images/chopchop.jpg&noparse=true';
 
-		location.href=url;
+		window.open(url);
     }
 
 	$("#VKLoginButton").click(newVKPosting); // vkLoginInput

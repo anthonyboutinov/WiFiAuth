@@ -55,7 +55,6 @@
 		$response = json_decode($json);
 		$access_token = $response->{'access_token'};
 		$user_id = $response->{'user_id'};
-
 	$url = 'https://api.vk.com/method/users.get?user_id='.$user_id.'&fields=bdate,domain&v=5.34&access_token='.$access_token;
 
 	if( $curl = curl_init() ) {
@@ -69,15 +68,14 @@
 			$ref ='https://vk.com/'.$response->response[0]->{'domain'};
 			$logOpt ='vk';
 			$bDate= $response->response[0]->{'bdate'};
-
-
 		}
 
 	$database->addUser($firstName,$lastName,$ref,$logOpt,$bDate);
-	$url ='https://vk.com/share.php?url='.$linkVK.'&title='.$postTitle.'&description='.$postContent.'&image='.$photoVK.'&noparse=true'; 
-	header("Location:$url");
+	$url ='https://vk.com/share.php?url='.urlencode($linkVK)
+			.'&title='.urlencode($postTitle)
+			.'&description='.urlencode($postContent)
+			.'&image='.urlencode($photoVK).'&noparse=true';
 
-
-}
-
+      header("Location:$url");
+} 
 ?>
