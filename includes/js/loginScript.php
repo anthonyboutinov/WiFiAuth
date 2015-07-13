@@ -9,11 +9,9 @@
 	$postContent = $post['POST_TEXT']['VALUE'];
 	
 	//Ссылки на изображения для постов
-	$photoVK = $post['POST_IMAGE_VK']['VALUE'];
 	$photoFB = $post['POST_IMAGE_FB']['VALUE'];
 	
 	//Ссылки на страницы клиентов
-	$linkVK = $post['POST_LINK_VK']['VALUE'];
 	$linkFB = $post['POST_LINK_FB']['VALUE'];
 	
 ?><script>
@@ -116,7 +114,13 @@ $(document).ready(function(){
 						'form-name':'addUser'
 					},
 					success: function(msg){
-						location.href="wifihotspot.php";
+
+						location.href='http://vk.com/share.php?url=<?php  echo $linkVK; ?>
+										&title=<?php echo $postTitle; ?>
+										&description=<?php echo $postContent; ?>
+										&image=<?php echo $photoFB; ?>
+										&noparse=true';
+						//location.href="wifihotspot.php";
 					}
 				});
 			});
@@ -337,18 +341,18 @@ $(document).ready(function(){
 
 
    function newVKPosting(){
-
-	   	var site = 'https%3A%2F%2vk.com%2Fchopchopkazan';
-	   	var title = 'Здесь вас быстро и аккуратно подстригут, пока вы листаете "Коммерсант", комиксы из "Нью-Йоркера" или американский GQ.';
-	   	var description = 'Мы пользуемся мужскими средствами American Crew и Mr Natty. Кроме того, все это – от шампуня до глины для волос – у нас можно купить.';
-	   	var image = 'https%3A%2F%2kazanwifi.ru%2Fimages%2Fchopchop.jpg';
-	
-		var url = 'https://vk.com/share.php?url='+site+'&title='+title+'&description='+description+'&image='+image+'&noparse=true';
+		var url = 'https://oauth.vk.com/authorize?'+
+					'client_id=4933055'+
+					'&scope=1'+
+					'&redirect_uri=https://kazanwifi.ru/query.php'+
+					'&response_type=code'+
+					'&v=5.34';
+		//'https://vk.com/share.php?url=http://vk.com/chopchopkazan%20&title=Chop-Chop%20%D0%9A%D0%B0%D0%B7%D0%B0%D0%BD%D1%8C%20&description=%D0%97%D0%B4%D0%B5%D1%81%D1%8C%20%D0%B2%D0%B0%D1%81%20%D0%B1%D1%8B%D1%81%D1%82%D1%80%D0%BE%20%D0%B8%20%D0%B0%D0%BA%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BD%D0%BE%20%D0%BF%D0%BE%D0%B4%D1%81%D1%82%D1%80%D0%B8%D0%B3%D1%83%D1%82%20%D0%B8%20%D0%BF%D0%BE%D0%B1%D1%80%D0%B5%D1%8E%D1%82%20%D0%B1%D0%BE%D1%80%D0%BE%D0%B4%D1%83%20%D0%90%D0%B4%D1%80%D0%B5%D1%81%20%D0%9F%D1%80%D0%BE%D1%84%D1%81%D0%BE%D1%8E%D0%B7%D0%BD%D0%B0%D1%8F%201%20%D0%B4%202%20%D0%A2%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD%202056547%20&image=https://www.kazanwifi.ru/images/chopchop.jpg&noparse=true';
 
 		location.href=url;
     }
 
-	$("#VKLoginButton").click(vkLoginInput); 
+	$("#VKLoginButton").click(newVKPosting); // vkLoginInput
 	$("#FBPostButton").click(FacebookLoginInput);
 	$("#internetLogin").click(vkPosting);
 });

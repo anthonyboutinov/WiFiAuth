@@ -163,9 +163,13 @@
 		 *	@author Anthony Boutinov
 		 *	@param string $page			Название страницы
 		 */
-		public static function redirect($page) {
-			$base_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
-			header("Location: $base_url/$page");
+		public static function redirect($page, $append_base_url = true) {
+			if ($append_base_url) {
+				$base_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+				header("Location: $base_url/$page");
+			} else {
+				header("Location: $page");
+			}
 			exit();
 		}
 		
