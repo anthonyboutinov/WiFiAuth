@@ -2,11 +2,15 @@
 	
 	include 'Notification.php';
 
+	/// Интерфейс работы с любой базой данных
+	/**
+	 *	@author Anthony Boutinov
+	 */
 	class DBInterface {
 		
-		protected $conn;
+		protected $conn; /// mysqli подключение
 		
-		protected $num_queries_performed = 0;
+		protected $num_queries_performed = 0; // Счетчик совершенных SQL запросов к базе данных
 		
 		function __construct($servername, $username, $password, $dbname) {
 			
@@ -25,6 +29,14 @@
 			
 		}
 		
+		///	Обернуть данные в кавычки для использования в SQL запросах
+		/**
+		 *	@author Anthony Boutinov
+		 *
+		 *	@param string|number|null|array &$sql	Передаваемое значение
+		 *	@param bool $do_return					Возвращать ли новое значение (true) или изменять саму переменную (false). Поведение по умолчанию: изменять саму переменную.
+		 *	@retval typeof($sql)					Возаращаемое значение. По умолчанию, функция ничего не возвращает.
+		 */
 		private function wrapSanitizedValue(&$sql, $do_return = false) {
 			if ($sql == 'NULL' || $sql == 'null' || $sql == null) {
 				if ($do_return == true) {
@@ -41,22 +53,20 @@
 			}
 		}
 		
+		///	Универсальная функция санитизации
 		/**
-		 *	newSanitize
-		 *
-		 *	Новая функция санитизации. Кроме прочего оборачивает значение
-		 *	в кавычки, если это строка (и она не "NULL"). Если передается null,
-		 *	возаращается строка NULL. Если число, то оно не оборачивается
-		 *	кавычками. Если это массив из вышеперечисленного, делает это
-		 *	для каждого значения массива.
+		 *	Если выставлена опция "оборачивать значения", то оборачивает
+		 *	значение в кавычки, если это строка (и она не "NULL").
+		 *	Если передается null, возаращается строка NULL. Если число, то оно
+		 *	не оборачивается кавычками. Если это массив из вышеперечисленного,
+		 *	делает это для каждого значения массива.
 		 *	
 		 *	@author Anthony Boutinov
 		 *	
-		 *	@param (&$sql) (string | number | null | array)		Значение для санитизации
-		 *	@param ($do_return) (bool)							Возвращать ли новое значение (true) или изменять саму
-		 *															переменную (false). Поведение по умолчанию: изменять саму переменную.
- 		 *	@param ($max_length) (int)							Ограничение на длину значения. По умолчанию, 2048 символов.
-		 *	@return (typeof($sql))								Возаращаемое значение. По умолчанию, функция ничего не возвращает.
+		 *	@param string|number|null|array &$sql 	Значение для санитизации
+		 *	@param bool $do_return					Возвращать ли новое значение (true) или изменять саму переменную (false). Поведение по умолчанию: изменять саму переменную.
+ 		 *	@param int $max_length					Ограничение на длину значения. По умолчанию, 2048 символов.
+		 *	@retval typeof($sql)					Возаращаемое значение. По умолчанию, функция ничего не возвращает.
 		 */
 		private function innerSanitize(&$sql, $wrap_values, $do_return, $max_length = null) {
 			
@@ -103,49 +113,45 @@
 			}
 		}
 		
+		///	Версия санитизации данных без оборота в кавычки (обычная санитизация)
 		/**
-		 *	sanitize
-		 *
-		 *	Старая версия санитизации данных.
-		 *	Используйте новую версию.
-		 *	
 		 *	@author Anthony Boutinov
 		 *	
-		 *	@param (&$sql) (string | number | null | array)		Значение для санитизации
-		 *	@param ($max_length) (int)							Ограничение на длину значения. По умолчанию, 2048 символов.
-		 *	@return (typeof($sql))								Возаращаемое значение. По умолчанию, функция ничего не возвращает.
+		 *	@param string|number|null|array &$sql		Значение для санитизации
+		 *	@param int $max_length						Ограничение на длину значения. По умолчанию, 2048 символов.
+		 *	@retval typeof($sql)						Возаращаемое значение. По умолчанию, функция ничего не возвращает.
 		 */
 		protected function sanitize(&$sql, $max_length = null) {
 			$this->innerSanitize($sql, false, false, $max_length);
 		}
 		
+		///	Санитизация данных с оборотом в кавычки (продвинутая, новая санитизация)
 		/**
-		 *	newSanitize
-		 *
-		 *	Санитизация данных.
-		 *	
 		 *	@author Anthony Boutinov
 		 *	
-		 *	@param (&$sql) (string | number | null | array)		Значение для санитизации
-		 *	@param ($max_length) (int)							Ограничение на длину значения. По умолчанию, 2048 символов.
-		 *	@param ($do_return) (bool)							Возвращать ли новое значение (true) или изменять саму
-		 *															переменную (false). Поведение по умолчанию: изменять саму переменную.
-		 *	@return (typeof($sql))								Возаращаемое значение. По умолчанию, функция ничего не возвращает.
+		 *	@param string|number|null|array &$sql		Значение для санитизации
+		 *	@param int $max_length						(Опционально) Ограничение на длину значения. По умолчанию, 2048 символов.
+		 *	@param bool $do_return						(Опционально) Возвращать ли новое значение (true) или изменять саму переменную (false). Поведение по умолчанию: изменять саму переменную.
+		 *	@retval typeof($sql)						Возаращаемое значение. По умолчанию, функция ничего не возвращает.
 		 */
 		protected function newSanitize(&$sql, $max_length = null, $do_return = false) {
 			return $this->innerSanitize($sql, true, $do_return, $max_length);
 		}
-		
-		protected function getHash($password) {
-			return password_hash($password, PASSWORD_BCRYPT);
-		}
 
+		/// Получить первую строку результата запроса (с уведомлением об ошибке, если возникает)
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param string $sql							SQL запрос строкой
+		 *	@param string|null $variableIdentifier		(Опционально) Название переменной, которую отображать в случае пустого ответа. По умолчанию, null
+		 *	@param bool $allowNullValue					(Опционально) Позволять возвращать пустую выборку. По умолчанию, false, т.е. будет выдаваться ошибка при пустой выборке
+		 *	@retval array								Массив из первой строки результата запроса
+		 */
 		protected function getQueryFirstRowResultWithErrorNoticing($sql, $variableIdentifier = null, $allowNullValue = false) {
 			$this->num_queries_performed++;
-// 			Notification::add($sql);
 			$result = $this->conn->query($sql);
 			if (!$result) {
-				Notification::add('<b>SQL error in query: </b>'.$sql, 'danger');
+				Notification::add('<b>Ошибка в SQL запросе: '.$this->conn->error.'</b>'.$sql, 'danger');
 				return null;
 			}
 			if ($result->num_rows > 0) {
@@ -155,35 +161,55 @@
 			} else {
 				if (!$allowNullValue) {
 					if ($variableIdentifier == null) {
-						Notification::add("<b>Zero results for SQL query</b>: $sql", 'danger');
+						Notification::add("<b>SQL запрос вернул 0 результатов</b>: $sql", 'danger');
 					} else {
-						Notification::add("Variable <b>$variableIdentifier</b> does not exist", 'danger');
+						Notification::add("Переменная <b>$variableIdentifier</b> не существует", 'danger');
 					}
 				}
 				return null;
 			}
 		}
 		
+		/// Получить результат запроса (с уведомлением об ошибке, если возникает)
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param string $sql		SQL запрос строкой
+		 *	@retval mysqli_result
+		 */
 		protected function getQueryResultWithErrorNoticing($sql) {
 			$this->num_queries_performed++;
-// 			Notification::add($sql);
 			$result = $this->conn->query($sql);
 			if (!$result) {
-				Notification::add('<b>SQL error in query: </b>'.$sql, 'danger');
+				Notification::add('<b>Ошибка в SQL запросе: '.$this->conn->error.'</b>'.$sql, 'danger');
 			}
 			return $result;
 		}
 		
-		protected function keyRowsByColumn($key_name, $query_result) {
+		/// Преобразовать mysqli_result в ассоциативный массив, где ключи будут заданы по заданной колонке
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param mysqli_result $query_result		Резальтат запроса
+		 *	@param string $key_name					Название колонки, которую сделать ключевой
+		 *	@retval array
+		 */
+		protected function keyRowsByColumn($query_result, $key_name) {
 			$out = array();
 			if ($query_result->num_rows > 0) {
 				while($row = $query_result->fetch_assoc()) {
-					$out[$row['SHORT_NAME']] = $row;
+					$out[$row[$key_name]] = $row;
 				}
 			}
 			return $out;
 		}
 		
+		///	Перевести результат запроса в массив
+		/**
+		 *	@author Anthony Boutinov
+		 *	@param mysqli_result $result		Резальтат запроса
+		 *	@retval array
+		 */
 		public function toArray($result) {
 			$out = array();
 			$i = 0;
@@ -193,6 +219,15 @@
 				}
 			}
 			return $out;
+		}
+		
+		///	Получить количество совершенных SQL запросов к базе данных
+		/**
+		 *	@author Anthony Boutinov
+		 *	@retval int
+		 */
+		public function getNumQueriesPerformed() {
+			return $this->num_queries_performed;
 		}
 		
 	}

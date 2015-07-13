@@ -135,7 +135,7 @@ class POP3
      * @param string $username
      * @param string $password
      * @param integer $debug_level
-     * @return boolean
+     * @retval boolean
      */
     public static function popBeforeSmtp(
         $host,
@@ -160,7 +160,7 @@ class POP3
      * @param string $username
      * @param string $password
      * @param integer $debug_level
-     * @return boolean
+     * @retval boolean
      */
     public function authorise($host, $port = false, $timeout = false, $username = '', $password = '', $debug_level = 0)
     {
@@ -202,7 +202,7 @@ class POP3
      * @param string $host
      * @param integer|boolean $port
      * @param integer $tval
-     * @return boolean
+     * @retval boolean
      */
     public function connect($host, $port = false, $tval = 30)
     {
@@ -261,7 +261,7 @@ class POP3
      * @access public
      * @param string $username
      * @param string $password
-     * @return boolean
+     * @retval boolean
      */
     public function login($username = '', $password = '')
     {
@@ -309,7 +309,7 @@ class POP3
      * Get a response from the POP3 server.
      * $size is the maximum number of bytes to retrieve
      * @param integer $size
-     * @return string
+     * @retval string
      * @access private
      */
     private function getResponse($size = 128)
@@ -324,7 +324,7 @@ class POP3
     /**
      * Send raw data to the POP3 server.
      * @param string $string
-     * @return integer
+     * @retval integer
      * @access private
      */
     private function sendString($string)
@@ -342,7 +342,7 @@ class POP3
      * Checks the POP3 server response.
      * Looks for for +OK or -ERR.
      * @param string $string
-     * @return boolean
+     * @retval boolean
      * @access private
      */
     private function checkResponse($string)

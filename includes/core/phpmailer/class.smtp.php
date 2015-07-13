@@ -197,7 +197,7 @@ class SMTP
      * @see SMTP::$do_debug
      * @param string $str Debug string to output
      * @param integer $level The debug level of this message; see DEBUG_* constants
-     * @return void
+     * @retval void
      */
     protected function edebug($str, $level = 0)
     {
@@ -242,7 +242,7 @@ class SMTP
      * @param integer $timeout How long to wait for the connection to open
      * @param array $options An array of options for stream_context_create()
      * @access public
-     * @return boolean
+     * @retval boolean
      */
     public function connect($host, $port = null, $timeout = 30, $options = array())
     {
@@ -329,7 +329,7 @@ class SMTP
     /**
      * Initiate a TLS (encrypted) session.
      * @access public
-     * @return boolean
+     * @retval boolean
      */
     public function startTLS()
     {
@@ -357,7 +357,7 @@ class SMTP
      * @param string $realm       The auth realm for NTLM
      * @param string $workstation The auth workstation for NTLM
      * @access public
-     * @return boolean True if successfully authenticated.
+     * @retval boolean True if successfully authenticated.
      */
     public function authenticate(
         $username,
@@ -513,7 +513,7 @@ class SMTP
      * @param string $data The data to hash
      * @param string $key  The key to hash with
      * @access protected
-     * @return string
+     * @retval string
      */
     protected function hmac($data, $key)
     {
@@ -545,7 +545,7 @@ class SMTP
     /**
      * Check connection state.
      * @access public
-     * @return boolean True if connected.
+     * @retval boolean True if connected.
      */
     public function connected()
     {
@@ -570,7 +570,7 @@ class SMTP
      * Don't use this function without first trying to use QUIT.
      * @see quit()
      * @access public
-     * @return void
+     * @retval void
      */
     public function close()
     {
@@ -595,7 +595,7 @@ class SMTP
      * Implements rfc 821: DATA <CRLF>
      * @param string $msg_data Message data to send
      * @access public
-     * @return boolean
+     * @retval boolean
      */
     public function data($msg_data)
     {
@@ -684,7 +684,7 @@ class SMTP
      * and RFC 2821 EHLO.
      * @param string $host The host name or IP to connect to
      * @access public
-     * @return boolean
+     * @retval boolean
      */
     public function hello($host = '')
     {
@@ -699,7 +699,7 @@ class SMTP
      * @param string $hello The HELO string
      * @param string $host The hostname to say we are
      * @access protected
-     * @return boolean
+     * @retval boolean
      */
     protected function sendHello($hello, $host)
     {
@@ -753,7 +753,7 @@ class SMTP
      * Implements rfc 821: MAIL <SP> FROM:<reverse-path> <CRLF>
      * @param string $from Source address of this message
      * @access public
-     * @return boolean
+     * @retval boolean
      */
     public function mail($from)
     {
@@ -771,7 +771,7 @@ class SMTP
      * Implements from rfc 821: QUIT <CRLF>
      * @param boolean $close_on_error Should the connection close if an error occurs?
      * @access public
-     * @return boolean
+     * @retval boolean
      */
     public function quit($close_on_error = true)
     {
@@ -791,7 +791,7 @@ class SMTP
      * Implements from rfc 821: RCPT <SP> TO:<forward-path> <CRLF>
      * @param string $toaddr The address the message is being sent to
      * @access public
-     * @return boolean
+     * @retval boolean
      */
     public function recipient($toaddr)
     {
@@ -807,7 +807,7 @@ class SMTP
      * Abort any transaction that is currently in progress.
      * Implements rfc 821: RSET <CRLF>
      * @access public
-     * @return boolean True on success.
+     * @retval boolean True on success.
      */
     public function reset()
     {
@@ -820,7 +820,7 @@ class SMTP
      * @param string $commandstring The actual command to send
      * @param integer|array $expect     One or more expected integer success codes
      * @access protected
-     * @return boolean True on success.
+     * @retval boolean True on success.
      */
     protected function sendCommand($command, $commandstring, $expect)
     {
@@ -880,7 +880,7 @@ class SMTP
      * Implements rfc 821: SAML <SP> FROM:<reverse-path> <CRLF>
      * @param string $from The address the message is from
      * @access public
-     * @return boolean
+     * @retval boolean
      */
     public function sendAndMail($from)
     {
@@ -891,7 +891,7 @@ class SMTP
      * Send an SMTP VRFY command.
      * @param string $name The name to verify
      * @access public
-     * @return boolean
+     * @retval boolean
      */
     public function verify($name)
     {
@@ -902,7 +902,7 @@ class SMTP
      * Send an SMTP NOOP command.
      * Used to keep keep-alives alive, doesn't actually do anything
      * @access public
-     * @return boolean
+     * @retval boolean
      */
     public function noop()
     {
@@ -916,7 +916,7 @@ class SMTP
      * and _may_ be implemented in future
      * Implements from rfc 821: TURN <CRLF>
      * @access public
-     * @return boolean
+     * @retval boolean
      */
     public function turn()
     {
@@ -929,7 +929,7 @@ class SMTP
      * Send raw data to the server.
      * @param string $data The data to send
      * @access public
-     * @return integer|boolean The number of bytes sent to the server or false on error
+     * @retval integer|boolean The number of bytes sent to the server or false on error
      */
     public function client_send($data)
     {
@@ -940,7 +940,7 @@ class SMTP
     /**
      * Get the latest error.
      * @access public
-     * @return array
+     * @retval array
      */
     public function getError()
     {
@@ -950,7 +950,7 @@ class SMTP
     /**
      * Get SMTP extensions available on the server
      * @access public
-     * @return array|null
+     * @retval array|null
      */
     public function getServerExtList()
     {
@@ -974,7 +974,7 @@ class SMTP
      *  - false returned: the requested feature exactly not exists
      *  - positive value returned: the requested feature exists
      * @param string $name Name of SMTP extension or 'HELO'|'EHLO'
-     * @return mixed
+     * @retval mixed
      */
     public function getServerExt($name)
     {
@@ -1001,7 +1001,7 @@ class SMTP
     /**
      * Get the last reply from the server.
      * @access public
-     * @return string
+     * @retval string
      */
     public function getLastReply()
     {
@@ -1015,7 +1015,7 @@ class SMTP
      * 4th character is '-' symbol. If it is a space then we don't
      * need to read anything else.
      * @access protected
-     * @return string
+     * @retval string
      */
     protected function get_lines()
     {
@@ -1072,7 +1072,7 @@ class SMTP
 
     /**
      * Get VERP address generation mode.
-     * @return boolean
+     * @retval boolean
      */
     public function getVerp()
     {
@@ -1107,7 +1107,7 @@ class SMTP
 
     /**
      * Get debug output method.
-     * @return string
+     * @retval string
      */
     public function getDebugOutput()
     {
@@ -1125,7 +1125,7 @@ class SMTP
 
     /**
      * Get debug output level.
-     * @return integer
+     * @retval integer
      */
     public function getDebugLevel()
     {
@@ -1143,7 +1143,7 @@ class SMTP
 
     /**
      * Get SMTP timeout.
-     * @return integer
+     * @retval integer
      */
     public function getTimeout()
     {

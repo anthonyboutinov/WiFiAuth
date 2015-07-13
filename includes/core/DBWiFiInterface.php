@@ -2,19 +2,23 @@
 	
 	include 'DBInterface.php';
 
+	/// Интерфейс работы с базой данных ReSpot WiFi
+	/**
+	 *	@author Anthony Boutinov, Михаил Полюбай
+	 */
 	class DBWiFiInterface extends DBInterface {
 		
-		var $is_router;
-		var $id_db_user = null;
-		var $id_db_user_editor = null;
-		var $id_min_access_level = null;
+		var $is_router; /// Работает ли с базой данных роутер
+		var $id_db_user = null; /// ID_DB_USER клиента
+		var $id_db_user_editor = null; /// ID_DB_USER администратора
+		var $id_min_access_level = null; /// Уровень доступа, который соответствует администратору
 		
-		var $superadmin_name = null;
+		var $superadmin_name = null; /// Имя администратора
 		
-		var $tablePageLimit = null;
-		var $dashboardTablePreviewLimit = null;
+		var $tablePageLimit = null; /// Лимит данных на одну страницу таблицы
+		var $dashboardTablePreviewLimit = null; /// Лимит данных на одну страницу таблицы в Dashboard
 		
-		var $access_level_accepted = null;
+		var $access_level_accepted = null; /// Массив с названиями уровней доступа, которыми обладает администоатор (Например, если он PRIV_MANAGER, то набор данных в массиве будет таким: ['MANAGER', 'PRIV_MANAGER'])
 		
 		function    __construct($servername, $username, $password, $dbname, $router_login, $router_pasword, $cli_login, $cli_password, $id_cli) {
 			parent::__construct($servername, $username, $password, $dbname);
@@ -46,31 +50,55 @@
 						
 		}
 		
-		public function getNumQueriesPerformed() {
-			return $this->num_queries_performed;
-		}
+		
 		
 		# ========================================================================= #
 		# ==== PUBLIC ОПРЕДЕЛЕНИЕ ТИПА ПОЛЬЗОВАТЕЛЯ И ПРАВ ДОСТУПА ==== #
 		# ========================================================================= #
 
-		
+		/// Ведется ли работа с базой данных от лица роутера		@retval bool
 		public function is_router() {
 			return $this->is_router;
 		}
 		
+		/// Ведется ли работа с базой данных от лица администратора		@retval bool
 		public function is_superadmin() {
 			return isset($this->id_db_user_editor);
 		}
 		
-		public function is_valid() {
-			return (isset($this->id_db_user_editor) || isset($this->id_db_user));
-		}
-		
+		/// Ведется ли работа с базой данных от клиента		@retval bool
 		public function is_db_user() {
 			return isset($this->id_db_user);
 		}
 		
+		/// Валиден ли пользователь		@retval bool
+		public function is_valid() {
+			return (isset($this->id_db_user_editor) || isset($this->id_db_user));
+		}
+		
+		///	Проверяет, обладает ли соответсвтуюей привелегией администратор, от лица которого ведется работа требуемому уровню
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param string $accl_short_name			Короткое название уровня доступа
+		 *	@retval bool
+		 */
+		public function meetsAccessLevel($accl_short_name) {
+			foreach ($this->access_level_accepted as $value) {
+				if ($accl_short_name == $value) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		///	Проверяет, соответствует ли пароль паролю администора или нет
+		/**
+		 *	@author Михаил Полюбай
+		 *	
+		 *	@param string $password			Пароль
+		 *	@retval string					Возвращает 'true' или 'false' в зависимости от того, соответствует ли пароль паролю администора или нет
+		 */
 		public function superadminConfirmPassword($password) {
 			$this->sanitize($password);
 			$sql='SELECT PASSWORD FROM CM$DB_USER WHERE ID_DB_USER='.$this->id_db_user_editor;
@@ -85,15 +113,6 @@
 				}
 			}
 		}
-
-		public function meetsAccessLevel($accl_short_name) {
-			foreach ($this->access_level_accepted as $value) {
-				if ($accl_short_name == $value) {
-					return true;
-				}
-			}
-			return false;
-		}
 		
 		# ==== КОНЕЦ PUBLIC ОПРЕДЕЛЕНИЕ ТИПА ПОЛЬЗОВАТЕЛЯ И ПРАВ ДОСТУПА ==== #
 		# ========================================================================= #		
@@ -102,11 +121,16 @@
 		# ==== PUBLIC ПОЛУЧЕНИЕ ID ПОЛЬЗОВАТЕЛЯ ==== #
 		# =============================================================== #
 
-		
-		public function getBDUserID() {
+		///	Возвращает либо ID_DB_USER администратора, либо ID_DB_USER клиента (в таком приоритете)
+		/**
+		 *	@author Anthony Boutinov
+		 *	@retval int
+		 */
+		public function getIDBDUser() {
 			return isset($this->id_db_user_editor) ? $this->id_db_user_editor : $this->id_db_user;
 		}
 		
+		/// Возвращает имя адмниистратора		@retval string
 		public function getSuperadminName() {
 			return $this->superadmin_name;
 		}
@@ -118,6 +142,10 @@
 		# ==== ПЕРВИЧНАЯ ОБРАБОТКА ПОЛЬЗОВАТЕЛЯ (АВТОРИЗАЦИЯ)                 ==== #
 		# ======================================================================== #
 		
+		///	Наполняет массив $access_level_accepted набором коротких названий всех привелегий, которыми обдалает администратор
+		/**
+		 *	@author Anthony Boutinov
+		 */
 		private function setAcceccLevelAcceptedArray() {
 			
 			// Достать значения из куки, если есть
@@ -143,6 +171,14 @@
 			}
 		}
 		
+		///	Производит аутентификацию роутера по его логину и паролю.
+		/**	
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param string $router_login				Логин роутера
+		 *	@param string $router_password			Пароль роутера
+		 *	@retval int								ID_DB_USER роутера
+		 */
 		private function getWebUserByAuthenticatingViaRouterData($router_login, $router_password) {
 			$this->sanitize($router_login);
 			$this->sanitize($router_password);
@@ -211,14 +247,10 @@
 			Notification::add("Логин и(или) пароль неверны", 'danger');
 		}
 		
+		///	Сбрасывает поля, связанные с отметками о неверных вводах пароля пользователем
 		/**
-		 *	resetFailedLoginAtteptFields
-		 *
-		 *	Сбрасывает поля, связанные с отметками о неверных вводах пароля пользователем
-		 *	
 		 *	@author Anthony Boutinov
-		 *	
-		 *	@param ($id_db_user) (int)	id DB_USER
+		 *	@param int $id_db_user				ID_DB_USER
 		 */
 		private function resetFailedLoginAtteptFields($id_db_user) {
 			// Сбросить счетчики неверных паролей
@@ -232,16 +264,13 @@
 			$this->getQueryResultWithErrorNoticing($sql);
 		}
 		
+		///	Производит аутентификацию клиента (в Личный Кабинет)
 		/**
-		 *	setWebUser
-		 *
-		 *	Производит авторизацию клиента (в Личный Кабинет).
-		 *	
 		 *	@author Anthony Boutinov
 		 *	
-		 *	@param ($web_user) (string)			Логин
-		 *	@param ($web_password) (string)		Пароль
-		 *	@return (bool)						Возвращает false, если авторизация не прошла, и true, если прошла успешно
+		 *	@param string $web_user				Логин
+		 *	@param string $web_password			Пароль
+		 *	@retval bool						Возвращает false, если авторизация не прошла, и true, если прошла успешно
 		 */
 		private function setWebUser($web_user, $web_password) {
 			$this->sanitize($web_user);
@@ -354,10 +383,9 @@
 			}
 		}
 		
+		/// Функция «притвориться...»
 		/**
-		 *	pretendToBe
-		 *
-		 *	Функция «притвориться...» — позволяет суперадмину производить
+		 *	Позволяет суперадмину производить
 		 *	операции от лица клиента с заданным идентификатором.
 		 *	Данные получаются из $_POST массива, если они есть.
 		 *	Чтобы вызвать эту функцию, необходимо отправить форму pretend-to-be
@@ -379,10 +407,9 @@
 			}
 		}
 		
+		/// Возвращает ID_DB_USER админа или клиента (в обратном приоритете)
 		/**
-		 *	getMixedDBUserID
-		 *
-		 *	Возвращает id DB_USER. Если не включена опция «Притвориться...»
+		 *	Возвращает ID_DB_USER. Если не включена опция «Притвориться...»
 		 *	и работа ведется от лица суперадмин, то возвращается его id.
 		 *	Если работа ведется от лица суперадмин и он «притворяется» клиентом,
 		 *	то возвращается id заданного клиента.
@@ -390,7 +417,7 @@
 		 *	
 		 *	@author Anthony Boutinov
 		 *	
-		 *	@return (int)			ID_DB_USER
+		 *	@retval int			ID_DB_USER
 		 */
 		protected function getMixedDBUserID() {
 			if (!isset($_SESSION['pretend-to-be']) && $this->id_db_user_editor) {
@@ -407,17 +434,27 @@
 		# ============================================================= #
 		# ==== ПОЛУЧЕНИЕ ДАННЫХ ИЗ СЛОВАРЯ ==== #
 		# ============================================================= #
-
 		
+		/// Преобразовать mysqli_result в ассоциативный массив, где ключи будут заданы по заданной колонке
 		/**
-		 *	getValueByShortName
+		 *	Переопределяет родительский метод: задает значение по умолчанию для $key_name как 'SHORT_NAME'
 		 *
-		 *	Получить значение из SP$VAR по SHORT_NAME
-		 *	
 		 *	@author Anthony Boutinov
 		 *	
-		 *	@param ($short_name) (string)	SHORT_NAME
-		 *	@return (array)					Массив из одной строки таблицы SP$VAR
+		 *	@param mysqli_result $query_result		Резальтат запроса
+		 *	@param string $key_name					(Опционально) Название колонки, которую сделать ключевой
+		 *	@retval array
+		 */
+		protected function keyRowsByColumn($query_result, $key_name = 'SHORT_NAME') {
+			return $super->keyRowsByColumn($query_result, $key_name);
+		}
+		
+		///	Получить значение из SP$VAR по SHORT_NAME
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param string $short_name		SHORT_NAME
+		 *	@retval array					Массив из одной строки таблицы SP$VAR
 		 */
 		public function getValueByShortName($short_name) {
 			$this->sanitize($short_name);
@@ -431,15 +468,12 @@
 			return $result;
 		}
 		
+		///	Получить значение из SP$VAR по ID_DICTIONARY
 		/**
-		 *	getValueByID
-		 *
-		 *	Получить значение из SP$VAR по ID_DICTIONARY
-		 *	
 		 *	@author Anthony Boutinov
 		 *	
-		 *	@param ($id) (int)		ID_DICTIONARY
-		 *	@return (array)			Массив из одной строки таблицы SP$VAR
+		 *	@param int $id			ID_DICTIONARY
+		 *	@retval array			Массив из одной строки таблицы SP$VAR
 		 */
 		public function getValueByID($id) {
 			$this->sanitize($id);
@@ -447,17 +481,16 @@
 			return $this->getQueryFirstRowResultWithErrorNoticing($sql, $id);
 		}
 		
+		///	Получить значения по заданному родителю
 		/**
-		 *	getValuesForParentByShortName
-		 *	
 		 *	Получить значения по заданному родителю (или нескольким родителям)
 		 *	(словарь имеет древовидную структуру, в результате запроса 
 		 *	возвращаются все записи, относящиеся к требуемой ветке словаря)
 		 *
 		 *	@author		Anthony Boutinov
 		 *
-		 *	@param ($short_names) (string или array(string))	название ветки или нескольких веток словаря, например 'VARS'
-		 *	@return (array)										сложный массив, где каждая строка результата доступна по ключу SHORT_NAME
+		 *	@param string|array $short_names		Название ветки или нескольких веток словаря, например 'VARS'
+		 *	@retval array							Сложный массив, где каждая строка результата доступна по ключу SHORT_NAME
 		 */
 		public function getValuesForParentByShortName($short_names) {
 			$this->newSanitize($short_names);
@@ -494,7 +527,7 @@
 				ORDER BY W.ORDER, Y.ORDER ASC';
 
 			$result = $this->getQueryResultWithErrorNoticing($sql);
-			return $this->keyRowsByColumn('SHORT_NAME', $result);
+			return $this->keyRowsByColumn($result);
 		}
 		
 		public function getDataTypesForParentByShortName($short_names) {
@@ -513,7 +546,7 @@
 			$sql = $sql.') order by D.ORDER ASC';
 						
 			$result = $this->getQueryResultWithErrorNoticing($sql);
-			return $this->keyRowsByColumn('SHORT_NAME', $result);
+			return $this->keyRowsByColumn($result);
 		}
 		
 		# ==== КОНЕЦ ПОЛУЧЕНИЕ ДАННЫХ ИЗ СЛОВАРЯ ==== #
@@ -524,15 +557,12 @@
 		# ==== PROTECTED ОБЩИЕ МЕТОДЫ ПРЕОБРАЗОВАНИЯ ДАННЫХ ==== #
 		# ===================================================================================== #
 		
+		///	Санитизировать одновременно обе переменные: from и to
 		/**
-		 *	sanitizeFromTo
-		 *
-		 *	Санитизировать одновременно обе переменные: from и to
-		 *	
 		 *	@author Anthony Boutinov
 		 *	
-		 *	@param (&$from) (type)	переменная from
-		 *	@param (&$to) (type)	переменная to
+		 *	@param mixed &$from
+		 *	@param mixed &$to
 		 */
 		protected function sanitizeFromTo(&$from, &$to) {
 			$this->sanitize($from);
@@ -543,16 +573,15 @@
 			}
 		}
 		
+		///	Добавляет в $sql «равно ...» или «в массиве значений (...)»
 		/**
-		 *	appendToSQLIsOrInArrayOfValues
-		 *
 		 *	Добавляет в $sql «равно ...» или «в массиве значений (...)»
-		 *	для заданного значения, которое может быть либо строкой или 
+		 *	для заданного значения, которое может быть либо строкой либо массивом строк
 		 *	
 		 *	@author Anthony Boutinov
 		 *	
-		 *	@param (name) (type)	description
-		 *	@return (type)			description
+		 *	@param string|array $values			Значения(е)
+		 *	@param string &$sql					SQL строка запроса, в которую дописать данные
 		 */
 		protected function appendToSQLIsOrInArrayOfValues($values, &$sql) {
 			if (is_array($values)) {
@@ -580,18 +609,30 @@
 		# ==== ПОЛУЧЕНИЕ ДАННЫХ О OFFSET, LIMIT ДЛЯ ВСЕХ ТАБЛИЦ ==== #
 		# ======================================================================================= #
 		
+		/// Подготовиться для запросов (таблиц) на страницах Dashboard		@author Anthony Boutinov
 		public function prepareForDashboardTableQueries() {
 			$this->dashboardTablePreviewLimit = $this->getValueByShortName('DASHBOARD_TABLE_PREVIEW_LIMIT')['NUMBER_VALUE'];
 		}
 		
+		/// Подготовиться для запросов (таблиц) на страницах кроме Dashboard		@author Anthony Boutinov
 		public function prepareForDefaultTableQueries() {
 			$this->tablePageLimit = $this->getValueByShortName('TABLE_PAGE_LIMIT')['NUMBER_VALUE'];
 		}
 		
+		/// Получить лимит в запросе таблиц Dashboard
+		/**
+		 *	@author Anthony Boutinov
+		 *	@retval int			Количество строк, которые необходимо отображать
+		 */
 		public function getDashboardTablePreviewLimit() {
 			return $this->dashboardTablePreviewLimit;
 		}
 		
+		/// Получить лимит в запросе таблиц кроме Dashboard
+		/**
+		 *	@author Anthony Boutinov
+		 *	@retval int			Количество строк, которые необходимо отображать
+		 */
 		public function getTablePageLimit() {
 			return $this->tablePageLimit;
 		}
@@ -605,7 +646,14 @@
 		# ========================================================================== #
 
 		
-		
+		/// Получить акты входа
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param int $from			Лимит от
+		 *	@param int|null $to			(Опционально) Лимит до. По умолчанию, $tablePageLimit
+		 *	@retval mysqli_result
+		 */
 		public function getLoginActs($from = 0, $to = null) {
 			$this->sanitizeFromTo($from, $to);
 			$sql = 'select * from VW_SP$LOGIN_ACT
@@ -613,6 +661,14 @@
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
+		/// Получить постоянных пользователей
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param int $from			Лимит от
+		 *	@param int|null $to			(Опционально) Лимит до. По умолчанию, $tablePageLimit
+		 *	@retval mysqli_result
+		 */
 		public function getTopUsers($from = 0, $to = null) {
 			$this->sanitizeFromTo($from, $to);
 			$sql = 'select * from VW_SP$USER_LOGIN_COUNT
@@ -620,6 +676,14 @@
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
+		/// Получить недавних пользователей
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param int $from			Лимит от
+		 *	@param int|null $to			(Опционально) Лимит до. По умолчанию, $tablePageLimit
+		 *	@retval mysqli_result
+		 */
 		public function getUsers($from = 0, $to = null) {
 			$this->sanitizeFromTo($from, $to);
 			$sql = 'SELECT DISTINCT LOGIN_OPTION_NAME, LINK, NAME, BIRTHDAY, ID_LOGIN_OPTION
@@ -628,6 +692,15 @@
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
+		/// Получить дни рождения
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param int $from			Лимит от
+		 *	@param int|null $to			(Опционально) Лимит до. По умолчанию, $tablePageLimit
+		 *	@param int|bool|other		(Опционально) Составить запрос в интеллектуальном представлении
+		 *	@retval mysqli_result
+		 */
 		public function getBirthdays($from = 0, $to = null, $intellectual_view = 1) {
 			$this->sanitizeFromTo($from, $to);
 			$intellectual_view = $intellectual_view == 1 ? true : false;
@@ -694,6 +767,11 @@
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
+		/// Получить список опций входа кроме тех, которые отключены
+		/**
+		 *	@author Anthony Boutinov
+		 *	@retval array	Простой массив со значениями (только список значений по колонке SHORT_NAME)
+		 */
 		public function getLoginOptionsIgnoringDisabledOnes() {
 			$sql = 'select LO.SHORT_NAME
 			from VW_CM$LOGIN_OPTION LO
@@ -703,9 +781,16 @@
 			return CommonFunctions::extractSingleValueFromMultiValueArray($result, 'SHORT_NAME');
 		}
 		
+		/// Список опций входа
 		var $loginOptions = null;
 		
-		// параметр ограничивать ли только теми, по которым были заходы пользователей
+		/// Получить список опций входа
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param bool $cross_with_limit_acts			(Опционально) Не ограничивать ли только теми, по которым были заходы пользователей. По умолчанию, false (ограничивать)
+		 *	@retval array								SQL результат в виде массива
+		 */
 		public function getLoginOptions($cross_with_limit_acts = false) {
 			if ($this->loginOptions != null) {
 				return $this->loginOptions;
@@ -728,14 +813,10 @@
 			return $this->loginOptions;
 		}
 		
+		///	Получить цвета (цветовую схему)
 		/**
-		 *	getColors
-		 *
-		 *	Получить цвета (цветовую схему).
-		 *	
 		 *	@author Anthony Boutinov
-		 *	
-		 *	@return (array)			Простой массив с CSS цветами
+		 *	@retval array			Простой массив с CSS цветами (значения по колонке 'COLOR')
 		 */
 		public function getColors() {
 			$sql = 
@@ -750,6 +831,13 @@
 			return CommonFunctions::extractSingleValueFromMultiValueArray($result, 'COLOR');
 		}
 		
+		/// Получить главную таблицу статистики
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param int $num_days		За какое поличество дней производить выборку
+		 *	@retval array				SQL результат в виде массива
+		 */
 		public function getMainStatsTable($num_days) {
 
 			$login_options = $this->getLoginOptions(true);
@@ -854,8 +942,16 @@
 			return $this->toArray($this->getQueryResultWithErrorNoticing($sql));
 		}
 		
+		/// Количество входов по каждому способу входа (для легенды под графиком)
 		var $loginCountByLoginOption = null;
 		
+		/// Получить количество входов по каждому способу входа (для легенды под графиком) вместе с процентным соотношением
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param int $num_days		За какое поличество дней производить выборку
+		 *	@retval array				SQL результат в виде массива
+		 */
 		public function getLoginCountByLoginOption($num_days) {
 			
 			if ($this->loginCountByLoginOption != null) {
@@ -898,6 +994,11 @@
 			return $out;
 		}
 		
+		/// Получить краткий отчет
+		/**
+		 *	@author Anthony Boutinov
+		 *	@retval array				SQL результат в виде ассоциативного массива с ключами ['сегодня', 'вчера', 'неделю', 'месяц', 'год', 'все время']
+		 */
 		public function getShortReport() {
 			$sql = 'select count(A.ID_LOGIN_ACT) as COUNT from SP$LOGIN_ACT A where DATE(A.DATE_CREATED) = CURDATE() and A.ID_DB_USER='.$this->id_db_user; // today
 			$sql = $sql.' union all '.'select count(A.ID_LOGIN_ACT) as COUNT from SP$LOGIN_ACT A where DATE(A.DATE_CREATED) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) and A.ID_DB_USER='.$this->id_db_user; // yesterday
@@ -926,6 +1027,13 @@
 		# ==== Функции, изменяющие данные в БД ==== #
 		# =================================================================== #
 		
+		/// Добавить пользователя по номеру телефона
+		/**
+		 *	@author Михаил Полюбай
+		 *	
+		 *	@param string|int $phone			Номер телефона
+		 *	@param string $log_opt				LOGIN_OPTION SHORT_NAME
+		 */
 		public function addMobileUser($phone, $log_opt)
 		{
 			$this->sanitize($phone);
@@ -953,10 +1061,20 @@
         	$id = $result['ID_USER']; // либо из result перед if'ом, либо из result внутри него
 
             $sql = 'insert into SP$LOGIN_ACT (ID_DB_USER,ID_USER) values ('.$this->id_db_user.', '.$id.')';
-            echo $sql.' ';
+//             echo $sql.' ';
             $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
+		/// Добавить пользователя
+		/**
+		 *	@author Михаил Полюбай
+		 *	
+		 *	@param string $first_name			Имя
+		 *	@param string $last_name			Фамилия
+		 *	@param string $user_href			Ссылка на профиль
+		 *	@param string $log_opt				LOGIN_OPTION SHORT_NAME
+		 *	@param string $b_date				День рождения
+		 */
 		public function addUser($first_name, $last_name, $user_href, $log_opt, $b_date)
 		{
 			$this->sanitize($first_name);
@@ -989,6 +1107,14 @@
             $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
+		/// Проверяет, заданы для POST значения по заданным ключам ($rows)
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param array $rows					Ключи, по которым надо проверить массив $_POST
+		 *	@param bool $allowEmptyStrings		Позволять пустые строки ('')
+		 *	@retval bool
+		 */
 		protected function postIsFine($rows, $allowEmptyStrings = false) {
 			$post_is_fine = true;
 			foreach ($rows as $value) {				
@@ -1002,7 +1128,15 @@
 			return $post_is_fine;
 		}
 		
-
+		/// Обработать POST запрос: обновить SP$VARS
+		/**
+		 *	Обработать POST запрос: обновить SP$VARS. Используется для сохранения настроек.
+		 *
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param array $short_names			CM$DICTIONARY.SHORT_NAME массив
+		 *	@retval bool						Возвращает true, если успешно, иначе false
+		 */
 		public function processPostRequestUpdateVars($short_names) {
 			
 			function processFileToSQL($key, &$sql) {
@@ -1068,8 +1202,7 @@
 					$sql = $sql.'VALUE="'.htmlspecialchars($_POST[$key]).'"';
 				}
 				
-				$sql = $sql.' WHERE ID_DB_USER='.$this->id_db_user.' AND ID_DICTIONARY='.$value['ID_DICTIONARY'];
-								
+				$sql = $sql.' WHERE ID_DB_USER='.$this->id_db_user.' AND ID_DICTIONARY='.$value['ID_DICTIONARY'];				
 				$this->getQueryResultWithErrorNoticing($sql);
 			}
 			
@@ -1078,15 +1211,12 @@
 			
 		}
 		
+		///	Получить список несуществующих переменных для заданного ID_DB_USER
 		/**
-		 *	getNonexistentVarsForDBUser
-		 *
-		 *	Получить список несуществующих переменных для заданного DB_USER
-		 *	
 		 *	@author Anthony Boutinov
 		 *	
-		 *	@param ($id_db_user) (integer)		id DB_USER, касательно которого необходимо получить данные
-		 *	@return (array)						Массив с результатом запроса
+		 *	@param int $id_db_user			ID_DB_USER
+		 *	@retval mysqli_result
 		 */
 		private function getNonexistentVarsForDBUser($id_db_user) {
 			$sql =
@@ -1116,21 +1246,42 @@
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
+		/// Получить клиентов
+		/**
+		 *	@author Михаил Полюбай
+		 *	@retval mysqli_result
+		 */
 		public function getDBUsers() {
-			$sql='SELECT  C.VALUE AS EMAIL,  B.VALUE AS COMPANY_NAME, D.* FROM CM$DB_USER D, SP$VAR B , SP$VAR C
-					WHERE D.IS_SUPERADMIN=\'F\' 
-					AND D.ID_DB_USER = B.ID_DB_USER
-                                        AND D.ID_DB_USER = C.ID_DB_USER
-					AND B.ID_DICTIONARY = (SELECT ID_DICTIONARY 
+			$sql =
+			'SELECT
+				C.VALUE AS EMAIL, B.VALUE AS COMPANY_NAME, D.*
+			FROM
+				CM$DB_USER D, SP$VAR B, SP$VAR C
+			WHERE
+				D.IS_SUPERADMIN=\'F\' 
+				AND D.ID_DB_USER = B.ID_DB_USER
+	            AND D.ID_DB_USER = C.ID_DB_USER
+				AND B.ID_DICTIONARY = (
+					SELECT ID_DICTIONARY 
 					FROM CM$DICTIONARY
-                    WHERE SHORT_NAME = "COMPANY_NAME")
-                    AND C.ID_DICTIONARY = (SELECT ID_DICTIONARY 
+		            WHERE SHORT_NAME = "COMPANY_NAME"
+	            )
+				AND C.ID_DICTIONARY = (
+					SELECT ID_DICTIONARY 
 					FROM CM$DICTIONARY
-                    WHERE SHORT_NAME = "EMAIL")
-					ORDER BY B.VALUE ASC';
+		            WHERE SHORT_NAME = "EMAIL"
+	            )
+			ORDER BY B.VALUE ASC';
 			return  $this->getQueryResultWithErrorNoticing($sql); 
 		}
 		
+		/// Получить количество администраторов и клиентов
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param bool $count_deactivated		(Опционально) Считать вмете с деактивированными. По умолчанию, не считать их.
+		 *	@retval int
+		 */
 		public function getDBUsersCount($count_deactivated = false) {
 			$sql =
 			'select count(ID_DB_USER) as COUNT from CM$DB_USER where IS_SUPERADMIN=\'F\' '.
@@ -1142,9 +1293,19 @@
 			return CommonFunctions::extractSingleValueFromMultiValueArray($array, 'COUNT');
 		}
 		
-		protected function insertVarValue($id_dictionary, $value, $db_db_user, $echo_sql = false) {
+		/// Произвести INSERT в SP$VAR
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param int $id_dictionary			ID_DICTIONARY
+		 *	@param string|int|null $value		Значение
+		 *	@param int $id_db_user				ID_DB_USER
+		 *	@param bool $echo_sql				(Опционально) Выполнить echo запросов. По умолчанию, не делать этого
+		 *	@retval mysqli_result
+		 */
+		protected function insertVarValue($id_dictionary, $value, $id_db_user, $echo_sql = false) {
 			$value = isset($value) ? "'".$value."'" : 'NULL';
-			$sql = 'INSERT INTO SP$VAR (ID_DICTIONARY,VALUE,ID_DB_USER) VALUES ('.$id_dictionary.','.$value.','.$db_db_user.');';
+			$sql = 'INSERT INTO SP$VAR (ID_DICTIONARY,VALUE,ID_DB_USER) VALUES ('.$id_dictionary.','.$value.','.$id_db_user.');';
 			
 			if ($echo_sql == true) {
 				echo $sql."<br>";
@@ -1153,7 +1314,18 @@
 			$this->getQueryResultWithErrorNoticing($sql);
 		}
 		
-		public function addDBUser($name, $email,$routerLogin,$router_password,$login,$password) {
+		/// Добавить клиента
+		/**
+		 *	@author Михаил Полюбай, Anthony Boutinov
+		 *	
+		 *	@param string $name					Название компании
+		 *	@param string $email				Email
+		 *	@param string $routerLogin			Логин роутера
+		 *	@param string $router_password		Пароль роутера
+		 *	@param string $login				Логин
+		 *	@param string $password				Пароль
+		 */
+		public function addDBUser($name, $email, $routerLogin, $router_password, $login, $password) {
 			$this->sanitize($routerLogin);
 			$this->sanitize($router_password);
 			$this->sanitize($login);
@@ -1196,6 +1368,13 @@
 			}
 		}
 		
+		/// «Починить» SP$VARS для одного заданного ID_DB_USER
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param int $id_db_user			ID_DB_USER
+		 *	@param bool $echo_sql			(Опционально) Выполнить echo запросов. По умолчанию, не делать этого
+		 */
 		protected function fixVarsForOneDBUser($id_db_user, $echo_sql = false) {
 			// Получить информацию по полям, которых нет в таблице SP$VAR для этого пользователя
 			$result = $this->getNonexistentVarsForDBUser($id_db_user);
@@ -1209,10 +1388,10 @@
 			
 		}
 		
+		///	«Починить» таблицу SP$VAR
 		/**
-		 *	fixVarTable
-		 *
-		 *	"Починить" таблицу SP$VAR после добавления новых записей в CM$DICTIONARY или после неполного добавления нового DB_USER.
+		 *	«Починить» таблицу SP$VAR после добавления новых записей
+		 *	в CM$DICTIONARY или после неполного добавления нового DB_USER.
 		 *	Добавляет значения по умолчанию для несуществующих DB_USER'ов.
 		 *	
 		 *	@author Anthony Boutinov
@@ -1231,9 +1410,24 @@
 			}		
 		}
 
-		public function setActiveDBUser($active,$id_db_user) {
+		/// Задать ID_DB_USER'а активным или неактивным
+		/**
+		 *	@author Михаил Полюбай, Anthony Boutinov
+		 *	
+		 *	@param string|bool $active			Сделать активным или неактивным ('T', 'F', либо bool значение)
+		 *	@param int $id_db_user				ID_DB_USER
+		 */
+		public function setActiveDBUser($active, $id_db_user) {
 			$this->sanitize($active);
 			$this->sanitize($id_db_user);
+			
+			if ($active == 'T' || $active == true) {
+				$active = 'T';
+			} else if ($active == 'F' || $active == false) {
+				$active = false;
+			} else {
+				die('DEBUG Error: Передан неверный параметр в setActiveDBUser');
+			}
 
 			$sql = 'update  CM$DB_USER set IS_ACTIVE="'.$active.'" where ID_DB_USER='.$id_db_user;
 			$this->getQueryResultWithErrorNoticing($sql);
@@ -1244,7 +1438,12 @@
 				$this->fixVarsForOneDBUser($id_db_user);
 			}
 		}
-		
+		/// Обновить пароль для клиента или администратора
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@retval string	Строка вербозного ответа. Если ответ имеет форму ошибки, то вначале строки приписана строка 'danger:'
+		 */
 		public function updateDBUserPassowrd() {
 
 			if (!$this->postIsFine(['old-password', 'password', 'repeat-password'])) {
@@ -1260,7 +1459,7 @@
 			}
 			
 			// get login and password
-			$sql = 'select U.LOGIN, U.PASSWORD from CM$DB_USER U where U.ID_DB_USER='.$this->id_db_user;
+			$sql = 'select U.LOGIN, U.PASSWORD from CM$DB_USER U where U.ID_DB_USER='.$this->getIDBDUser();
 			$result = $this->getQueryFirstRowResultWithErrorNoticing($sql);
 			
 			// check old password
@@ -1268,11 +1467,10 @@
 				return 'danger:Был введен неверный пароль!';
 			}
 			
-			$sql = 'update CM$DB_USER set PASSWORD="'.password_hash($password, PASSWORD_BCRYPT).'" where ID_DB_USER='.$this->id_db_user;
+			$sql = 'update CM$DB_USER set PASSWORD="'.password_hash($password, PASSWORD_BCRYPT).'" where ID_DB_USER='.$this->getIDBDUser();
 			$this->getQueryResultWithErrorNoticing($sql);
 			
 			return "Новый пароль установлен!";
-			return true;
 			
 		}
 				
@@ -1285,6 +1483,13 @@
 		# ==== ВОССТАНОВЛЕНИЕ ПАРОЛЯ ==== #
 		# =================================================== #
 		
+		/// Инициировать сброс пароля: сгенерировать токен для восстановления
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param string $login_or_email		Логин или email
+		 *	@retval array|false					Ассоциативный массив с ключами EMAIL, LOGIN, PASSWORD_RESET_TOKEN. Если пользователь с таким логином или email не найден, возвращается false
+		 */
 		public function initiatePasswordReset($login_or_email) {
 			$is_email = filter_var($login_or_email, FILTER_VALIDATE_EMAIL);
 			$this->sanitize($login_or_email);
@@ -1357,6 +1562,14 @@
 			return ['PASSWORD_RESET_TOKEN' => $password_restore_token, 'LOGIN' => $login, 'EMAIL' => $email];
 		}
 		
+		/// Проверить валидность токена сброса пароля
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param string $login			LOGIN
+		 *	@param string $token			PASSWORD_RESET_TOKEN
+		 *	@retval bool					Возвращает true, если валиден, иначе false
+		 */
 		public function checkPasswordResetToken($login, $token) {
 			$this->newSanitize($login);
 			$this->sanitize($token);
@@ -1370,6 +1583,15 @@
 			}
 		}
 		
+		/// Задать новый пароль, используя токен сброса пароля
+		/**
+		 *	@author Anthony Boutinov
+		 *	
+		 *	@param string $login			LOGIN
+		 *	@param string $token			PASSWORD_RESET_TOKEN
+		 *	@param string $newPassword		Новый пароль
+		 *	@retval bool					Возвращает true, если успешно, иначе false
+		 */
 		public function setNewPasswordUsingResetPasswordToken($login, $token, $newPassword) {
 			if (!$this->checkPasswordResetToken($login, $token)) {
 				return false;

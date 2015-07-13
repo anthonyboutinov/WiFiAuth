@@ -1,8 +1,12 @@
 <?php
 
+/// Отвечает за защиту страниц от несанкцианированного доступа (разграничение клиентов и администраторов, уровни доступа)
+/**
+ *	@author Anthony Boutinov
+ */
 class Protector {
 	
-	protected $database;
+	protected $database; /// Ссылка на объект интерфейса базы данных
 	
 	public $adminMainPage 		= 'admin-dashboard.php';
 	public $superadminMainPage 	= 'superadmin-clients.php';
@@ -10,10 +14,8 @@ class Protector {
 	function __construct($database) {
 		$this->database = $database;
 	}
+	///	Установить минимальный уровень доступа для страницы superadmin
 	/**
-	 *	protectPageSetMinAccessLevel
-	 *
-	 *	Устанавливает минимальный уровень доступа для страницы superadmin.
 	 *	Если пользователь не соответсвует уровню доступа, то он перенаправляется
 	 *	на главную страницу (admin-главная или superadmin-главная).
 	 *	
@@ -32,12 +34,9 @@ class Protector {
 		}
 	}
 	
+	///	Защитить страницу admin от неавторизованного входа со стороны суперадмина
 	/**
-	 *	protectPageAdminPage
-	 *
-	 *	Защищает страницу admin от неавторизованного входа со стороны
-	 *	суперадмина (суперадмин должен «притвориться» админом, чтобы попасть
-	 *	на эту страницу)
+	 *	Суперадмин должен «притвориться» админом, чтобы попасть на такую страницу
 	 *	
 	 *	@author Anthony Boutinov
 	 */
@@ -53,11 +52,8 @@ class Protector {
 		}
 	}
 	
+	///	Защитить страницу из группы admin-... от доступа любым суперадмином
 	/**
-	 *	protectPageForbidSuperadmin
-	 *
-	 *	Защищает страницу из группы admin-... от доступа любым суперадмином.
-	 *	
 	 *	@author Anthony Boutinov
 	 */
 	public function protectPageForbidSuperadmin() {

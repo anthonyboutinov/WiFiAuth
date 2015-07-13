@@ -123,7 +123,7 @@
 				$_SESSION['router-login']    = $router_login;
 				$_SESSION['router-password'] = $router_pasword;
 			} else {
-				$_SESSION['id_cli'] = $database->getBDUserID();
+				$_SESSION['id_cli'] = $database->getIDBDUser();
 			}
 			
 			// Если надо запомнить, то сделать это
