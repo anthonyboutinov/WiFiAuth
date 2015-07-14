@@ -9,7 +9,7 @@
 		<script src="includes/js/superadmin-clients.js"></script>
 		<title>Клиенты — Панель администрирования Re[Spot]</title>
 	</head>
-	<body class="admin-page simple-page">
+	<body class="admin-page simple-page"><div class="background-cover"></div>
 
 	<?php if ($database->meetsAccessLevel('PRIV_MANAGER')) { ?>
 		<div class="modal fade" id="disableModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">

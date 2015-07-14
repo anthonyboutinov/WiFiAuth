@@ -4,7 +4,7 @@
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
 		<title>Новый пароль — Re[Spot]</title>
 	</head>
-	<body class="admin-page-login">
+	<body class="admin-page-login"><div class="background-cover"></div>
 
 		<div class="container absolute-center-center">
 			<div class="glass-panel">

@@ -4,7 +4,7 @@
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
 		<title>Ошибка</title>
 	</head>
-	<body class="admin-page-login">
+	<body class="admin-page-login"><div class="background-cover"></div>
 		<div class="container absolute-center-center text-center">
 
 			<h1>Ошибка соединения с базой данных</h1>

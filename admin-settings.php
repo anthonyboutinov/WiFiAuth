@@ -24,7 +24,7 @@
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
 		<title>Настройки <?php echo $adminPanelTitle; ?></title>
 	</head>
-	<body class="admin-page simple-page">
+	<body class="admin-page simple-page"><div class="background-cover"></div>
 		<div class="container glass-panel">
 			<?php include 'includes/base/navbar.php'; ?>
 			

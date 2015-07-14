@@ -21,7 +21,7 @@
 		<title>Главная <?php echo $adminPanelTitle; ?></title>
 		<?php include 'includes/modules/mainStatsChartGoogleChartJS.php'; ?>
 	</head>
-	<body class="admin-page simple-page dashboard">
+	<body class="admin-page simple-page dashboard"><div class="background-cover"></div>
 		<div class="container glass-panel">
 			<?php include 'includes/base/navbar.php'; ?>
 			

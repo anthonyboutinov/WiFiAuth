@@ -4,7 +4,7 @@
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
 		<title>Обработка данных... — <?=$database->getValueByShortName('COMPANY_NAME')['VALUE'];?></title>
 	</head>
-	<body class="admin-page-login login-page">		
+	<body class="admin-page-login login-page"><div class="background-cover"></div>
 	  <div class="container">
 			<div class="glass-panel">			
 				<div class="lead h2"><a href="#" id="internetLogin">Продолжить</a></div>

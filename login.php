@@ -26,7 +26,7 @@
 		<title>Добро пожаловать! — <?=$companyName;?></title>
 		<script type="text/javascript" src="https://vk.com/js/api/share.js?90" charset="windows-1251"></script>
 	</head>
-	<body class="admin-page-login login-page">
+	<body class="admin-page-login login-page"><div class="background-cover"></div>
 		
 		<div class="modal fade" id="modalPassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-black">

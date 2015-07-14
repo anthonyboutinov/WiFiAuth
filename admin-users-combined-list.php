@@ -21,7 +21,7 @@
 			if ($drawLoyals && $drawOnlyOne) echo "Постоянные клиенты"; else echo "Клиенты";
 		?> <?php echo $adminPanelTitle; ?></title>
 	</head>
-	<body class="admin-page simple-page">
+	<body class="admin-page simple-page"><div class="background-cover"></div>
 		<?php
 			if (!$drawBoth) {
 				$notificationLink = "admin-users-combined-list.php";
