@@ -7,7 +7,7 @@
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
 		<script src="includes/js/superadmin-clients.js"></script>
-		<title>Добавление клиента — Панель администрирования Re[Spot]</title>
+		<title>Клиенты — Панель администрирования Re[Spot]</title>
 	</head>
 	<body class="admin-page simple-page">
 
@@ -73,8 +73,15 @@
 		<div class="container glass-panel">
 			<?php include 'includes/base/superadmin-navbar.php'; ?>			
 			<div class = "row">
-				<div class = "col-md-4">
-					<h1><i class="fa fa-users"></i> Клиенты</h1> 
+				<div class = "col-md-12" id="left-hand-side">
+					<h1>
+						<i class="fa fa-users"></i> Клиенты
+						<a class="options" href="#" id="add-user-button">
+							<div class="superadmin-add-row">
+								Добавить <i class="fa fa-plus"></i>
+							</div>
+						</a>
+					</h1> 
 					<div class="page-wrapper">
 						<div class="row head-row">
 							
@@ -106,14 +113,15 @@
 							<?php } ?>
 							
 						</div>
-					 	<table class="table table-hover table-condensed" id="table">
+						
+						<table class="table table-hover table-condensed" id="table">
 							<?php include 'includes/modules/superadmin-clients-table.php'; ?>
 						</table>
 
 					</div>
 				</div>
-			<div class="col-md-8">
-				<?php include 'includes/modules/superadminClientsModule.php' ?> 
+			<div class="col-md-8" id="right-hand-side">
+ 				<?php /* include 'includes/modules/superadmin-clients-add.php'; */ ?> 
 			</div>
 			</div>
 			<?php include 'includes/base/footer.php'; ?>

@@ -24,6 +24,7 @@ $.extend({
   }
 });
 
+/// Сделать соединения с элементами DOM superadmin-clients-table
 function makeTableDOMConnections() {
 	
 	// включить подсказки
@@ -131,10 +132,8 @@ function makeTableDOMConnections() {
 	
 }
 
+/// Сделать соединения по генерированию паролей с элементами DOM superadmin-clients-add-client
 function enablePasswordGenerationCapabilities() {
-/* *
-* ГЕНЕРИРОВАНИЕ ПАРОЛЕЙ
-*/
 
 	var generateTokenButton = $("#generate-token");
 	var generatePasswordButton = $("#generate-password");
@@ -161,10 +160,8 @@ function enablePasswordGenerationCapabilities() {
 	genPassword();
 }
 
+/// Сделать соединения по ограничению вводимых данных с элементами DOM superadmin-clients-add-client
 function enableAddClientFieldsRectictions() {
-/* *
-   * Ограничение вводимых данных
- */
 
  	$("#login").alphanum({
 	 	allow: '-_',
@@ -193,17 +190,27 @@ function enableAddClientFieldsRectictions() {
 	});
 }
 
+/// Сделать соединения с элементами DOM superadmin-clients-add-client
 function makeAddClientDOMConnections() {
 	enableVerticalPositioning();
 	enablePasswordGenerationCapabilities();
 	enableAddClientFieldsRectictions();
+	
+	$("#close-right-hand-side").click(function(e) {
+		e.preventDefault();
+		$("#right-hand-side").html('');
+		setTimeout(function() {
+			$("#left-hand-side").removeClass("col-md-4").addClass("col-md-12");
+			$(".hide-on-collapsed-view").show();
+			setTimeout(function() {
+				$("#add-user-button").attr('style', 'dislpay:inline-block');
+			}, 1000);
+		}, 200);
+	});
 }
 
+/// Включить возможности сотрировки
 function enableSortingCapabilities() {
-/* *
-   * Сортировка
- */
-
 	function order_by(by, _this) {
 		$.ajax({
 			type: "GET",
@@ -241,39 +248,53 @@ function enableSortingCapabilities() {
 	
 }
 
+/// Выполнить вертикальное позиционирование
 function positionVertically() {	
 	$(modalForm1).css('margin-top', (document.body.clientHeight - $(modalForm1).outerHeight()) / 2);
 	$(modalForm2).css('margin-top', (document.body.clientHeight - $(modalForm2).outerHeight()) / 2);
 }
-				
+
+/// Открыть модал и сфокусироваться на...				
 function openmodalFormAndFocusOn(focusOn) {
 	setTimeout(positionVertically, 200);
 	$(focusOn).focus();
 }
 
+/// Включить вертикальное позиционирование
 function enableVerticalPositioning() {
-/* *
-   * ВЕРТИКАЛЬНОЕ ПОЗИЦИОНИРОВАНИЕ
- */
-
 	modalForm1 = $("#disableModal > .modal-dialog");
 	modalForm2 = $("#enableModal > .modal-dialog");
-	
-	// Привязки к дейсвтиям
-	
-		panel = $(".glass-panel");
-		footer = $("footer.footer");
+	setTimeout(positionVertically, 200);
+	$(window).resize(positionVertically);	
+}
 
-		setTimeout(positionVertically, 200);
-		$(window).resize(positionVertically);
-	
-	// EOF Привязки к дейсвтиям
-	
-	
+/// Подготовиться к вертикальному позиционированию
+function prepareForVerticalPositioning() {
+	panel = $(".glass-panel");
+	footer = $("footer.footer");
 }
 
 $(document).ready(function() {	
 	makeAddClientDOMConnections();
 	makeTableDOMConnections();	
+	prepareForVerticalPositioning();
 	enableSortingCapabilities();
+	
+	$("#add-user-button").click(function(e) {
+		e.preventDefault();
+		$.ajax({
+			type: "GET",
+			url: 'includes/modules/superadmin-clients-add.php',
+			success: function(msg) {
+				$("#add-user-button").hide();
+				$(".hide-on-collapsed-view").hide();
+				$("#right-hand-side").removeClass("fadeOutRightBig").addClass("animated fadeInRightBig").html(msg);
+				setTimeout(function() {
+				$("#left-hand-side").removeClass("col-md-12").addClass("col-md-4");
+				}, 200);
+				
+			},
+			fail: failNotification
+		});
+	});
 });

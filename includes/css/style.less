@@ -111,6 +111,25 @@ a:hover, a:focus, a:active,
 	vertical-align: middle;
 }
 
+.superadmin-add-row {
+	text-align: center;
+	padding: 4px;
+	
+	&:hover {
+		background: rgba(0, 0, 0, 0.07);
+	}
+}
+
+#left-hand-side, #right-hand-side {
+	-webkit-transition: width 0.5s ease-out;
+	-moz-transition: width 0.5s ease-out;
+	transition: width 0.5s ease-out;
+}
+
+.super-small {
+	font-size: 70%;
+}
+
 input[type="text"], input[type="number"], input[type="url"], input[type="color"], input[type="password"], input[type="email"], input[type="phone"], input[type="search"] {
 	font-family: 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
@@ -1040,7 +1059,7 @@ body.admin-page.simple-page table td {
 	border: 0;
 }
 
-body.admin-page.simple-page table .head-row td {
+table .head-row td {
 	background: rgba(0,0,0,0.3);
 }
 
