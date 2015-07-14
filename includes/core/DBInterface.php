@@ -156,6 +156,7 @@
 			}
 			if ($result->num_rows > 0) {
 				while($row = $result->fetch_assoc()) {
+// 					Notification::add($sql);
 					return $row;
 				}
 			} else {
@@ -183,6 +184,7 @@
 			if (!$result) {
 				Notification::add('<b>Ошибка в SQL запросе: '.$this->conn->error.'</b>'.$sql, 'danger');
 			}
+// 			Notification::add($sql);
 			return $result;
 		}
 		

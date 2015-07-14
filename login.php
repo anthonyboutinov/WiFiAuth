@@ -87,18 +87,16 @@
 					<img src="data:image/jpeg;base64,<?=base64_encode($img['BLOB_VALUE']);?>" class="ad">
 				<?php } else echo "<h1>$companyName</h1>"; ?>
 				
-				<h1>Войти в&nbsp;Интернет с&nbsp;помощью:</h1>
+				<h1>Войти в&nbsp;Интернет с&nbsp;помощью:<!-- Получите&nbsp;бесплатный доступ&nbsp;в&nbsp;Интернет,<br>авторизовавшись удобным&nbsp;вам&nbsp;способом: --></h1>
 					
 				<div class="login-options">
 					
 					<?php
 					$enabledLoginOptions = $database->getLoginOptionsIgnoringDisabledOnes();
-					$out = '';
 				
 					foreach ($enabledLoginOptions as $value) {
 						
 						if ($value == 'vk') {
-							ob_start();
 					?>
 			         <a href="#" id="VKLoginButton" >
 						<span class="fa-stack">
@@ -106,9 +104,8 @@
 							<i class="fa fa-vk fa-stack-1x fa-inverse"></i>
 						</span>
 			         </a>
-			         <?php 	$out = $out.ob_get_clean();
+			         <?php 
 			         	} else if ($value == 'facebook') {
-				         	ob_start();
 			         ?>
 					<a href="#" id="FBLoginButton" data-toggle="modal" data-target="#ModalFacebook">
 						<span class="fa-stack">
@@ -116,9 +113,8 @@
 							<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
 						</span>
 					</a>
-					<?php 	$out = $out.ob_get_clean();
+					<?php
 			         	} else if ($value == 'odnoklassniki') {
-				         	ob_start();
 			         ?>
 					<a href="#" id="odnoklassiniLoginButton" data-toggle="modal" data-target="#modalOdnoklassniki">
 						<span class="fa-stack">
@@ -126,24 +122,21 @@
 							<i class="fa fa-odnoklassniki fa-stack-1x fa-inverse"></i>
 						</span>
 					</a>
-					<?php 	$out = $out.ob_get_clean();
+					<?php
 			         	} else if ($value == 'mobile') {
-				         	ob_start();
 			         ?>
 					<a href="#" id="loginInputPasswordFormButton" data-toggle="modal" data-target="#modalPassword">
 						<span class="fa-stack">
 							<i class="fa fa-circle fa-stack-2x" style="color: rgba(102, 102, 102, 1);"></i>
-							<i class="fa fa-mobile fa-stack-1x fa-inverse"></i>
+<!-- 							<i class="fa fa-mobile fa-stack-1x fa-inverse"></i> -->
+							<span class="sms-login-option">SMS</span>
 						</span>
 					</a>
-					<?php 	$out = $out.ob_get_clean();
+					<?php
 						}
 					}
-					echo $out;
 					?>
-				
 				</div>
-				
 			</div>
 		</div>
 		<?php include 'includes/base/footer.php'; ?>
@@ -152,6 +145,5 @@
 		<script src="//vk.com/js/api/openapi.js"></script>
 		<script src="//connect.facebook.net/en_US/sdk.js"></script>
 		<?php include "includes/js/loginScript.php"; ?>
-
 	</body>
 </html>
