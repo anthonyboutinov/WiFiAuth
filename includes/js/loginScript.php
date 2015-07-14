@@ -13,6 +13,7 @@
 	
 	//Ссылки на страницы клиентов
 	$linkFB = $post['POST_LINK_FB']['VALUE'];
+	$linkVK = $post['POST_LINK_VK']['VALUE'];
 	
 ?><script>
 $(document).ready(function(){
@@ -347,20 +348,26 @@ $(document).ready(function(){
 					'&v=5.34';
 		var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
 		var newWin = window.open(url,'vk',params);
-		newWin.resizeTo(700,400);
+		newWin.resizeTo(674,410);
 		newWin.moveTo(((x-720)/2),((y-390)/2));
 		newWin.focus();
-		newWin.blur();
+		window.onfocus=function(){
 		VK.Api.call('wall.get',{
 						count:1,
 						filter:'owner'
 					}, function (r){
+						if(r.response[1].attachment.link.url=='<?php echo $linkVK; ?>'){
 
-						alert(r.response[1].attachment.link.url);
+							location="<?php echo $routerAdmin; ?>";
+						} else {
+							addNotification('Для выхода в интернет необходимо опубликовать пост!','warning');
+						}
+						}
 					});
+	}
     }
 
-	$("#VKLoginButton").click(vkLoginInput); //   newVKPosting
+	$("#VKLoginButton").click(newVKPosting); //vkLoginInput
 	$("#FBPostButton").click(FacebookLoginInput);
 	$("#internetLogin").click(vkPosting);
 });
