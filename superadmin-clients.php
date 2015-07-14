@@ -1,8 +1,6 @@
 <?php
 	include 'includes/core/session.php';
 	$protector->protectPageSetMinAccessLevel('MANAGER');
-	
-	$database->prepareForDefaultTableQueries();
 ?>
 <html lang="ru">
 	<head>
@@ -26,10 +24,10 @@
 
 		      <div class="form-horizontal">
 					<div class="form-group">
-							<label class="col-sm-3 control-label" for="disable-password">Пароль</label>							
-							<div class="col-sm-9">
-								<input type="password" class="form-control" name="disable-password" id="disable-password" autocomplete="off" maxlength="255">
-							</div>
+						<label class="col-sm-3 control-label" for="disable-password">Пароль</label>							
+						<div class="col-sm-9">
+							<input type="password" class="form-control" name="disable-password" id="disable-password" autocomplete="off" maxlength="255">
+						</div>
 					</div>
 
 				</div>	
@@ -54,10 +52,10 @@
 
 		      <div class="form-horizontal">
 					<div class="form-group">
-							<label class="col-sm-3 control-label" for="enable-password">Пароль</label>							
-							<div class="col-sm-9">
-								<input type="password" class="form-control" name="enable-password" id="enable-password" autocomplete="off" maxlength="64">
-							</div>
+						<label class="col-sm-3 control-label" for="enable-password">Пароль</label>							
+						<div class="col-sm-9">
+							<input type="password" class="form-control" name="enable-password" id="enable-password" autocomplete="off" maxlength="64">
+						</div>
 					</div>
 
 				</div>	
@@ -78,58 +76,38 @@
 				<div class = "col-md-4">
 					<h1><i class="fa fa-users"></i> Клиенты</h1> 
 					<div class="page-wrapper">
-					 	<table class="table table-hover table-condensed">
-							<?php
-								$dbusers = $database->getDBUsers();
-								if ($dbusers->num_rows > 0) {
-									$i = 0;
-									while($row = $dbusers->fetch_assoc()) {
-										$i++;
-									?>
-									<tr>
-										<td class="text-left superadmin-clients-popover-container"><a href="#" data-toggle="popover" data-placement="right" 
-										data-title="Информация о клиенте"  
-										data-content='<table class="no-word-wrap"><tr><td>Логин:</td><td><?=$row['LOGIN'];?></td></tr>
-											<tr><td>Email:</td><td><?=$row['EMAIL'];?></td></tr>
-											<tr><td>Логин&nbsp;роутера:</td><td><?=$row['ROUTER_LOGIN'];?></td></tr>
-											<tr><td>Пароль&nbsp;роутера:</td><td><?=htmlentities($row['ROUTER_PASSWORD'], ENT_QUOTES);?></td></tr></table>'>
-										<?=$row['COMPANY_NAME'];?></a></td>
-
-										<?php if ($database->meetsAccessLevel('ROOT')) { ?>
-											<td class="text-right">
-												<form action="admin-dashboard.php" method="post">
-													<input type="hidden" name="form-name" value="pretend-to-be">
-													<input type="hidden" name="pretend-to-be" value="<?=$row['ID_DB_USER'];?>">
-													<button type="submit" class="btn btn-link" data-toggle="tooltip" data-placement="left" title="Просмотреть личный кабинет">
-														<i class="fa fa-line-chart"></i>
-													</button>
-												</form>
-											</td>
-										<?php }
-											
-										if ($database->meetsAccessLevel('PRIV_MANAGER')) { 
-											
-											if ($row['IS_ACTIVE'] =='T') { ?>
-												<td class="text-right">
-													<a href="#" data-id="enabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Приостановить обслуживание">
-														<i class="fa fa-circle" ></i>
-													</a>
-												</td>
-											<?php } else { ?>
-												<td class="text-right">
-													<a href="#" data-id="disabled" data-id-db-user="<?=$row['ID_DB_USER'];?>" data-toggle="tooltip" data-placement="left" title="Возобновить обслуживание">
-														<i class="fa fa-circle-thin"></i>
-													</a>
-												</td>
-											<?php }
-												
-										} ?>
-									</tr>
-							<?php 
-									}
-								} else { ?>
-									<tr><td colspan="1" class="text-center">Пусто</td></tr>
-							<?	} ?>
+						<div class="row head-row">
+							
+							<div class="col-xs-12">
+								<div class="input-group">
+									<input type="search" class="form-control" placeholder="Поиск">
+									<span class="input-group-btn">
+										<button class="btn btn-black" type="button"><i class="fa fa-search"></i></button>
+									</span>
+								</div>
+							</div>
+							
+							<a href="#" id="order-by-name" class="active">
+								<div class="col-xs-<?=$database->meetsAccessLevel('ROOT') ? 4 : 6;?>">
+									<i class="fa fa-sort-alpha-asc" title="Сортировать по имени"></i><small> Имя</small>
+								</div>
+							</a>
+							<a href="#" id="order-by-traffic">
+								<div class="col-xs-<?=$database->meetsAccessLevel('ROOT') ? 4 : 6;?>">
+									<i class="fa fa-sort-amount-desc" title="Сортировать по количеству трафика"></i><small> Трафик</small>
+								</div>
+							</a>
+							<?php if ($database->meetsAccessLevel('ROOT')) { ?>
+							<a href="#" id="order-by-id">
+								<div class="col-xs-4">
+									<i class="fa fa-sort-numeric-asc" title="Сортировать по ID"></i><small> ID</small>
+								</div>
+							</a>
+							<?php } ?>
+							
+						</div>
+					 	<table class="table table-hover table-condensed" id="table">
+							<?php include 'includes/modules/superadmin-clients-table.php'; ?>
 						</table>
 
 					</div>

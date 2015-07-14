@@ -112,7 +112,8 @@ input[type="url"],
 input[type="color"],
 input[type="password"],
 input[type="email"],
-input[type="phone"] {
+input[type="phone"],
+input[type="search"] {
   font-family: 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 input[type="text"] {
@@ -828,6 +829,35 @@ body.admin-page-login .modal-image {
 .popover .arrow::after {
   color: rgba(0, 0, 0, 0.6);
   border-right-color: rgba(0, 0, 0, 0.6) !important;
+}
+.head-row {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding-top: 10px;
+  padding-bottom: 5px;
+  margin-top: -20px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+.head-row > div,
+.head-row > a > div {
+  padding-top: 10px;
+  padding-bottom: 5px;
+}
+.head-row input[type="search"] {
+  height: 28px;
+}
+.head-row .input-group-btn .btn {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.head-row .active {
+  color: #c4fdff;
+}
+.input-group-btn:first-child > .btn.btn-black {
+  border-right: none;
+}
+.input-group-btn:last-child > .btn.btn-black {
+  border-left: none;
 }
 /* eof ADMIN PAGE LOGIN */
 /* ADMIN PAGE */

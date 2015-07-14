@@ -1003,8 +1003,8 @@
 			$sql = 'select count(A.ID_LOGIN_ACT) as COUNT from SP$LOGIN_ACT A where DATE(A.DATE_CREATED) = CURDATE() and A.ID_DB_USER='.$this->id_db_user; // today
 			$sql = $sql.' union all '.'select count(A.ID_LOGIN_ACT) as COUNT from SP$LOGIN_ACT A where DATE(A.DATE_CREATED) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) and A.ID_DB_USER='.$this->id_db_user; // yesterday
 			$sql = $sql.' union all select Z.* from ('.'select count(A.ID_LOGIN_ACT) as COUNT from SP$LOGIN_ACT A where DATE(A.DATE_CREATED) > DATE_SUB(CURDATE(), INTERVAL 7 DAY) and A.ID_DB_USER='.$this->id_db_user; // last week
-			$sql = $sql.' union '.'select count(A.ID_LOGIN_ACT) as COUNT from SP$LOGIN_ACT A where DATE(A.DATE_CREATED) > DATE_SUB(CURDATE(), INTERVAL 30 DAY) and A.ID_DB_USER='.$this->id_db_user; // last month
-			$sql = $sql.' union '.'select count(A.ID_LOGIN_ACT) as COUNT from SP$LOGIN_ACT A where DATE(A.DATE_CREATED) > DATE_SUB(CURDATE(), INTERVAL 365 DAY) and A.ID_DB_USER='.$this->id_db_user; // last year
+			$sql = $sql.' union '.'select count(A.ID_LOGIN_ACT) as COUNT from SP$LOGIN_ACT A where DATE(A.DATE_CREATED) > DATE_SUB(CURDATE(), INTERVAL 1 MONTH) and A.ID_DB_USER='.$this->id_db_user; // last month
+			$sql = $sql.' union '.'select count(A.ID_LOGIN_ACT) as COUNT from SP$LOGIN_ACT A where DATE(A.DATE_CREATED) > DATE_SUB(CURDATE(), INTERVAL 1 YEAR) and A.ID_DB_USER='.$this->id_db_user; // last year
 			$sql = $sql.' union '.'select count(A.ID_LOGIN_ACT) as COUNT from SP$LOGIN_ACT A where A.ID_DB_USER='.$this->id_db_user.') Z'; // all time
 
 			$result = $this->getQueryResultWithErrorNoticing($sql);
@@ -1248,19 +1248,54 @@
 		
 		/// Получить клиентов
 		/**
-		 *	@author Михаил Полюбай
+		 *	@author Михаил Полюбай, Anthony Boutinov
+		 *	@param string $order_by 	По чему сортировать. Возможные значения: 'ID_DB_USER', 'TRAFFIC', 'NAME' (NAME по умолчанию).
 		 *	@retval mysqli_result
 		 */
-		public function getDBUsers() {
+		public function getDBUsers($order_by = 'NAME') {
+			
+			if ($order_by == 'ID_DB_USER') {
+				$order_by = 'B.ID_DB_USER ASC';
+			} else if ($order_by == 'TRAFFIC') {
+				$order_by = 'LOGIN_ACT_COUNT_MONTH DESC';
+			} else {
+				$order_by = 'B.VALUE ASC';
+			}
+			
 			$sql =
 			'SELECT
-				C.VALUE AS EMAIL, B.VALUE AS COMPANY_NAME, D.*
+				C.VALUE AS EMAIL,
+				B.VALUE AS COMPANY_NAME,
+				D.*,
+				CASE
+					WHEN D.ID_DB_USER=D.ID_DB_USER_MODIFIED THEN "самим собой"
+					ELSE P.LOGIN
+				END AS DB_USER_MODIFIED,
+				(
+					SELECT COUNT(LA.ID_LOGIN_ACT)
+					FROM SP$LOGIN_ACT LA
+					WHERE LA.ID_DB_USER=D.ID_DB_USER
+					AND DATE(LA.DATE_CREATED)=CURDATE()
+				) AS LOGIN_ACT_COUNT_TODAY,
+				(
+					SELECT COUNT(LA.ID_LOGIN_ACT)
+					FROM SP$LOGIN_ACT LA
+					WHERE LA.ID_DB_USER=D.ID_DB_USER
+					AND DATE(LA.DATE_CREATED) > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+				) AS LOGIN_ACT_COUNT_MONTH,
+				(
+					SELECT COUNT(LA.ID_LOGIN_ACT)
+					FROM SP$LOGIN_ACT LA
+					WHERE LA.ID_DB_USER=D.ID_DB_USER
+					AND DATE(LA.DATE_CREATED) > DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+				) AS LOGIN_ACT_COUNT_YEAR
 			FROM
-				CM$DB_USER D, SP$VAR B, SP$VAR C
+				CM$DB_USER D, SP$VAR B, SP$VAR C, CM$DB_USER P
 			WHERE
 				D.IS_SUPERADMIN=\'F\' 
 				AND D.ID_DB_USER = B.ID_DB_USER
 	            AND D.ID_DB_USER = C.ID_DB_USER
+	            AND D.ID_DB_USER_MODIFIED = P.ID_DB_USER
 				AND B.ID_DICTIONARY = (
 					SELECT ID_DICTIONARY 
 					FROM CM$DICTIONARY
@@ -1271,7 +1306,7 @@
 					FROM CM$DICTIONARY
 		            WHERE SHORT_NAME = "EMAIL"
 	            )
-			ORDER BY B.VALUE ASC';
+			ORDER BY '.$order_by;
 			return  $this->getQueryResultWithErrorNoticing($sql); 
 		}
 		

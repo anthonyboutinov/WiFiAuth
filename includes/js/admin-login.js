@@ -58,8 +58,6 @@ $(document).ready(function() {
 			},
 			fail: failNotification
 		});
-		
-		
 	});
 	
 	

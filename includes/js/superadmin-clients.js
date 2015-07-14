@@ -31,9 +31,9 @@ $(document).ready(function() {
 	// включить информеры
 	$('[data-toggle="popover"]').popover({'html': true});
 	
-	/* *
-	   * ГЕНЕРИРОВАНИЕ ПАРОЛЕЙ
-	   */
+/* *
+   * ГЕНЕРИРОВАНИЕ ПАРОЛЕЙ
+   */
 
 	var generateTokenButton = $("#generate-token");
 	var generatePasswordButton = $("#generate-password");
@@ -90,7 +90,6 @@ $(document).ready(function() {
 		                            'form-name': 'enable-disable-user'
 		                        },
 		                        success: function(msg){
-	// 	                            setTimeout(function(){location.reload();}, 600);
 									location.reload();
 		                        },
 		                        fail: failNotification
@@ -140,7 +139,6 @@ $(document).ready(function() {
 	                            },
 	                            success: function(msg){
 		                            location.reload();
-	//                                 setTimeout(function(){location.reload();}, 600);
 	                            },
 		                        fail: failNotification
 	                        }); 
@@ -229,5 +227,46 @@ $(document).ready(function() {
 	$(".superadmin-clients-popover-container > a").click(function(e) {
 		e.preventDefault();
 	});
+	
+	
+/* *
+   * Сортировка
+ */
+
+	function order_by(by, _this) {
+		$.ajax({
+			type: "GET",
+			url: "includes/modules/superadmin-clients-table.php",
+			data: {
+				'order-by': by
+			},
+			success: function(msg) {
+				$("#table").html(msg);
+				setActiveClass(_this);
+			},
+			fail: failNotification
+		});
+	}
+	
+	function setActiveClass(_this) {
+		$("[id^=\"order-by-\"]").removeClass("active");
+		$(_this).addClass("active");
+	}
+
+	$("#order-by-id").click(function(e) {
+		e.preventDefault();
+		order_by('ID_DB_USER', $(this));
+	});
+	
+	$("#order-by-name").click(function(e) {
+		e.preventDefault();
+		order_by('NAME', $(this));
+	});
+	
+	$("#order-by-traffic").click(function(e) {
+		e.preventDefault();
+		order_by('TRAFFIC', $(this));
+	});
+
 
 });

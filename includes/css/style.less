@@ -105,7 +105,7 @@ a:hover, a:focus, a:active,
 	background-color: rgba(0, 0, 0, 0.2);
 }
 
-input[type="text"], input[type="number"], input[type="url"], input[type="color"], input[type="password"], input[type="email"], input[type="phone"] {
+input[type="text"], input[type="number"], input[type="url"], input[type="color"], input[type="password"], input[type="email"], input[type="phone"], input[type="search"] {
 	font-family: 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
@@ -904,6 +904,41 @@ body.admin-page-login {
 		color: rgba(0,0,0,0.6);
 		border-right-color: rgba(0,0,0,0.6) !important;
 	}
+}
+
+.head-row {
+	background-color: rgba(0,0,0,0.2);
+	padding-top: 10px;
+	padding-bottom: 5px;
+	margin-top: -20px;
+	margin-bottom: 15px;
+	text-align: center;
+	
+	&>div, &>a>div {
+		padding-top: 10px;
+		padding-bottom: 5px;
+	}
+	
+	& input[type="search"] {
+		height: 28px;
+	}
+	
+	& .input-group-btn .btn {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	
+	& .active {
+		color: rgb(196, 253, 255);
+	}
+}
+
+.input-group-btn:first-child>.btn.btn-black {
+	border-right: none;
+}
+
+.input-group-btn:last-child>.btn.btn-black {
+	border-left: none;
 }
 
 /* eof ADMIN PAGE LOGIN */
