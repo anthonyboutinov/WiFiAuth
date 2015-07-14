@@ -206,7 +206,7 @@ $(document).ready(function(){
 
 		$.ajax({
 				type: "POST",
-				url: "loginusingpass.php",
+				url: "query.php",
 				data: {
 					'phone': phonenum,
 					'text':password
