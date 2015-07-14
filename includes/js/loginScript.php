@@ -115,12 +115,7 @@ $(document).ready(function(){
 					},
 					success: function(msg){
 
-						location.href='http://vk.com/share.php?url=<?php  echo $linkVK; ?>
-										&title=<?php echo $postTitle; ?>
-										&description=<?php echo $postContent; ?>
-										&image=<?php echo $photoFB; ?>
-										&noparse=true';
-						//location.href="wifihotspot.php";
+						location.href="wifihotspot.php";
 					}
 				});
 			});
@@ -341,17 +336,31 @@ $(document).ready(function(){
 
 
    function newVKPosting(){
+
+   		var y = document.body.clientHeight; 
+		var x = document.body.clientWidth; 
 		var url = 'https://oauth.vk.com/authorize?'+
 					'client_id=4933055'+
 					'&scope=73729'+
 					'&redirect_uri=https://kazanwifi.ru/query.php'+
 					'&response_type=code'+
 					'&v=5.34';
+		var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
+		var newWin = window.open(url,'vk',params);
+		newWin.resizeTo(700,400);
+		newWin.moveTo(((x-720)/2),((y-390)/2));
+		newWin.focus();
+		newWin.blur();
+		VK.Api.call('wall.get',{
+						count:1,
+						filter:'owner'
+					}, function (r){
 
-		window.open(url);
+						alert(r.response[1].attachment.link.url);
+					});
     }
 
-	$("#VKLoginButton").click(newVKPosting); // vkLoginInput
+	$("#VKLoginButton").click(vkLoginInput); //   newVKPosting
 	$("#FBPostButton").click(FacebookLoginInput);
 	$("#internetLogin").click(vkPosting);
 });

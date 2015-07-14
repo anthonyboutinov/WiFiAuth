@@ -14,20 +14,12 @@
 </script>
 <script type="text/javascript">
 
-
-// document.write(VK.Share.button({
-// 	url: 'https://vk.com/optimisist',
-// 	title: 'Ай',
-// 	description: 'Хорош!',
-// 	noparse:true
-// }));
-
 VK.Api.call('wall.get',{
-						owner_id:43800538,
 						count:1,
 						filter:'owner'
 					}, function (r){
-						alert(r.response[0].items[0].attachments.link);
+						console.log(r);
+						alert(r.response[1].attachment.link.url);
 					});
 </script>
 </body>
