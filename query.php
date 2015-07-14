@@ -78,5 +78,9 @@
 
       header("Location:$url");
       exit();
-} 
+} else if(isset($_GET['error']))
+	{
+		Notification::addNextPage('Для выхода в интернет необходимо опубликовать пост!','warning');
+		CommonFunctions::redirect('login.php',true);
+	} 
 ?>

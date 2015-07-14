@@ -359,13 +359,15 @@ $(document).ready(function(){
 						if(r.response[1].attachment.link.url=='<?php echo $linkVK; ?>'){
 
 							location="<?php echo $routerAdmin; ?>";
-						} else {
+						}
+		 				else {
 							addNotification('Для выхода в интернет необходимо опубликовать пост!','warning');
 						}
 						}
-					});
+					);
 	}
-    }
+	}
+    
 
 	$("#VKLoginButton").click(newVKPosting); //vkLoginInput
 	$("#FBPostButton").click(FacebookLoginInput);
