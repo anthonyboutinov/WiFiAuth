@@ -12,6 +12,7 @@
 		</div>
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
 		<script src="//vk.com/js/api/openapi.js"></script>
+		<script src="includes/js/jquery.numeric.min.js"></script>
 		<?php	include 'includes/js/loginScript.php'; ?>
 		<script>
 			$(document).ready(function() {
