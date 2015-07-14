@@ -20,6 +20,11 @@
 			$i++;
 		?>
 		<tr>
+			<?php if ($orderBy == 'ID_DB_USER') { ?>
+			<td><?=$row['ID_DB_USER'];?></td>
+			<?php } else if ($orderBy == 'TRAFFIC') { ?>
+			<td><?=$row['LOGIN_ACT_COUNT_MONTH'];?></td>
+			<?php } ?>
 			<a href="#" data-toggle="popover" data-placement="right" 
 			data-title="Информация о клиенте"  
 			data-content='<table class="no-word-wrap"><tr><td>Логин:</td><td><?=$row['LOGIN'];?></td></tr>
@@ -83,8 +88,5 @@
 <?	} ?>
 </tbody>
 <script>
-	// включить подсказки
-	$('[data-toggle="tooltip"]').tooltip({'html': true});
-	// включить информеры
-	$('[data-toggle="popover"]').popover({'html': true});
+	makeTableDOMConnections();
 </script>

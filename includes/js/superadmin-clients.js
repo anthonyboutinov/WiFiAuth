@@ -24,43 +24,15 @@ $.extend({
   }
 });
 
-$(document).ready(function() {
+function makeTableDOMConnections() {
 	
 	// включить подсказки
 	$('[data-toggle="tooltip"]').tooltip({'html': true});
 	// включить информеры
 	$('[data-toggle="popover"]').popover({'html': true});
 	
-/* *
-   * ГЕНЕРИРОВАНИЕ ПАРОЛЕЙ
-   */
-
-	var generateTokenButton = $("#generate-token");
-	var generatePasswordButton = $("#generate-password");
-	var generateLoginButton = $("#generate-login");
 	
-	function genRouterToken() {
-		$("#router-token").val($.password(16,true));
-	}
-	$(generateTokenButton).click(genRouterToken);
-	genRouterToken();
-	
-	function genRouterLogin() {
-		var login = $.password(10,false);
-		$("#router-login").val(login.toLowerCase());
-	}
-	$(generateLoginButton).click(genRouterLogin);
-	genRouterLogin();	
-
-	function genPassword() {
-		var password = $.password(4,false)+'-'+$.password(4,false)+'-'+$.password(4,false);
-		$("#password").val(password.toUpperCase());
-	}
-	$(generatePasswordButton).click(genPassword);
-	genPassword();
-
-
-    $("[data-id='disabled']").click(function (e) {
+	$("[data-id='disabled']").click(function (e) {
         e.preventDefault();
         openmodalFormAndFocusOn("#disable-password");
 
@@ -156,48 +128,40 @@ $(document).ready(function() {
     }).mouseleave(function() {
 		$(this).find("i").removeAttr('class').addClass('fa fa-circle');
     });
-  
-    
+	
+}
+
+function enablePasswordGenerationCapabilities() {
 /* *
-   * ВЕРТИКАЛЬНОЕ ПОЗИЦИОНИРОВАНИЕ
- */
+* ГЕНЕРИРОВАНИЕ ПАРОЛЕЙ
+*/
 
-	var modalForm1 = $("#disableModal");
-	var modalForm2 = $("#enableModal");
+	var generateTokenButton = $("#generate-token");
+	var generatePasswordButton = $("#generate-password");
+	var generateLoginButton = $("#generate-login");
 	
-	// Функции
+	function genRouterToken() {
+		$("#router-token").val($.password(16,true));
+	}
+	$(generateTokenButton).click(genRouterToken);
+	genRouterToken();
 	
-		function positionVertically() {
-			if ($(panel).outerHeight() < $(window).height()) {
-				$(panel).css('margin-top', ($(window).height() - $(panel).outerHeight()) / 2);
-				$(footer).css('position', 'fixed');
-			} else {
-				$(panel).css('margin-top', 0);
-				$(footer).css('position', 'inherit');
-			}	
-			$(modalForm1).css('margin-top', ($(window).height() - $(modalForm1).outerHeight()) / 2);
-			$(modalForm2).css('margin-top', ($(window).height() - $(modalForm2).outerHeight()) / 2);
-		}
-						
-		function openmodalFormAndFocusOn(focusOn) {
-			setTimeout(positionVertically, 200);
-			$(focusOn).focus();
-		}
-	
-	// EOF Функции
-	
-	// Привязки к дейсвтиям
-	
-		var panel = $(".glass-panel");
-		var footer = $("footer.footer");
+	function genRouterLogin() {
+		var login = $.password(10,false);
+		$("#router-login").val(login.toLowerCase());
+	}
+	$(generateLoginButton).click(genRouterLogin);
+	genRouterLogin();	
 
-		setTimeout(positionVertically, 200);
-		$(window).resize(positionVertically);
-	
-	// EOF Привязки к дейсвтиям
-	
-	
-	
+	function genPassword() {
+		var password = $.password(4,false)+'-'+$.password(4,false)+'-'+$.password(4,false);
+		$("#password").val(password.toUpperCase());
+	}
+	$(generatePasswordButton).click(genPassword);
+	genPassword();
+}
+
+function enableAddClientFieldsRectictions() {
 /* *
    * Ограничение вводимых данных
  */
@@ -227,8 +191,15 @@ $(document).ready(function() {
 	$(".superadmin-clients-popover-container > a").click(function(e) {
 		e.preventDefault();
 	});
-	
-	
+}
+
+function makeAddClientDOMConnections() {
+	enableVerticalPositioning();
+	enablePasswordGenerationCapabilities();
+	enableAddClientFieldsRectictions();
+}
+
+function enableSortingCapabilities() {
 /* *
    * Сортировка
  */
@@ -267,6 +238,42 @@ $(document).ready(function() {
 		e.preventDefault();
 		order_by('TRAFFIC', $(this));
 	});
+	
+}
 
+function positionVertically() {	
+	$(modalForm1).css('margin-top', (document.body.clientHeight - $(modalForm1).outerHeight()) / 2);
+	$(modalForm2).css('margin-top', (document.body.clientHeight - $(modalForm2).outerHeight()) / 2);
+}
+				
+function openmodalFormAndFocusOn(focusOn) {
+	setTimeout(positionVertically, 200);
+	$(focusOn).focus();
+}
 
+function enableVerticalPositioning() {
+/* *
+   * ВЕРТИКАЛЬНОЕ ПОЗИЦИОНИРОВАНИЕ
+ */
+
+	modalForm1 = $("#disableModal > .modal-dialog");
+	modalForm2 = $("#enableModal > .modal-dialog");
+	
+	// Привязки к дейсвтиям
+	
+		panel = $(".glass-panel");
+		footer = $("footer.footer");
+
+		setTimeout(positionVertically, 200);
+		$(window).resize(positionVertically);
+	
+	// EOF Привязки к дейсвтиям
+	
+	
+}
+
+$(document).ready(function() {	
+	makeAddClientDOMConnections();
+	makeTableDOMConnections();	
+	enableSortingCapabilities();
 });
