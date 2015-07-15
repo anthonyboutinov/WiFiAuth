@@ -18,12 +18,13 @@
 			
 			<div class="page-wrapper">
 				<div class="row">
-					<div class="col-md-<?=$database->meetsAccessLevel('ROOT') ? 3 : 6;?> col-md-offset-3">
+					<div class="col-md-<?=$database->meetsAccessLevel('ROOT') ? 6 : 6;?> col-md-offset-3">
 						<a href="superadmin-clients.php">
 							<h1 class="dashboard-tile"><i class="fa fa-2x fa-users"></i><br><br>Клиенты <?=$db_users_count[0];?></h1>
 						</a>
 					</div>
 					
+<!--
 					<?php if ($database->meetsAccessLevel('ROOT')) { ?>
 					<div class="col-md-3">
 						<a href="superadmin-admins.php">
@@ -31,6 +32,7 @@
 						</a>
 					</div>
 					<?php } ?>
+-->
 				</div>
 			</div>
 			<?php include 'includes/base/footer.php'; ?>

@@ -88,9 +88,9 @@ function makeClientEnableDisableButtonsDOMConnections() {
         e.preventDefault();
         openmodalFormAndFocusOn("#enable-password");
 
-//         var id_db_user;
-//         var password;
-        id_db_user = $(this).attr("data-id-db-user");
+        var idUser;
+        var password;
+        idUser = $(this).attr("data-id-db-user");
         $('#disableModal').modal('show');
         $('#disactiveClient').click( function() {
 	        password =  $('#disable-password').val();
@@ -108,7 +108,7 @@ function makeClientEnableDisableButtonsDOMConnections() {
 	                            type: "POST",
 	                            url: "superadmin-query.php",
 	                            data:{ 
-	                                'idUser': id_db_user, 
+	                                'idUser': idUser, 
 	                                'active':'F', 
 	                                'form-name': 'enable-disable-user'
 	                            },
@@ -313,6 +313,7 @@ function prepareForVerticalPositioning() {
 }
 
 $(document).ready(function() {	
+	enableVerticalPositioning();
 	makeTableDOMConnections();	
 	prepareForVerticalPositioning();
 	enableSortingCapabilities();

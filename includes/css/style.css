@@ -241,6 +241,11 @@ div.complex-h1 .options i.fa {
 div.complex-h1 .options {
   top: 24%;
 }
+.index-page h1 {
+  text-align: center;
+  font-size: 500%;
+  margin-bottom: 50px;
+}
 i.fa[data-toggle="tooltip"] {
   cursor: help;
 }
@@ -936,10 +941,10 @@ body.admin-page h2.divide-top {
   padding-top: 35px;
   border-top: 2px solid rgba(0, 0, 0, 0.25);
 }
-body.admin-page .lead {
+.lead {
   font-size: 19px;
 }
-body.admin-page .glass-panel {
+.glass-panel {
   background: rgba(0, 0, 0, 0.1);
 }
 body.admin-page h1,

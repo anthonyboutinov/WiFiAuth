@@ -89,10 +89,12 @@
 	}
 	
 	// Добавляет $_SESSION Notification данные
-	foreach ($_SESSION as $key => $value) {
-		if (CommonFunctions::startsWith(Notification::SESSION_VAR_PREFIX, $key)) {
-			Notification::add($value, substr($key, strlen(Notification::SESSION_VAR_PREFIX)));
-			unset($_SESSION[$key]);
+	if (isset($_SESSION)) {
+		foreach ($_SESSION as $key => $value) {
+			if (CommonFunctions::startsWith(Notification::SESSION_VAR_PREFIX, $key)) {
+				Notification::add($value, substr($key, strlen(Notification::SESSION_VAR_PREFIX)));
+				unset($_SESSION[$key]);
+			}
 		}
 	}
 	
