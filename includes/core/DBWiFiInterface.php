@@ -1082,21 +1082,33 @@
 			$this->sanitize($user_href);
 			$this->sanitize($log_opt);
 			$this->sanitize($b_date);
-			
+
 			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME="'.$log_opt.'"';
-			$log_opt = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
+			$logOption = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
 
             $sql  = 'select ID_USER from CM$USER where LINK="'.$user_href.'"';
             $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не выдавать ошибку, если нет результатов в запросе*/);
             if($result == null) {
+            	if($log_opt == 'vk'){
             	$sql = 'insert into CM$USER 
             	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,ID_DB_USER_MODIFIED)  values('
-            		     .$log_opt.', STR_TO_DATE("'
+            		     .$logOption.', STR_TO_DATE("'
             			 .$b_date.'","%d.%m.%Y "),"'
                          .$first_name.' '
                          .$last_name.'","'
                          .$user_href.'", '
                          .$this->id_db_user.')';
+					} else if($log_opt=='facebook') {
+
+		            	$sql = 'insert into CM$USER 
+            	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,ID_DB_USER_MODIFIED)  values('
+            		     .$logOption.', STR_TO_DATE("'
+            			 .$b_date.'","%m/%d/%Y "),"'
+                         .$first_name.' '
+                         .$last_name.'","'
+                         .$user_href.'", '
+                         .$this->id_db_user.')';
+					}
             	$this->getQueryResultWithErrorNoticing($sql);
             	$sql = 'select ID_USER from CM$USER order by ID_USER desc limit 0, 1';
             	$result = $this->getQueryFirstRowResultWithErrorNoticing($sql);
