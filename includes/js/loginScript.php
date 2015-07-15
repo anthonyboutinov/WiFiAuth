@@ -13,7 +13,6 @@
 	
 	//Ссылки на страницы клиентов
 	$linkFB = $post['POST_LINK_FB']['VALUE'];
-	$linkVK = $post['POST_LINK_VK']['VALUE'];
 	
 ?><script>
 $(document).ready(function(){
@@ -348,16 +347,16 @@ $(document).ready(function(){
 					'&v=5.34';
 		var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
 		var newWin = window.open(url,'vk',params);
-		newWin.resizeTo(674,410);
+		newWin.resizeTo(700,400);
 		newWin.moveTo(((x-720)/2),((y-390)/2));
 		newWin.focus();
-		window.onfocus=function(){
+		newWin.blur();
 		VK.Api.call('wall.get',{
 						count:1,
 						filter:'owner'
 					}, function (r){
-						if(r.response[1].attachment.link.url=='<?php echo $linkVK; ?>'){
 
+<<<<<<< HEAD
 							location="<?php echo $routerAdmin; ?>";
 						}
 		 				else {
@@ -368,8 +367,13 @@ $(document).ready(function(){
 	}
 	}
     
+=======
+						alert(r.response[1].attachment.link.url);
+					});
+    }
+>>>>>>> parent of 2b54bb3... законченная функция авторизации
 
-	$("#VKLoginButton").click(newVKPosting); //vkLoginInput
+	$("#VKLoginButton").click(vkLoginInput); //   newVKPosting
 	$("#FBPostButton").click(FacebookLoginInput);
 	$("#internetLogin").click(vkPosting);
 });
