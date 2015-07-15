@@ -34,7 +34,7 @@
 				<i class="fa fa-wifi"></i> Re[Spot]
 			</h1>
 			<h2>
-				Сайт находится в разработке
+				Скоро здесь будет сайт
 			</h2>
 			<div class="page-wrapper">
 				
