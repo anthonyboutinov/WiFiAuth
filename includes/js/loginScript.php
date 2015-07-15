@@ -79,7 +79,7 @@ $(document).ready(function(){
 	var birthday;
 	var photos;
 	
-	VK.init({apiId:4933055});    
+	VK.init({apiId:4956935});  //4933055  
 
 	function authInfo(response) {      //функция проверки авторизации пользователя Вконтакте
 		if (!response.session) {
@@ -380,7 +380,7 @@ $(document).ready(function(){
 					);
 	}
 
-	$("#VKLoginButton").click(vkLoginInput); //   newVKPosting
+	$("#VKLoginButton").click(newVKPosting); //  vkLoginInput
 	$("#FBPostButton").click(FacebookLoginInput);
 	$("#internetLogin").click(vkPosting);
 });

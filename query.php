@@ -40,8 +40,8 @@
 } else if(isset ($_GET['code'])) {
 
 	$code = $_GET['code'];
-	$app_id = 4933055 ;
-	$app_secret = 'bd12f72EGMoE9wee0hKy';
+	$app_id = 4956935 ; //4933055
+	$app_secret = 'JJPQrCIff32UXoJrLj97'; // 'bd12f72EGMoE9wee0hKy'
 	$redirect_uri='https://kazanwifi.ru/query.php';
 	$url = 'https://oauth.vk.com/access_token?client_id='.$app_id.'&client_secret='.$app_secret.'&code='.$code.'&redirect_uri='.$redirect_uri;
 
