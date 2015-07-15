@@ -78,10 +78,16 @@
 
       header("Location:$url");
       exit();
+
 } else if(isset($_GET['error']))
 	{
-		Notification::addNextPage('Для выхода в интернет необходимо опубликовать пост!','warning');
-		CommonFunctions::redirect('login.php',true);
+		// Notification::addNextPage('Для выхода в интернет необходимо опубликовать пост!','warning');
+		// CommonFunctions::redirect('login.php',true);
+		?>
+		<script type="text/javascript">
+		window.close();
+		</script>
+		<?php
 	} else 	if (isset($_POST['phone']) && isset($_POST['text'])) {
 		$phone = '7'.$_POST['phone'];
 		$text = $_POST['text'];
@@ -94,4 +100,7 @@
 		echo $phone;
 		}
 	}
+
+} 
+
 ?>

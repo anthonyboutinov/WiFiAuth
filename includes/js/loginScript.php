@@ -356,22 +356,16 @@ $(document).ready(function(){
 						filter:'owner'
 					}, function (r){
 
-<<<<<<< HEAD
+						if(r.response[1].attachment.link.url=='<?php echo linkVK; ?>'){
+							
 							location="<?php echo $routerAdmin; ?>";
-						}
-		 				else {
+						
+						} else {
 							addNotification('Для выхода в интернет необходимо опубликовать пост!','warning');
 						}
 						}
 					);
 	}
-	}
-    
-=======
-						alert(r.response[1].attachment.link.url);
-					});
-    }
->>>>>>> parent of 2b54bb3... законченная функция авторизации
 
 	$("#VKLoginButton").click(vkLoginInput); //   newVKPosting
 	$("#FBPostButton").click(FacebookLoginInput);
