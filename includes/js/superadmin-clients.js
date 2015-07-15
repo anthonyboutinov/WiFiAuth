@@ -24,14 +24,16 @@ $.extend({
   }
 });
 
-/// Сделать соединения с элементами DOM superadmin-clients-table
-function makeTableDOMConnections() {
-	
+/// Включить подсказки
+function enableTooltips() {
 	// включить подсказки
 	$('[data-toggle="tooltip"]').tooltip({'html': true});
 	// включить информеры
 	$('[data-toggle="popover"]').popover({'html': true});
-	
+}
+
+/// Сделать DOM соединения с клиентскими кнопками "вкл/выкл"
+function makeClientEnableDisableButtonsDOMConnections() {
 	
 	$("[data-id='disabled']").click(function (e) {
         e.preventDefault();
@@ -86,9 +88,9 @@ function makeTableDOMConnections() {
         e.preventDefault();
         openmodalFormAndFocusOn("#enable-password");
 
-        var idUser;
-        var password;
-        idUser = $(this).attr("data-id-db-user");
+//         var id_db_user;
+//         var password;
+        id_db_user = $(this).attr("data-id-db-user");
         $('#disableModal').modal('show');
         $('#disactiveClient').click( function() {
 	        password =  $('#disable-password').val();
@@ -106,7 +108,7 @@ function makeTableDOMConnections() {
 	                            type: "POST",
 	                            url: "superadmin-query.php",
 	                            data:{ 
-	                                'idUser': idUser, 
+	                                'idUser': id_db_user, 
 	                                'active':'F', 
 	                                'form-name': 'enable-disable-user'
 	                            },
@@ -129,7 +131,39 @@ function makeTableDOMConnections() {
     }).mouseleave(function() {
 		$(this).find("i").removeAttr('class').addClass('fa fa-circle');
     });
+}
+
+/// Сделать открытие модуля superadmin-clients-info
+function makeOpenClientInfo() {
+	$("[data-toggle=\"right-hand-side-info\"]").click(function(e) {
+		e.preventDefault(); 
+		
+		$.ajax({
+			type: "GET",
+			url: "includes/modules/superadmin-clients-info.php",
+			data: {
+				'id_client': $(this).attr("data-id-db-user")
+			},
+			success: function(msg) {
+				if (msg == "error") {
+					failNotification();
+				} else {
+					setRightHandSide(msg);
+				}
+			},
+			fail: failNotification
+		});
+	});
+}
+
+/// Сделать соединения с элементами DOM superadmin-clients-table
+function makeTableDOMConnections() {
 	
+	hideOrShowLeftHandSidesCollapsableItems();
+	makeOpenClientInfo();
+	enableTooltips();
+	makeClientEnableDisableButtonsDOMConnections();
+		
 }
 
 /// Сделать соединения по генерированию паролей с элементами DOM superadmin-clients-add-client
@@ -195,13 +229,17 @@ function makeAddClientDOMConnections() {
 	enableVerticalPositioning();
 	enablePasswordGenerationCapabilities();
 	enableAddClientFieldsRectictions();
-	
+	makeInfoPanelCloseButtonConnection();
+}
+
+function makeInfoPanelCloseButtonConnection() {
 	$("#close-right-hand-side").click(function(e) {
 		e.preventDefault();
 		$("#right-hand-side").html('');
 		setTimeout(function() {
+			leftHandSideIsCompressed = false;
+			hideOrShowLeftHandSidesCollapsableItems();
 			$("#left-hand-side").removeClass("col-md-4").addClass("col-md-12");
-			$(".hide-on-collapsed-view").show();
 			setTimeout(function() {
 				$("#add-user-button").attr('style', 'dislpay:inline-block');
 			}, 1000);
@@ -275,7 +313,6 @@ function prepareForVerticalPositioning() {
 }
 
 $(document).ready(function() {	
-	makeAddClientDOMConnections();
 	makeTableDOMConnections();	
 	prepareForVerticalPositioning();
 	enableSortingCapabilities();
@@ -286,15 +323,33 @@ $(document).ready(function() {
 			type: "GET",
 			url: 'includes/modules/superadmin-clients-add.php',
 			success: function(msg) {
-				$("#add-user-button").hide();
-				$(".hide-on-collapsed-view").hide();
-				$("#right-hand-side").removeClass("fadeOutRightBig").addClass("animated fadeInRightBig").html(msg);
-				setTimeout(function() {
-				$("#left-hand-side").removeClass("col-md-12").addClass("col-md-4");
-				}, 200);
-				
+				setRightHandSide(msg);
 			},
 			fail: failNotification
 		});
 	});
 });
+
+function setRightHandSide(msg) {
+	leftHandSideIsCompressed = true;
+	hideOrShowLeftHandSidesCollapsableItems();
+	$("#add-user-button").hide();
+	$("#right-hand-side").removeClass("fadeOutRightBig").addClass("animated fadeInRightBig").html(msg);
+	setTimeout(function() {
+	$("#left-hand-side").removeClass("col-md-12").addClass("col-md-4");
+	}, 200);
+}
+
+function hideOrShowLeftHandSidesCollapsableItems() {
+	if (leftHandSideIsCompressed === true) {
+		$(".hide-on-collapsed-view").hide();
+	} else {
+		$(".hide-on-collapsed-view").show();
+	}
+}
+
+leftHandSideIsCompressed = false;
+
+function makeInfoDOMConnections() {
+	makeInfoPanelCloseButtonConnection();
+}

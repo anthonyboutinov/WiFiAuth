@@ -85,6 +85,7 @@
 					<div class="page-wrapper">
 						<div class="row head-row">
 							
+<!--
 							<div class="col-xs-12">
 								<div class="input-group">
 									<input type="search" class="form-control" placeholder="Поиск">
@@ -93,6 +94,7 @@
 									</span>
 								</div>
 							</div>
+-->
 							
 							<a href="#" id="order-by-name" class="active">
 								<div class="col-xs-<?=$database->meetsAccessLevel('ROOT') ? 4 : 6;?>">
