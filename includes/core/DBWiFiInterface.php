@@ -1510,10 +1510,10 @@
 			$this->sanitize($active);
 			$this->sanitize($id_db_user);
 			
-			if ($active == 'T' || $active == true) {
+			if ($active === 'T' || $active === true) {
 				$active = 'T';
-			} else if ($active == 'F' || $active == false) {
-				$active = false;
+			} else if ($active === 'F' || $active === false) {
+				$active = 'F';
 			} else {
 				die('DEBUG Error: Передан неверный параметр в setActiveDBUser');
 			}

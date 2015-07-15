@@ -21,6 +21,7 @@
  				$active=$_POST['active'];
  				$id_db_user=$_POST['idUser'];
  				$database->setActiveDBUser($active,$id_db_user);
+
  		} else if($_POST['form-name'] == 'superadmin-confirm'){
 
 	 			$password = $_POST['password'];
