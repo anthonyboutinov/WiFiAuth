@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	include 'includes/core/session.php';
 	
 	$companyName = $database->getValueByShortName('COMPANY_NAME')['VALUE'];
@@ -18,7 +18,9 @@
 	//Ссылки на страницы клиентов
 	$linkVK = $post['POST_LINK_VK']['VALUE'];
 	$linkFB = $post['POST_LINK_FB']['VALUE'];
-	?>
+	
+	
+?>
 
 <!DOCTYPE html><html lang="ru">
 	<head>
@@ -145,5 +147,5 @@
 		<script src="//vk.com/js/api/openapi.js"></script>
 		<script src="//connect.facebook.net/en_US/sdk.js"></script>
 		<?php include "includes/js/loginScript.php"; ?>
-	</body>
+		</body>
 </html>

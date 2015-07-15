@@ -34,7 +34,21 @@
 		$logOpt =$_POST['logOpt'];
 	
 		$database->addMobileUser($phone,$logOpt); 
-	} 
+
+	} else if ($_POST['form-name']=='shareVKcheck') {
+		
+		 $user_id = $_POST['userId'];
+		 $url = 'https://api.vk.com/method/wall.get?owner_id='.$user_id.'&count=1&filter=owner&v=5.34';
+		 	if( $curl = curl_init() ) {
+			curl_setopt($curl, CURLOPT_URL, $url);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+			$json = curl_exec($curl);
+			curl_close($curl);
+			}
+
+			echo $json;
+
+	}
 
 
 } else if(isset ($_GET['code'])) {
@@ -71,15 +85,8 @@
 		}
 
 	$database->addUser($firstName,$lastName,$ref,$logOpt,$bDate);
-	$url ='https://vk.com/share.php?url='.urlencode($linkVK)
-			.'&title='.urlencode($postTitle)
-			.'&description='.urlencode($postContent)
-			.'&image='.urlencode($photoVK).'&noparse=true';
 
-      header("Location:$url");
-      exit();
-
-} else if(isset($_GET['error']))
+} else  if(isset($_GET['error']))
 	{
 		// Notification::addNextPage('Для выхода в интернет необходимо опубликовать пост!','warning');
 		// CommonFunctions::redirect('login.php',true);

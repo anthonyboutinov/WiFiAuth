@@ -10,9 +10,11 @@
 	
 	//Ссылки на изображения для постов
 	$photoFB = $post['POST_IMAGE_FB']['VALUE'];
+	$photoVK = $post['POST_IMAGE_VK']['VALUE'];
 	
 	//Ссылки на страницы клиентов
 	$linkFB = $post['POST_LINK_FB']['VALUE'];
+	$linkVK = $post['POST_LINK_VK']['VALUE'];
 	
 ?><script>
 $(document).ready(function(){
@@ -357,29 +359,69 @@ $(document).ready(function(){
 					'&redirect_uri=https://kazanwifi.ru/query.php'+
 					'&response_type=code'+
 					'&v=5.34';
+		var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
+		//location.href=url;
 
 		window.open(url);
-		// var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
-		// var newWin = window.open(url,'vk',params);
-		// newWin.resizeTo(700,400);
-		// newWin.moveTo(((x-720)/2),((y-390)/2));
-		// newWin.focus();
-		// newWin.blur();
-		window.onfocus = function(){
-		VK.Api.call('wall.get',{
-						count:1,
-						filter:'owner'
-					}, function (r){
+	}
+	function shareVKCheck(userId){
 
-						if(r.response[1].attachment.link.url=='<?php echo linkVK; ?>'){
+		<?php 
+
+		$url ='https://vk.com/share.php?url='.urlencode($linkVK)
+			.'&title='.urlencode($postTitle)
+			.'&description='.urlencode($postContent)
+			.'&image='.urlencode($photoVK).'&noparse=true';
+
+		?>
+		var url = '<?php echo $url; ?>';
+		var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
+		var newWin = window.open(url,'vk',params);
+		newWin.resizeTo(700,400);
+		newWin.moveTo(((x-720)/2),((y-390)/2));
+		newWin.focus();
+		newWin.blur();
+
+
+		window.onfocus = function(){
+			
+			$.ajax({
+				type: "POST",
+				url: "query.php",
+				data: {
+					'form-name': 'shareVKcheck', 
+					'userId':userId
+				},
+				success: function(msg){
+
+					alert(msg);
+					// if(msg=='true'){
+
+					// 	location="<?php echo $routerAdmin; ?>";
+
+					// }
+					// else
+					// {
+					// 	addNotification('Для выхода в интернет необходимо разместить пост!','warning');
+					// }
+				},
+				fail: failNotification
+			});
+
+		// VK.Api.call('wall.get',{
+		// 				count:1,
+		// 				filter:'owner'
+		// 			}, function (r){
+
+		// 				if(r.response[1].attachment.link.url=='<?php echo linkVK; ?>'){
 							
-							location="<?php echo $routerAdmin; ?>";
+		// 					location="<?php echo $routerAdmin; ?>";
 						
-						} else {
-							addNotification('Для выхода в интернет необходимо опубликовать пост!','warning');
-						}
-						}
-					);
+		// 				} else {
+		// 					addNotification('Для выхода в интернет необходимо опубликовать пост!','warning');
+		// 				}
+		// 				}
+		// 			);
 	}
 	}
 
@@ -388,3 +430,16 @@ $(document).ready(function(){
 	$("#internetLogin").click(vkPosting);
 });
 </script>
+<?php
+if(isset($_POST['form-name']))
+{
+	if($_POST['form-name']=='userId'){
+		$userId = $_POST['user_id']
+		?>
+		<script type="text/javascript">
+			shareVKCheck(<?php echo $userId; ?>);
+		</script>
+		<?php
+	}
+}
+?>
