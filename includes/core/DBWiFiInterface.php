@@ -1249,10 +1249,10 @@
 		/// Получить клиентов
 		/**
 		 *	@author Михаил Полюбай, Anthony Boutinov
-		 *	@param string $order_by 	По чему сортировать. Возможные значения: 'ID_DB_USER', 'TRAFFIC', 'NAME' (NAME по умолчанию).
+		 *	@param string $order_by 	(Опционально) По чему сортировать. Возможные значения: 'ID_DB_USER', 'TRAFFIC', 'NAME' (NAME по умолчанию).
 		 *	@retval mysqli_result
 		 */
-		public function getDBUsers($order_by = 'NAME') {
+		public function getClients($order_by = 'NAME') {
 			
 			if ($order_by == 'ID_DB_USER') {
 				$order_by = 'B.ID_DB_USER ASC';
@@ -1275,20 +1275,8 @@
 					SELECT COUNT(LA.ID_LOGIN_ACT)
 					FROM SP$LOGIN_ACT LA
 					WHERE LA.ID_DB_USER=D.ID_DB_USER
-					AND DATE(LA.DATE_CREATED)=CURDATE()
-				) AS LOGIN_ACT_COUNT_TODAY,
-				(
-					SELECT COUNT(LA.ID_LOGIN_ACT)
-					FROM SP$LOGIN_ACT LA
-					WHERE LA.ID_DB_USER=D.ID_DB_USER
 					AND DATE(LA.DATE_CREATED) > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
-				) AS LOGIN_ACT_COUNT_MONTH,
-				(
-					SELECT COUNT(LA.ID_LOGIN_ACT)
-					FROM SP$LOGIN_ACT LA
-					WHERE LA.ID_DB_USER=D.ID_DB_USER
-					AND DATE(LA.DATE_CREATED) > DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
-				) AS LOGIN_ACT_COUNT_YEAR
+				) AS LOGIN_ACT_COUNT_MONTH
 			FROM
 				CM$DB_USER D, SP$VAR B, SP$VAR C, CM$DB_USER P
 			WHERE
@@ -1326,6 +1314,63 @@
 			}
 			$array = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
 			return CommonFunctions::extractSingleValueFromMultiValueArray($array, 'COUNT');
+		}
+		
+		/// Получить информацию о клиенте
+		/**
+		 *	@author Anthony Boutinov, Михаил Полюбай
+		 *	
+		 *	@param int|string $id_db_user		ID_DB_USER
+		 *	@retval array						Одномерный массив
+		 */
+		public function getClient($id_db_user) {
+			$this->newSanitize($id_db_user);
+			
+			$sql =
+			'SELECT
+				C.VALUE AS EMAIL,
+				B.VALUE AS COMPANY_NAME,
+				D.*,
+				CASE
+					WHEN D.ID_DB_USER=D.ID_DB_USER_MODIFIED THEN "самим собой"
+					ELSE P.LOGIN
+				END AS DB_USER_MODIFIED,
+				(
+					SELECT COUNT(LA.ID_LOGIN_ACT)
+					FROM SP$LOGIN_ACT LA
+					WHERE LA.ID_DB_USER=D.ID_DB_USER
+					AND DATE(LA.DATE_CREATED)=CURDATE()
+				) AS LOGIN_ACT_COUNT_TODAY,
+				(
+					SELECT COUNT(LA.ID_LOGIN_ACT)
+					FROM SP$LOGIN_ACT LA
+					WHERE LA.ID_DB_USER=D.ID_DB_USER
+					AND DATE(LA.DATE_CREATED) > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+				) AS LOGIN_ACT_COUNT_MONTH,
+				(
+					SELECT COUNT(LA.ID_LOGIN_ACT)
+					FROM SP$LOGIN_ACT LA
+					WHERE LA.ID_DB_USER=D.ID_DB_USER
+					AND DATE(LA.DATE_CREATED) > DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+				) AS LOGIN_ACT_COUNT_YEAR
+			FROM
+				CM$DB_USER D, SP$VAR B, SP$VAR C, CM$DB_USER P
+			WHERE
+				D.ID_DB_USER='.$id_db_user.'
+				AND D.ID_DB_USER = B.ID_DB_USER
+	            AND D.ID_DB_USER = C.ID_DB_USER
+	            AND D.ID_DB_USER_MODIFIED = P.ID_DB_USER
+				AND B.ID_DICTIONARY = (
+					SELECT ID_DICTIONARY 
+					FROM CM$DICTIONARY
+		            WHERE SHORT_NAME = "COMPANY_NAME"
+	            )
+				AND C.ID_DICTIONARY = (
+					SELECT ID_DICTIONARY 
+					FROM CM$DICTIONARY
+		            WHERE SHORT_NAME = "EMAIL"
+	            )';
+            return $this->getQueryFirstRowResultWithErrorNoticing($sql);
 		}
 		
 		/// Произвести INSERT в SP$VAR

@@ -8,17 +8,17 @@
 		<div class="form-horizontal">
 
 			<div class="form-group">
-					<label class="col-sm-3 control-label" for="company-name">Название</label>
-					<div class="col-sm-9">
+				<label class="col-sm-3 control-label" for="company-name">Название</label>
+				<div class="col-sm-9">
 					<input type="text" class="form-control" name="company-name" id="company-name" autocomplete="off" maxlength="255">
-					</div>
+				</div>
 			</div>
 			<div class="form-group">
-					<label class="col-sm-3 control-label" for="email">E-mail</label>							
-					<div class="col-sm-9">
-						<input type="text" class="form-control" name="email" id="email" autocomplete="off" maxlength="255">
-					</div>
+				<label class="col-sm-3 control-label" for="email">E-mail</label>							
+				<div class="col-sm-9">
+					<input type="text" class="form-control" name="email" id="email" autocomplete="off" maxlength="255">
 				</div>
+			</div>
 		</div>
 		
 	</div>
