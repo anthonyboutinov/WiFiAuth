@@ -174,6 +174,11 @@ $(document).ready(function(){
 	$("#phoneButton").click(function(e) {  //функция входа по паролю
 		e.preventDefault();
 
+		phoneButton = $("#phoneButton");
+		phoneButtonOldHTML = $(phoneButton).html();
+		
+		$(phoneButton).html('<i class="fa fa-pulse fa-spinner"></i>').attr("disabled", 'disabled');;
+
 		var phonenum_input = $('#phone-form');
 		var phonenum = $(phonenum_input).val();
 		phone = '7'+phonenum;
@@ -183,9 +188,11 @@ $(document).ready(function(){
 		// обработка неверного значения номера телефона
 		if(!phonenum) {
 			addNotification('Введине номер телефона!','warning');
+			$(phoneButton).removeAttr('disabled').html(phoneButtonOldHTML);
 			return;
 		} else if(phonenum.length != 10) { // если количество цифр неверно
 			addNotification('Номер телефона задан неверно!','warning');
+			$(phoneButton).removeAttr('disabled').html(phoneButtonOldHTML);
 			return;
 		}
 		
@@ -216,39 +223,45 @@ $(document).ready(function(){
 
 					addNotification('Смс с кодом отправлено на ваш телефон','success');
 
-				 	$.ajax({
+					$.ajax({
 						type: "POST",
 						url: "query.php",
 						data: {'phone': phone, 
 							   'logOpt':'mobile',
 							   'form-name':'addMobileUser'
-							}
+							},
+						success: function(msg) {
+							
+							
+							$(phoneButton).text("30").attr("disabled", 'disabled');
+					        var phoneTimer = window.setInterval(function() {
+						        var timeCounter = $(phoneButton).html();
+						        var updateTime = eval(timeCounter)- eval(1);
+					            $(phoneButton).html(updateTime);
+					
+					            if(updateTime <= 0){
+					                clearInterval(phoneTimer);
+					                $(phoneButton).removeAttr('disabled').html(phoneButtonOldHTML);
+					            }
+					        }, 1000);
 
-						});
+							
+						},
+						fail: function() {
+							$(phoneButton).removeAttr('disabled').html(phoneButtonOldHTML);
+							failNotification();
+						}
+					});
 
 
 				} else {
 				 addNotification("Смс с кодом не отправлено, попробуйте еще раз!", 'danger');
+				 $(phoneButton).removeAttr('disabled').html(phoneButtonOldHTML);
 				}
 			$("#phone-pass-group").removeClass("hidden");
 			},
 			fail: failNotification
 		});
-
- 		
- 		var phoneButton = $("#phoneButton");
- 		var phoneButtonOldHTML = $(phoneButton).html();
-		$(phoneButton).text("30").attr("disabled", 'disabled');
-        var phoneTimer = window.setInterval(function() {
-	        var timeCounter = $(phoneButton).html();
-	        var updateTime = eval(timeCounter)- eval(1);
-            $(phoneButton).html(updateTime);
-
-            if(updateTime <= 0){
-                clearInterval(phoneTimer);
-                $(phoneButton).removeAttr('disabled').html(phoneButtonOldHTML);
-            }
-        }, 1000);
 	
 	});
 
