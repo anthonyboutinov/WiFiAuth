@@ -1038,22 +1038,20 @@
 		{
 			$this->sanitize($phone);
 			$this->sanitize($log_opt);
-			
-			$phone = '+'.$phone;
-			
+				
 			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME="'.$log_opt.'"';
 			$log_opt = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
-			echo $log_opt;
 			
             $sql  = 'select ID_USER from CM$USER where NAME="'.$phone.'"';
-            $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не выдавать ошибку, если нет результатов в запросе*/);
+            $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $phone, true /*не выдавать ошибку, если нет результатов в запросе*/);
             if($result == null) {
             	$sql = 'insert into CM$USER 
             	         (ID_LOGIN_OPTION,LINK,NAME,ID_DB_USER_MODIFIED)  values('
             		     .$log_opt.',"'
-            		     .'tel:'.$phone.',"'
+            		     .'tel:'.$phone.'","'
                          .$phone.'",'
                          .$this->id_db_user.')';
+
             	$this->getQueryResultWithErrorNoticing($sql);
             	$sql = 'select ID_USER from CM$USER order by ID_USER desc limit 0, 1';
             	$result = $this->getQueryFirstRowResultWithErrorNoticing($sql);
@@ -1061,7 +1059,6 @@
         	$id = $result['ID_USER']; // либо из result перед if'ом, либо из result внутри него
 
             $sql = 'insert into SP$LOGIN_ACT (ID_DB_USER,ID_USER) values ('.$this->id_db_user.', '.$id.')';
-//             echo $sql.' ';
             $this->getQueryResultWithErrorNoticing($sql);
 		}
 		

@@ -88,7 +88,7 @@
 		window.close();
 		</script>
 		<?php
-	} else 	if (isset($_POST['phone']) && isset($_POST['text'])) {
+	} else if (isset($_POST['phone']) && isset($_POST['text'])) {
 		$phone = '7'.$_POST['phone'];
 		$text = $_POST['text'];
 	  		if( $curl = curl_init() ) {

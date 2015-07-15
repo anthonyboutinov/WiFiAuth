@@ -219,7 +219,7 @@ $(document).ready(function(){
 				},
 			success: function(msg){
 				
-				if (msg.lastIndexOf('100',0) === 0) {
+				if (msg.lastIndexOf('100',0) === 0) {    
 
 					addNotification('Смс с кодом отправлено на ваш телефон','success');
 
@@ -231,7 +231,6 @@ $(document).ready(function(){
 							   'form-name':'addMobileUser'
 							},
 						success: function(msg) {
-							
 							
 							$(phoneButton).text("30").attr("disabled", 'disabled');
 					        var phoneTimer = window.setInterval(function() {
@@ -254,7 +253,7 @@ $(document).ready(function(){
 					});
 
 
-				} else {
+				 } else {
 				 addNotification("Смс с кодом не отправлено, попробуйте еще раз!", 'danger');
 				 $(phoneButton).removeAttr('disabled').html(phoneButtonOldHTML);
 				}
@@ -353,17 +352,20 @@ $(document).ready(function(){
    		var y = document.body.clientHeight; 
 		var x = document.body.clientWidth; 
 		var url = 'https://oauth.vk.com/authorize?'+
-					'client_id=4933055'+
+					'client_id=4956935'+
 					'&scope=73729'+
 					'&redirect_uri=https://kazanwifi.ru/query.php'+
 					'&response_type=code'+
 					'&v=5.34';
-		var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
-		var newWin = window.open(url,'vk',params);
-		newWin.resizeTo(700,400);
-		newWin.moveTo(((x-720)/2),((y-390)/2));
-		newWin.focus();
-		newWin.blur();
+
+		window.open(url);
+		// var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
+		// var newWin = window.open(url,'vk',params);
+		// newWin.resizeTo(700,400);
+		// newWin.moveTo(((x-720)/2),((y-390)/2));
+		// newWin.focus();
+		// newWin.blur();
+		window.onfocus = function(){
 		VK.Api.call('wall.get',{
 						count:1,
 						filter:'owner'
@@ -378,6 +380,7 @@ $(document).ready(function(){
 						}
 						}
 					);
+	}
 	}
 
 	$("#VKLoginButton").click(newVKPosting); //  vkLoginInput
