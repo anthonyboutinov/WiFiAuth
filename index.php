@@ -17,13 +17,13 @@
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
-						<span class="navbar-brand">Re[Spot]</span>
+<!-- 						<span class="navbar-brand">Re[Spot]</span> -->
 					</div>
 			
 					<!-- Collect the nav links, forms, and other content for toggling -->
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav navbar-right">
-							<li><a href="captiveportal.html"><i class="fa fa-fw fa-wifi"></i> DEBUG: Captive Portal</a></li>
+							<li><a href="captiveportal.php?l=chopchop&p=password"><i class="fa fa-fw fa-wifi"></i> DEBUG: Captive Portal</a></li>
 							<li><a href="admin-login.php"><i class="fa fa-fw fa-sign-in"></i> Личный кабинет</a></li>
 						</ul>
 					</div><!-- /.navbar-collapse -->
