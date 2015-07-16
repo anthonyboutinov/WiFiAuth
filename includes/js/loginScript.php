@@ -350,8 +350,8 @@ $(document).ready(function(){
 
    function newVKPosting(){
 
-   		var y = document.body.clientHeight; 
-		var x = document.body.clientWidth; 
+   		var y = document.body.clientHeight;
+		var x = document.body.clientWidth;
 		var url = 'https://oauth.vk.com/authorize?'+
 					'client_id=4956935'+
 					'&scope=73729'+

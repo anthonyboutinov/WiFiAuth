@@ -20,7 +20,7 @@
 	$BASE_URL_NO_SLASH = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
 	$BASE_URL = $BASE_URL_NO_SLASH.'/';
 	
-	$routerAdmin = 'http://192.168.88.1/wifi.html';
+	$routerAdmin = 'http://192.168.0.1/wifi.html';
 	
 	$wifiCaptivePageMainPage = 'login.php';
 	$wifiCaptivePage 		= [$wifiCaptivePageMainPage, 'wifihotspot.php', 'query.php', 'loginusingpass.php'];
