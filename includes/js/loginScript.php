@@ -361,8 +361,9 @@ $(document).ready(function(){
 					'&v=5.34';
 		var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
 
-		var lastFired = new Date().getTime();
+		$("body").append('<div class="notification bg-info" style="font-size: 30px;"><b>Вернитесь на эту страницу</b>, чтобы получить доступ в Интернет.<a class="pull-right" href="#" onclick="$(this).parent().remove();"><i class="fa fa-times"></i><span class="sr-only">Закрыть уведомление</span></a></div>');
 
+		var lastFired = new Date().getTime();
 		setInterval(function() {
 		    now = new Date().getTime();
 		    if(now - lastFired > 5000) {//if it's been more than 5 seconds
@@ -370,6 +371,7 @@ $(document).ready(function(){
 		    }
 		    lastFired = now;
 		}, 1000);
+
 
 		var newWin = window.open(url,'vk',params);
 		newWin.resizeTo(700,400);
@@ -403,22 +405,18 @@ $(document).ready(function(){
 			url: "query.php",
 			data:{ 
 				'form-name':'VKuser',
-				 'VKuserId':VKuser,
-
+				 'VKuserId':VKuser
 			},
 			success: function(msg){
-				addNotification(msg, 'info');
 				var obj = jQuery.parseJSON(msg);
 				try{
-				if(obj.response[1].attachment.link.url=='<?php echo $linkVK;?>'){
-
-					 location="<?php echo $routerAdmin; ?>";
-				} else {
-					addNotification('Для авторизации необходимо разместить пост!', 'warning');
-					isChecked = false;
-				}
-			} catch(err){
-
+					if(obj.response[1].attachment.link.url=='<?php echo $linkVK;?>'){
+						 location="<?php echo $routerAdmin; ?>";
+					} else {
+						addNotification('Для авторизации необходимо разместить пост!', 'warning');
+						isChecked = false;
+					}
+				} catch(err){
 					addNotification('Для авторизации необходимо разместить пост!', 'warning');
 					isChecked = false;
 				}
