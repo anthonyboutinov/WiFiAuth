@@ -17,13 +17,6 @@
   position: relative;
 }
 body {
-  /*
-	background-image: url('../../images/background.jpg');
-	background-position:  center center;
-	background-attachment: fixed;
-	background-repeat: no-repeat;
-	background-size: cover;
-*/
   background-color: #345972;
   font-family: Fontatigo, 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
   -webkit-font-smoothing: antialiased;

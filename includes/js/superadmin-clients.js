@@ -174,7 +174,7 @@ function enablePasswordGenerationCapabilities() {
 	var generateLoginButton = $("#generate-login");
 	
 	function genRouterToken() {
-		$("#router-token").val($.password(16,true));
+		$("#router-token").val($.password(16,false));
 	}
 	$(generateTokenButton).click(genRouterToken);
 	genRouterToken();
