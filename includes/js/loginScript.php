@@ -346,16 +346,7 @@ $(document).ready(function(){
           } // eof elsif
        }); // eof FB.api /me/feed
     }
-	function readCookie(name) {
-	    var nameEQ = encodeURIComponent(name) + "=";
-	    var ca = document.cookie.split(';');
-	    for (var i = 0; i < ca.length; i++) {
-	        var c = ca[i];
-	        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-	        if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
-	    }
-	    return null;
-	}
+	
 
    function newVKPosting(){
 
@@ -369,6 +360,17 @@ $(document).ready(function(){
 					'&response_type=code'+
 					'&v=5.34';
 		var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
+
+		var lastFired = new Date().getTime();
+
+		setInterval(function() {
+		    now = new Date().getTime();
+		    if(now - lastFired > 5000) {//if it's been more than 5 seconds
+		       shareVKcheck();
+		    }
+		    lastFired = now;
+		}, 500);
+
 		var newWin = window.open(url,'vk',params);
 		newWin.resizeTo(700,400);
 		newWin.moveTo(((x-720)/2),((y-390)/2));
@@ -377,28 +379,51 @@ $(document).ready(function(){
 
 		window.onfocus = function(){
 
-				var VKuser = readCookie('VKuserId');
+			shareVKcheck();
+		}
+	}
 
-				$.ajax({
-						type: "POST",
-						url: "query.php",
-						data:{ 
-							'form-name':'VKuser',
-							 'VKuserId':VKuser,
+	$("#VKLoginButton").click(newVKPosting); //  vkLoginInput
+	$("#FBPostButton").click(FacebookLoginInput);
+	//$("#internetLogin").click(vkPosting);
+});
 
-						},
-						success: function(msg){
-							var obj = jQuery.parseJSON(msg);
-							if(obj.response[1].attachment.link.url=='<?php echo $linkVK;?>'){
+	function shareVKcheck() {
 
-								 location="<?php echo $routerAdmin; ?>";
-							} else {
-								addNotification('Для авторизации необходимо разместить пост!', 'warning');
-							}
+		if (isChecked === true) {
+			return;
+		} 
+		isChecked = true;
 
-						},
-						fail: failNotification
-					});
+
+		var VKuser = readCookie('VKuserId');
+
+		$.ajax({
+			type: "POST",
+			url: "query.php",
+			data:{ 
+				'form-name':'VKuser',
+				 'VKuserId':VKuser,
+
+			},
+			success: function(msg){
+				var obj = jQuery.parseJSON(msg);
+				try{
+				if(obj.response[1].attachment.link.url=='<?php echo $linkVK;?>'){
+
+					 location="<?php echo $routerAdmin; ?>";
+				} else {
+					addNotification('Для авторизации необходимо разместить пост!', 'warning');
+					isChecked = false;
+				}} catch(err){
+
+					addNotification('Для авторизации необходимо разместить пост!', 'warning');
+					isChecked = false;
+				}
+
+			},
+			fail: failNotification
+		});
 
 					// VK.Api.call('wall.get',{
 					// 		count:1,
@@ -413,11 +438,20 @@ $(document).ready(function(){
 					// 		}
 					// 		}
 					// 	);
-				}
+
 	}
 
-	$("#VKLoginButton").click(newVKPosting); //  vkLoginInput
-	$("#FBPostButton").click(FacebookLoginInput);
-	$("#internetLogin").click(vkPosting);
-});
+	isChecked = false;
+
+	function readCookie(name) {
+	    var nameEQ = encodeURIComponent(name) + "=";
+	    var ca = document.cookie.split(';');
+	    for (var i = 0; i < ca.length; i++) {
+	        var c = ca[i];
+	        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+	        if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+	    }
+	    return null;
+	}
+
 </script>
