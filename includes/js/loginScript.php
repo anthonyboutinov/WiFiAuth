@@ -1,5 +1,6 @@
 <?php
-	
+	include '../core/session.php';
+
 	$post = $database->getValuesForParentByShortName('POST');
 	
 	// Заголовок поста
@@ -430,16 +431,3 @@ $(document).ready(function(){
 	$("#internetLogin").click(vkPosting);
 });
 </script>
-<?php
-if(isset($_POST['form-name']))
-{
-	if($_POST['form-name']=='userId'){
-		$userId = $_POST['user_id']
-		?>
-		<script type="text/javascript">
-			shareVKCheck(<?php echo $userId; ?>);
-		</script>
-		<?php
-	}
-}
-?>

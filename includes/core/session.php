@@ -27,7 +27,6 @@
 	$adminLoginPage 		= 'admin-login.php';
 	$adminMainPage 			= 'admin-dashboard.php';
 	$superadminMainPage 	= 'superadmin-dashboard.php';
-	
 
 	// Если находится на открытой странице
 	if (isset($current_page_is_not_protected) && $current_page_is_not_protected) {
