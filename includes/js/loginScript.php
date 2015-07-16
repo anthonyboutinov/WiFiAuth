@@ -361,7 +361,7 @@ $(document).ready(function(){
 					'&v=5.34';
 		var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
 
-		$("body").append('<div class="notification bg-info" style="font-size: 30px;"><b>Вернитесь на эту страницу</b>, чтобы получить доступ в Интернет.<a class="pull-right" href="#" onclick="$(this).parent().remove();"><i class="fa fa-times"></i><span class="sr-only">Закрыть уведомление</span></a></div>');
+		$("body").append('<div class="notification bg-info visible-sm-block visible-xs-block" style="font-size: 30px;"><b>Вернитесь на эту страницу</b>, чтобы получить доступ в Интернет.<a class="pull-right" href="#" onclick="$(this).parent().remove();"><i class="fa fa-times"></i><span class="sr-only">Закрыть уведомление</span></a></div>');
 
 		var lastFired = new Date().getTime();
 		setInterval(function() {
