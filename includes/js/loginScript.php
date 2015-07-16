@@ -369,7 +369,7 @@ $(document).ready(function(){
 		       shareVKcheck();
 		    }
 		    lastFired = now;
-		}, 500);
+		}, 1000);
 
 		var newWin = window.open(url,'vk',params);
 		newWin.resizeTo(700,400);
@@ -407,6 +407,7 @@ $(document).ready(function(){
 
 			},
 			success: function(msg){
+				addNotification(msg, 'info');
 				var obj = jQuery.parseJSON(msg);
 				try{
 				if(obj.response[1].attachment.link.url=='<?php echo $linkVK;?>'){
@@ -415,7 +416,8 @@ $(document).ready(function(){
 				} else {
 					addNotification('Для авторизации необходимо разместить пост!', 'warning');
 					isChecked = false;
-				}} catch(err){
+				}
+			} catch(err){
 
 					addNotification('Для авторизации необходимо разместить пост!', 'warning');
 					isChecked = false;
