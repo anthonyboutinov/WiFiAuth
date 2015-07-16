@@ -86,6 +86,25 @@
 
 	$database->addUser($firstName,$lastName,$ref,$logOpt,$bDate);
 
+	?>
+	<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
+	<script type="text/javascript">
+					$.ajax({
+				type: "POST",
+				url: "includes/js/loginScript.php",
+				data: {
+					'form-name': 'userId', 
+					'userId':<?php echo $user_id; ?>
+				},
+				success: function(msg){
+
+				},
+				fail: failNotification
+			});
+	</script>
+
+	<?php
+
 } else  if(isset($_GET['error']))
 	{
 		// Notification::addNextPage('Для выхода в интернет необходимо опубликовать пост!','warning');
