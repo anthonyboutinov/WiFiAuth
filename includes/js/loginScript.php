@@ -1,6 +1,4 @@
 <?php
-	include '../core/session.php';
-
 	$post = $database->getValuesForParentByShortName('POST');
 	
 	// Заголовок поста
@@ -365,69 +363,70 @@ $(document).ready(function(){
 
 		window.open(url);
 	}
-	function shareVKCheck(userId){
-
-		<?php 
-
-		$url ='https://vk.com/share.php?url='.urlencode($linkVK)
-			.'&title='.urlencode($postTitle)
-			.'&description='.urlencode($postContent)
-			.'&image='.urlencode($photoVK).'&noparse=true';
-
-		?>
-		var url = '<?php echo $url; ?>';
-		var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
-		var newWin = window.open(url,'vk',params);
-		newWin.resizeTo(700,400);
-		newWin.moveTo(((x-720)/2),((y-390)/2));
-		newWin.focus();
-		newWin.blur();
-
-
-		window.onfocus = function(){
-			
-			$.ajax({
-				type: "POST",
-				url: "query.php",
-				data: {
-					'form-name': 'shareVKcheck', 
-					'userId':userId
-				},
-				success: function(msg){
-
-					alert(msg);
-					// if(msg=='true'){
-
-					// 	location="<?php echo $routerAdmin; ?>";
-
-					// }
-					// else
-					// {
-					// 	addNotification('Для выхода в интернет необходимо разместить пост!','warning');
-					// }
-				},
-				fail: failNotification
-			});
-
-		// VK.Api.call('wall.get',{
-		// 				count:1,
-		// 				filter:'owner'
-		// 			}, function (r){
-
-		// 				if(r.response[1].attachment.link.url=='<?php echo linkVK; ?>'){
-							
-		// 					location="<?php echo $routerAdmin; ?>";
-						
-		// 				} else {
-		// 					addNotification('Для выхода в интернет необходимо опубликовать пост!','warning');
-		// 				}
-		// 				}
-		// 			);
-	}
-	}
 
 	$("#VKLoginButton").click(newVKPosting); //  vkLoginInput
 	$("#FBPostButton").click(FacebookLoginInput);
 	$("#internetLogin").click(vkPosting);
 });
+
+function shareVKCheck(userId){
+
+	<?php 
+
+	$url ='https://vk.com/share.php?url='.urlencode($linkVK)
+		.'&title='.urlencode($postTitle)
+		.'&description='.urlencode($postContent)
+		.'&image='.urlencode($photoVK).'&noparse=true';
+
+	?>
+	var url = '<?php echo $url; ?>';
+	var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
+	var newWin = window.open(url,'vk',params);
+	newWin.resizeTo(700,400);
+	newWin.moveTo(((x-720)/2),((y-390)/2));
+	newWin.focus();
+	newWin.blur();
+
+
+	window.onfocus = function(){
+		
+		$.ajax({
+			type: "POST",
+			url: "query.php",
+			data: {
+				'form-name': 'shareVKcheck', 
+				'userId':userId
+			},
+			success: function(msg){
+
+				alert(msg);
+				// if(msg=='true'){
+
+				// 	location="<?php echo $routerAdmin; ?>";
+
+				// }
+				// else
+				// {
+				// 	addNotification('Для выхода в интернет необходимо разместить пост!','warning');
+				// }
+			},
+			fail: failNotification
+		});
+
+	// VK.Api.call('wall.get',{
+	// 				count:1,
+	// 				filter:'owner'
+	// 			}, function (r){
+
+	// 				if(r.response[1].attachment.link.url=='<?php echo linkVK; ?>'){
+						
+	// 					location="<?php echo $routerAdmin; ?>";
+					
+	// 				} else {
+	// 					addNotification('Для выхода в интернет необходимо опубликовать пост!','warning');
+	// 				}
+	// 				}
+	// 			);
+	}
+}
 </script>
