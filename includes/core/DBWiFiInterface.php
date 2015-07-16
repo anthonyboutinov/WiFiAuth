@@ -1518,7 +1518,7 @@
 				die('DEBUG Error: Передан неверный параметр в setActiveDBUser');
 			}
 
-			$sql = 'update  CM$DB_USER set IS_ACTIVE="'.$active.'" where ID_DB_USER='.$id_db_user;
+			$sql = 'update  CM$DB_USER set IS_ACTIVE="'.$active.'", ID_DB_USER_MODIFIED='.$this->id_db_user_editor.' where ID_DB_USER='.$id_db_user;
 			$this->getQueryResultWithErrorNoticing($sql);
 			
 			// Если активирован

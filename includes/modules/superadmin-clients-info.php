@@ -23,10 +23,12 @@
 			<label 	class="col-sm-6 control-label">Email</label>
 			<p 		class="col-sm-6 form-control-static"><a href="mailto:<?=$userInfo['EMAIL'];?>"><?=$userInfo['EMAIL'];?></a></p>
 		</div>
+<!--
 		<div class="form-group">
 			<label 	class="col-sm-6 control-label">Комментарий</label>
-			<p 		class="col-sm-6 form-control-static"><?=$userInfo['COMMENT'];?></p>
+			<p 		class="col-sm-6 form-control-static">< ? =$userInfo['COMMENT'];?></p>
 		</div>
+-->
 	</div>
 	
 </div>

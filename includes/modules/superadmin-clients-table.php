@@ -86,6 +86,10 @@
 					</td>
 				<?php }
 					
+			} else { 
+				echo '<td class="text-right">';
+				echo '<span class="hide-on-collapsed-view super-small">'.($row['IS_ACTIVE'] =='T' ? 'Вкл.' : 'Выкл.').' </span><i class="fa fa-'.($row['IS_ACTIVE'] =='T' ? 'circle' : 'circle-thin').'" ></i>';
+				echo '</td>';
 			} ?>
 		</tr>
 <?php 
