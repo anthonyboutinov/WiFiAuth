@@ -48,6 +48,17 @@
 
 			echo $json;
 
+	} else if($_POST['form-name']=='VKuser') {
+
+			$user_id = $_POST['VKuserId'];
+			$url = 'https://api.vk.com/method/wall.get?owner_id='.$user_id.'&count=1&filter=owner';
+			if( $curl = curl_init() ) {
+			curl_setopt($curl, CURLOPT_URL, $url);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+			$json = curl_exec($curl);
+			curl_close($curl);
+			echo $json;
+		}
 	}
 
 
@@ -71,6 +82,8 @@
 		$user_id = $response->{'user_id'};
 	$url = 'https://api.vk.com/method/users.get?user_id='.$user_id.'&fields=bdate,domain&v=5.34&access_token='.$access_token;
 
+	setcookie('VKuserId',$user_id,time()+300);
+
 	if( $curl = curl_init() ) {
 			curl_setopt($curl, CURLOPT_URL, $url);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
@@ -86,24 +99,12 @@
 
 	$database->addUser($firstName,$lastName,$ref,$logOpt,$bDate);
 
-	?>
-	<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>
-	<script type="text/javascript">
-					$.ajax({
-				type: "POST",
-				url: "includes/js/loginScript.php",
-				data: {
-					'form-name': 'userId', 
-					'userId':<?php echo $user_id; ?>
-				},
-				success: function(msg){
+		$url ='https://vk.com/share.php?url='.urlencode($linkVK)
+		.'&title='.urlencode($postTitle)
+		.'&description='.urlencode($postContent)
+		.'&image='.urlencode($photoVK).'&noparse=true';
 
-				},
-				fail: failNotification
-			});
-	</script>
-
-	<?php
+		header("Location:$url");
 
 } else  if(isset($_GET['error']))
 	{

@@ -147,20 +147,5 @@
 		<script src="//vk.com/js/api/openapi.js"></script>
 		<script src="//connect.facebook.net/en_US/sdk.js"></script>
 		<?php include "includes/js/loginScript.php"; ?>
-		<?php
-		if(isset($_GET['form-name']))
-		{
-			if($_GET['form-name']=='userId'){
-				$userId = $_GET['user_id'];
-				?>
-				<script type="text/javascript">
-					$(document).ready(function(){
-						shareVKCheck(<?php echo $userId; ?>);
-					});
-				</script>
-				<?php
-			}
-		}
-		?>
 		</body>
 </html>

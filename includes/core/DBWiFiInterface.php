@@ -1048,7 +1048,7 @@
             	$sql = 'insert into CM$USER 
             	         (ID_LOGIN_OPTION,LINK,NAME,ID_DB_USER_MODIFIED)  values('
             		     .$log_opt.',"'
-            		     .'tel:'.$phone.'","'
+            		     .'tel:+'.$phone.'","'
                          .$phone.'",'
                          .$this->id_db_user.')';
 

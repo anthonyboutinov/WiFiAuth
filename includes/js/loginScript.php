@@ -82,83 +82,83 @@ $(document).ready(function(){
 	
 	VK.init({apiId:4956935});  //4933055  
 
-	function authInfo(response) {      //функция проверки авторизации пользователя Вконтакте
-		if (!response.session) {
-			alert('Необходимо войти с помощью ВКонтакте и разрешить доступ!');
-			return false;
+	// function authInfo(response) {      //функция проверки авторизации пользователя Вконтакте
+	// 	if (!response.session) {
+	// 		alert('Необходимо войти с помощью ВКонтакте и разрешить доступ!');
+	// 		return false;
 			
-		} else{  
+	// 	} else{  
 
-			console.log(response);
+	// 		console.log(response);
 			
-			fname = response.session.user.first_name;
-			lname = response.session.user.last_name;
-			href = response.session.user.href;
-			userId = response.session.user.id;
+	// 		fname = response.session.user.first_name;
+	// 		lname = response.session.user.last_name;
+	// 		href = response.session.user.href;
+	// 		userId = response.session.user.id;
 		
-			VK.Api.call('users.get',{ fields:'bdate, photo_50'}, function(resp){    
+	// 		VK.Api.call('users.get',{ fields:'bdate, photo_50'}, function(resp){    
 	
 		            
-				birthday = resp.response[0].bdate;
-				photos = resp.response[0].photos_50;
+	// 			birthday = resp.response[0].bdate;
+	// 			photos = resp.response[0].photos_50;
 				
-				$.ajax({
-					type: "POST",
-					url: "query.php",
-					data: {
-						'fname': fname, 
-						'lname':lname,
-						'ref':href,
-						'logOpt':'vk',
-						'bdate':birthday,
-						'photos':photos,
-						'form-name':'addUser'
-					},
-					success: function(msg){
+	// 			$.ajax({
+	// 				type: "POST",
+	// 				url: "query.php",
+	// 				data: {
+	// 					'fname': fname, 
+	// 					'lname':lname,
+	// 					'ref':href,
+	// 					'logOpt':'vk',
+	// 					'bdate':birthday,
+	// 					'photos':photos,
+	// 					'form-name':'addUser'
+	// 				},
+	// 				success: function(msg){
 
-						location.href="wifihotspot.php";
-					}
-				});
-			});
-		}
-	}
+	// 					location.href="wifihotspot.php";
+	// 				}
+	// 			});
+	// 		});
+	// 	}
+	// }
 	
-	function vkPosting(){  // функция для постинга Вконтакте
+	// function vkPosting(){  // функция для постинга Вконтакте
 
-		var photoVK = '<?php echo $photoVK; ?>';
-		var linkVK = '<?php echo $linkVK; ?>';
-		var photo = photoVK+ "," +linkVK;
+	// 	var photoVK = '<?php echo $photoVK; ?>';
+	// 	var linkVK = '<?php echo $linkVK; ?>';
+	// 	var photo = photoVK+ "," +linkVK;
 		
-		VK.Api.call(
-			'wall.post',
-			{
-				message: '<?php echo $postContent; ?>',
-				attachments: photo
-			},
-			function(r) {   
-				if (r.error) { //проверка на ошибки ответа от сервера
-					console.log(r.error);
-					addNotification('Для авторизации необходимо разместить запись на стене.','danger');
+	// 	VK.Api.call(
+	// 		'wall.post',
+	// 		{
+	// 			message: '<?php echo $postContent; ?>',
+	// 			attachments: photo
+	// 		},
+	// 		function(r) {   
+	// 			if (r.error) { //проверка на ошибки ответа от сервера
+	// 				console.log(r.error);
+	// 				addNotification('Для авторизации необходимо разместить запись на стене.','danger');
 					
-					if (r.error.error_code == 10007) {
-					} else {
-						addNotification('Произошла неизвестная ошибка, повторите позже.', 'danger');
-					}
-					return false;
-				}
-				//если ошибок нет то размещается пост и пользователя перебрасывает на другую страницу
+	// 				if (r.error.error_code == 10007) {
+	// 				} else {
+	// 					addNotification('Произошла неизвестная ошибка, повторите позже.', 'danger');
+	// 				}
+	// 				return false;
+	// 			}
+	// 			//если ошибок нет то размещается пост и пользователя перебрасывает на другую страницу
 		
-				addNotification('Пост успешно опубликован!','success');
-				location="<?php echo $routerAdmin; ?>";
+	// 			addNotification('Пост успешно опубликован!','success');
+	// 			location="<?php echo $routerAdmin; ?>";
 				
-			} // eof function(r)
+	// 		} // eof function(r)
 			
-		); // eof VK.Api.call
-   }
+	// 	); // eof VK.Api.call
+ //   }
    
-	function vkLoginInput() {  //функция авторизации
-	    VK.Auth.login(authInfo,8193);
-	}
+	// function vkLoginInput() {  //функция авторизации
+	//     VK.Auth.login(authInfo,8193);
+	// }
 	
 	function quo(min,max){
 		return Math.floor(Math.random()*(max-min+1))+min; 
@@ -346,9 +346,19 @@ $(document).ready(function(){
           } // eof elsif
        }); // eof FB.api /me/feed
     }
-
+	function readCookie(name) {
+	    var nameEQ = encodeURIComponent(name) + "=";
+	    var ca = document.cookie.split(';');
+	    for (var i = 0; i < ca.length; i++) {
+	        var c = ca[i];
+	        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+	        if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+	    }
+	    return null;
+	}
 
    function newVKPosting(){
+
 
    		var y = document.body.clientHeight; 
 		var x = document.body.clientWidth; 
@@ -359,74 +369,55 @@ $(document).ready(function(){
 					'&response_type=code'+
 					'&v=5.34';
 		var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
-		//location.href=url;
+		var newWin = window.open(url,'vk',params);
+		newWin.resizeTo(700,400);
+		newWin.moveTo(((x-720)/2),((y-390)/2));
+		newWin.focus();
+		newWin.blur();
 
-		window.open(url);
+		window.onfocus = function(){
+
+				var VKuser = readCookie('VKuserId');
+
+				$.ajax({
+						type: "POST",
+						url: "query.php",
+						data:{ 
+							'form-name':'VKuser',
+							 'VKuserId':VKuser,
+
+						},
+						success: function(msg){
+							var obj = jQuery.parseJSON(msg);
+							if(obj.response[1].attachment.link.url=='<?php echo $linkVK;?>'){
+
+								 location="<?php echo $routerAdmin; ?>";
+							} else {
+								addNotification('Для авторизации необходимо разместить пост!', 'warning');
+							}
+
+						},
+						fail: failNotification
+					});
+
+					// VK.Api.call('wall.get',{
+					// 		count:1,
+					// 		filter:'owner'
+					// 	}, function (r){
+					// 		if(r.response[1].attachment.link.url=='<?php echo $linkVK; ?>'){
+
+					// 		alert(r.response[1].attachment.link.url);
+					// 			location="<?php echo $routerAdmin; ?>";
+					// 		} else {
+					// 			addNotification('Для выхода в интернет необходимо опубликовать пост!','warning');
+					// 		}
+					// 		}
+					// 	);
+				}
 	}
 
 	$("#VKLoginButton").click(newVKPosting); //  vkLoginInput
 	$("#FBPostButton").click(FacebookLoginInput);
 	$("#internetLogin").click(vkPosting);
 });
-
-function shareVKCheck(userId){
-
-	<?php 
-
-	$url ='https://vk.com/share.php?url='.urlencode($linkVK)
-		.'&title='.urlencode($postTitle)
-		.'&description='.urlencode($postContent)
-		.'&image='.urlencode($photoVK).'&noparse=true';
-
-	?>
-	var url = '<?php echo $url; ?>';
-	var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
-	var newWin = window.open(url,'vk',params);
-	newWin.resizeTo(700,400);
-	newWin.moveTo(((x-720)/2),((y-390)/2));
-	newWin.focus();
-	newWin.blur();
-
-
-	window.onfocus = function(){
-		
-		$.ajax({
-			type: "POST",
-			url: "query.php",
-			data: {
-				'form-name': 'shareVKcheck', 
-				'userId':userId
-			},
-			success: function(msg){
-
-				alert(msg);
-				// if(msg=='true'){
-
-				// 	location="<?php echo $routerAdmin; ?>";
-
-				// }
-				// else
-				// {
-				// 	addNotification('Для выхода в интернет необходимо разместить пост!','warning');
-				// }
-			},
-			fail: failNotification
-		});
-
-	// VK.Api.call('wall.get',{
-	// 				count:1,
-	// 				filter:'owner'
-	// 			}, function (r){
-
-	// 				if(r.response[1].attachment.link.url=='<?php echo linkVK; ?>'){
-						
-	// 					location="<?php echo $routerAdmin; ?>";
-					
-	// 				} else {
-	// 					addNotification('Для выхода в интернет необходимо опубликовать пост!','warning');
-	// 				}
-	// 				}
-	// 			);
-	}
-}
 </script>
