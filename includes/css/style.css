@@ -241,6 +241,9 @@ div.complex-h1 .options i.fa {
 div.complex-h1 .options {
   top: 24%;
 }
+.index-page .glass-panel .glass-panel {
+  padding: 100px 0px;
+}
 .index-page h1 {
   text-align: center;
   font-size: 500%;
@@ -1354,6 +1357,15 @@ ul.affix-top > li > a {
   }
 }
 @media screen and (max-width: 767px) {
+  .index-page .glass-panel .glass-panel {
+    padding: 50px 0px;
+  }
+  .index-page h1 {
+    font-size: 300%;
+  }
+  .index-page h2 {
+    font-size: 18px;
+  }
   body.admin-page-login .login-options {
     padding-left: 5%;
     padding-right: 5%;

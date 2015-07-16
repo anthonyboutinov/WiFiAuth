@@ -23,13 +23,14 @@
 					<!-- Collect the nav links, forms, and other content for toggling -->
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav navbar-right">
+							<li><a href="captiveportal.html"><i class="fa fa-fw fa-wifi"></i> DEBUG: Captive Portal</a></li>
 							<li><a href="admin-login.php"><i class="fa fa-fw fa-sign-in"></i> Личный кабинет</a></li>
 						</ul>
 					</div><!-- /.navbar-collapse -->
 				</div><!-- /.container-fluid -->
 			</nav>
 
-			<div class="glass-panel" style="padding: 100px;">
+			<div class="glass-panel">
 			<h1>
 				<i class="fa fa-wifi"></i> Re[Spot]
 			</h1>
@@ -37,7 +38,7 @@
 				Скоро здесь будет сайт
 			</h2>
 			<div class="page-wrapper">
-				
+				<!-- Текст здесь -->
 			</div>
 		</div>
 		<?php include 'includes/base/jqueryAndBootstrapScripts.html'; ?>

@@ -251,6 +251,10 @@ div.complex-h1 .options {
 
 .index-page {
 	
+	& .glass-panel .glass-panel {
+		padding: 100px 0px;
+	}
+	
 	& h1 {
 		text-align: center;
 		font-size: 500%;
@@ -1523,10 +1527,23 @@ ul.affix, ul.affix-top {
 	input[type='number'] {
 		width: 60%;
 	}
-	
 }
 
 @media screen and (max-width: 767px) {
+	
+		.index-page {
+			
+		& .glass-panel .glass-panel {
+			padding: 50px 0px;
+		}
+			
+		& h1 {
+			font-size: 300%;
+		}
+		& h2 {
+			font-size: 18px;
+		}
+	}
 	
 	body.admin-page-login .login-options {
 		padding-left: 5%;
