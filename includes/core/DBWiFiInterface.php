@@ -1272,11 +1272,11 @@
 		public function getClients($order_by = 'NAME') {
 			
 			if ($order_by == 'ID_DB_USER') {
-				$order_by = 'B.ID_DB_USER ASC';
+				$order_by = 'D.ID_DB_USER ASC';
 			} else if ($order_by == 'TRAFFIC') {
-				$order_by = 'LOGIN_ACT_COUNT_MONTH DESC';
+				$order_by = 'D.IS_ACTIVE DESC, LOGIN_ACT_COUNT_MONTH DESC';
 			} else {
-				$order_by = 'B.VALUE ASC';
+				$order_by = 'D.IS_ACTIVE DESC, B.VALUE ASC';
 			}
 			
 			$sql =
