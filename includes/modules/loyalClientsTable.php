@@ -28,9 +28,10 @@
 <div class="page-wrapper">
 
 	<?php if ($drawBoth) { 	?><table class="table table-head-row text-center"><?php } 
-		  else { 			?><table class="table text-right"><?php } ?>
+		  else { 			?><table class="table text-right contains-fas"><?php } ?>
 		<?php if ($drawFullContent) { ?><tr class="head-row<?php if ($drawOnlyOne) { echo " text-center"; } ?>">
 			<td id="loyal-clients-table-head-part-col-1">№</td>
+			<td><span class="sr-only">Логин</span></td>
 			<td id="loyal-clients-table-head-part-col-2">Клиент</td>
 			<td id="loyal-clients-table-head-part-col-3">Сессии</td>
 		</tr>
@@ -38,7 +39,7 @@
 		if ($drawBoth) { 	?>
 	</table>
 	<div class="scrollable gradient" id="loyal-clients-scrollable">
-		<table class="table text-right">
+		<table class="table text-right contains-fas">
 	<?php } 
 		
 		if ($topUsers->num_rows > 0) {
@@ -48,6 +49,10 @@
 	?>
 			<tr>
 				<?php if ($drawFullContent) { ?><td id="loyal-clients-table-scrollable-part-col-1"><?=$i;?></td><?php } ?>
+				<td class="text-center">
+					<span class="fa-stack"><i class="fa fa-<?=$row['LOGIN_OPTION_SHORT_NAME'];?>"></i></span>
+					<span class="sr-only"><?=$row['LOGIN_OPTION_NAME'];?></span>
+				</td>
 				<td id="loyal-clients-table-scrollable-part-col-2" class="text-left"><a href="<?=$row['LINK'];?>" target="blank"><?=$row['NAME'];?></a></td>
 				<td id="loyal-clients-table-scrollable-part-col-3"><?=$row['LOGIN_COUNT'];?></td>
 			</tr>

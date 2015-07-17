@@ -40,7 +40,7 @@
 		public static function fatalError($error, $description = null) {
 			
 			if ($description) {
-				Error::generalErrorTemplate($error, $$description);
+				Error::generalErrorTemplate($error, $description);
 			} else {
 				
 				?><!DOCTYPE html>
@@ -48,7 +48,7 @@
 					<head>
 						<title>Ошибка — Re[Spot]</title>
 					</head>
-					<body>
+					<body style="-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;">
 						<p style="font-family: 'Lucida Console', Monaco, monospace; text-align: center; vertical-align: middle; padding-top: 10%; color: #4b4b4b">
 							/*&nbsp; <?=$error;?> &nbsp;*/
 						</p>

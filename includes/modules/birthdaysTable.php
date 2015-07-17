@@ -27,7 +27,8 @@
     <figure class="front">
 <?php } ?>
 
-<h1 class="flip-birthdays-card<?php if ($dislay_as_flipcard) {echo ' link';} ?>">
+<h1 class="flip-birthdays-card<?php if ($dislay_as_flipcard) {echo ' link';}?>"<?php
+	if ($dislay_as_flipcard) {echo ' data-toggle="tooltip" data-placement="top" title="Показать настройки таблицы «Дни рождения»"';} ?>>
 	<span class="ignore-link-coloring"><i class="fa fa-birthday-cake"></i> Дни рождения</span>
 	<?php if ($allow_intellectual_view) { ?>
 		<span class="options">
