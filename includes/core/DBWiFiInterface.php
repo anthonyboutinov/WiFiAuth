@@ -1018,6 +1018,14 @@
 			return $out;
 			
 		}
+		
+		public function getPostImage($id_db_user) {
+			$this->newSanitize($id_db_user);
+			$sql = 'select BLOB_VALUE from SP$VAR
+			where ID_DB_USER='.$id_db_user.'
+			and ID_DICTIONARY=(SELECT ID_DICTIONARY FROM CM$DICTIONARY WHERE SHORT_NAME="POST_IMG")';
+			return $this->getQueryFirstRowResultWithErrorNoticing($sql, "POST_IMG", false)['BLOB_VALUE'];
+		} 
 
 		# ==== КОНЕНЦ ПОЛУЧЕНИЕ ОБЫЧНЫХ ДАННЫХ ИЗ ТАБЛИЦ ==== #
 		# ========================================================================== #

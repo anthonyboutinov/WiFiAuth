@@ -11,18 +11,11 @@
 	// Содержание текста для постов
 	$postContent = $post['POST_TEXT']['VALUE'];
 	
-	//Ссылки на изображения для постов
-	$photoVK = $post['POST_IMAGE_VK']['VALUE'];
-	$photoFB = $post['POST_IMAGE_FB']['VALUE'];
-	
 	//Ссылки на страницы клиентов
 	$linkVK = $post['POST_LINK_VK']['VALUE'];
 	$linkFB = $post['POST_LINK_FB']['VALUE'];
 	
-	
-?>
-
-<!DOCTYPE html><html lang="ru">
+?><!DOCTYPE html><html lang="ru">
 	<head>
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
 		<title>Добро пожаловать! — <?=$companyName;?></title>
@@ -69,7 +62,10 @@
 						<h2 class="modal-title" id="myModalLabel">Размещение записи</h2>
 					</div>
 					<div class="modal-body">
-						<img src="<?php echo $photoFB; ?>" class="modal-image">
+						<?php $img = $database->getValueByShortName('POST_IMG');
+							if (isset($img['BLOB_VALUE'])) { ?>
+							<img src="data:image/jpeg;base64,<?=base64_encode($img['BLOB_VALUE']);?>" class="modal-image">
+						<?php } ?>
 						<h2 style="font-size: 25px;"><?php echo $postTitle; ?></h2>
 						<textarea  class="form-control" rows=5 id="FBTextArea"><?php echo $postContent; ?></textarea>
 					</div>

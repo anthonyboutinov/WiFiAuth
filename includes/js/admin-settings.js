@@ -42,9 +42,11 @@ $(document).ready(function() {
 		
 		var fileExtensionError = false;
 		$('input[data-type="file-name"]').each(function() {
-			var ext = $(this).val().split('.').pop().toLowerCase();
-			if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
-			    fileExtensionError = true;
+			if ($(this).val() != '') {
+				var ext = $(this).val().split('.').pop().toLowerCase();
+				if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+				    fileExtensionError = true;
+				}
 			}
 		});
 		
