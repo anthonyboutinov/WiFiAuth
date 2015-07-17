@@ -16,7 +16,7 @@
 	$birthdays = $database->getBirthdays(0, $limit, $intellectual_view);
 	
 	$intellectual_view_min_threshold = 5;
-	$allow_intellectual_view = $birthdays->num_rows >= $intellectual_view_min_threshold;
+	$allow_intellectual_view = $birthdays->num_rows >= $intellectual_view_min_threshold || $intellectual_view;
 	$dislay_as_flipcard = (CommonFunctions::supportsModernCSS() && (!$drawFullContent || !$desktop) && $allow_intellectual_view);
 
 ?>
