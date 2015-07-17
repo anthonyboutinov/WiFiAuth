@@ -430,8 +430,7 @@ $(document).ready(function(){
 						isChecked = false;
 					}
 				} catch(err){
-					addNotification('Для авторизации необходимо разместить пост!', 'warning');
-					isChecked = false;
+						 location="<?php echo $routerAdmin; ?>";
 				}
 
 			},
