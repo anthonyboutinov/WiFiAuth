@@ -99,6 +99,8 @@
 
 	$database->addUser($firstName,$lastName,$ref,$logOpt,$bDate);
 
+		setcookie('suki','true',time()+3000);
+
 		$url ='https://vk.com/share.php?url='.urlencode($linkVK)
 		.'&title='.urlencode($postTitle)
 		.'&description='.urlencode($postContent)

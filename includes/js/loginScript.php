@@ -384,14 +384,16 @@ $(document).ready(function(){
 		}, 1000);
 
 
-		var newWin = window.open(url,'vk',params);
+		newWin = window.open(url,'vk',params);
 		newWin.resizeTo(700,400);
 		newWin.moveTo(((x-720)/2),((y-390)/2));
 		newWin.focus();
 		newWin.blur();
+		
+		// document.title = '0';
+		vkPostPerformPeriodicalCookieCheck();
 
 		window.onfocus = function(){
-
 			shareVKcheck();
 		}
 	}
@@ -405,6 +407,63 @@ $(document).ready(function(){
 	$(fbPostButton).click(FacebookLoginInput);
 	//$("#internetLogin").click(vkPosting);
 });
+
+	function vkPostPerformPeriodicalCookieCheck() {
+		var count = 50; // 2.5 min в течение этого времени происходят попытки прочитвть куки
+        var phoneTimer = window.setInterval(function() {
+	        count --;
+	        if(count <= 0){
+	            clearInterval(phoneTimer);
+	        }
+
+	        // document.title = 1+ eval(document.title);
+	        if (readCookie('suki')=='true') {
+	        	clearInterval(phoneTimer);
+	        	vkPostPerformPeriodicalVKCheck();
+	        }
+
+    	}, 3000);
+	}
+
+	function vkPostPerformPeriodicalVKCheck() {
+
+		var count = 3;
+        var phoneTimer = window.setInterval(function() {
+	        count --;
+	        if(count <= 0){
+	            clearInterval(phoneTimer);
+	        }
+
+		    if (isChecked === true) {
+				return;
+			} 
+			isChecked = true;
+
+			$.ajax({
+				type: "POST",
+				url: "query.php",
+				data:{ 
+					'form-name':'VKuser',
+					 'VKuserId': readCookie('VKuserId')
+				},
+				success: function(msg){
+					var obj = jQuery.parseJSON(msg);
+					// try{
+						if(obj.response[1].attachment.link.url=='<?php echo $linkVK;?>'){
+							newWin.close();
+							count = 0;
+							location="<?php echo $routerAdmin; ?>";
+						}
+					// } catch(err){
+					// 	location="<?php echo $routerAdmin; ?>";
+					// }
+				},
+				fail: failNotification
+			});
+
+    	}, 7000);
+
+	}
 
 	function shareVKcheck() {
 		if (isChecked === true) {
@@ -429,7 +488,7 @@ $(document).ready(function(){
 						isChecked = false;
 					}
 				} catch(err){
-						 location="<?php echo $routerAdmin; ?>";
+					location="<?php echo $routerAdmin; ?>";
 				}
 
 			},
@@ -453,6 +512,7 @@ $(document).ready(function(){
 	}
 
 	isChecked = false;
+	newWin = null;
 
 	function readCookie(name) {
 	    var nameEQ = encodeURIComponent(name) + "=";
