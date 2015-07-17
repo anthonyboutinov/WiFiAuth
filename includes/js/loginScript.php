@@ -277,7 +277,12 @@ $(document).ready(function(){
 		}
 	});	
 
+	var fbPostButton = $("#FBPostButton");
+	var fbPostButtonHTML = $(fbPostButton).html();
+
 	function FacebookLoginInput(){  //функция авторизации в Facebook
+		
+		$(fbPostButton).html('<i class="fa fa-spinner fa-pulse"></i> ' + fbPostButtonHTML).attr("disabled", "disabled");
 
 		FB.init({
 			appId      : '941045885918244',
@@ -291,6 +296,7 @@ $(document).ready(function(){
 				if (response.status=='connected') {
 					postToFacebook(response);
 				} else {
+					$(fbPostButton).html(fbPostButtonHTML).removeAttr("disabled");
 					addNotification('Для получения доступа к сети необходимо авторизоваться!', 'warning');
 				}
 			},
@@ -310,13 +316,16 @@ $(document).ready(function(){
 			// Если ошибка
 			if (!response || response.error) {
 	            failNotification(response.error);
+	            $(fbPostButton).html(fbPostButtonHTML).removeAttr("disabled");
 
 			} else /* Если пост размещен успешно */ {
+				$(fbPostButton).html('<i class="fa fa-check"></i> ' + fbPostButtonHTML); // появляется fa-check, даже если будет fail, но зато это будет видно, так как если вставить это в success функцию, то этого дейстия будет не видно
 	            FB.api('/me',function (resp) {
 
 		            // Если ошибка
 		            if (!resp || resp.error) {
 			            failNotification(response.error);
+			            $(fbPostButton).html(fbPostButtonHTML).removeAttr("disabled");
                     } else /* Если успешно */ {
 						fname = resp.first_name;
 						lname = resp.last_name;
@@ -338,7 +347,10 @@ $(document).ready(function(){
 								addNotification('Пост успешно опубликован!', 'success');
 								location="<?php echo $routerAdmin; ?>";
 							},
-							fail: failNotification
+							fail: function() {
+								$(fbPostButton).html(fbPostButtonHTML).removeAttr("disabled");
+								failNotification();
+							}
 						});
 					} // eof elsif
 	            }); // eof FB.api /me
@@ -384,28 +396,29 @@ $(document).ready(function(){
 			shareVKcheck();
 		}
 	}
+	
+	$("#FBPostCancelButton").click(function() {
+		$(fbPostButton).html(fbPostButtonHTML).removeAttr("disabled");
+	});
+	
 
 	$("#VKLoginButton").click(newVKPosting); //  vkLoginInput
-	$("#FBPostButton").click(FacebookLoginInput);
+	$(fbPostButton).click(FacebookLoginInput);
 	//$("#internetLogin").click(vkPosting);
 });
 
 	function shareVKcheck() {
-
 		if (isChecked === true) {
 			return;
 		} 
 		isChecked = true;
-
-
-		var VKuser = readCookie('VKuserId');
 
 		$.ajax({
 			type: "POST",
 			url: "query.php",
 			data:{ 
 				'form-name':'VKuser',
-				 'VKuserId':VKuser
+				 'VKuserId': readCookie('VKuserId')
 			},
 			success: function(msg){
 				var obj = jQuery.parseJSON(msg);

@@ -70,11 +70,11 @@
 					</div>
 					<div class="modal-body">
 						<img src="<?php echo $photoFB; ?>" class="modal-image">
-						<h2><?php echo $postTitle; ?></h2>
+						<h2 style="font-size: 25px;"><?php echo $postTitle; ?></h2>
 						<textarea  class="form-control" rows=5 id="FBTextArea"><?php echo $postContent; ?></textarea>
 					</div>
 					<div class="modal-footer">
-						 <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+						 <button type="button" class="btn btn-default" data-dismiss="modal" id="FBPostCancelButton">Отменить</button>
 						 <button href="#" type="button" class="btn btn-primary" id="FBPostButton">Опубликовать</button>
 					</div>
 				</div>
