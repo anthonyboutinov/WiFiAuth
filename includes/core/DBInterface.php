@@ -1,6 +1,7 @@
 <?php
 	
 	include 'Notification.php';
+	include 'Error.php';
 
 	/// Интерфейс работы с любой базой данных
 	/**
@@ -18,8 +19,7 @@
 			$conn = new mysqli($servername, $username, $password, $dbname);
 			$this->conn = $conn;
 			if ($this->conn->connect_error) {
-			  include 'includes/base/db_connection_failure.php';
-			  exit();
+			  Error::dbConnectionFailure();
 			}
 			
 			// Change character set to utf8
@@ -82,7 +82,7 @@
 			
 			if (is_array($sql)) {
 				if ($do_return == true) {
-					die('DEBUG: $do_return == true не поддерживается для массивов!');
+					Error::fatalError('DEBUG Error in DBInterface::innerSanitize(): $do_return == true не поддерживается для массивов!');
 				}
 				foreach ($sql as $key => $value) {
 					$val = $this->conn->real_escape_string($value);

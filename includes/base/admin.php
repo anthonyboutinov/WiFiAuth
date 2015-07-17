@@ -3,7 +3,7 @@
 	$protector->protectPageAdminPage();
 	
 	if ($database == false) {
-		die('DEBUG error in includes/base/admin.php: $database not found');
+		Error::fatalError('DEBUG error in includes/base/admin.php: $database not found');
 	}
 	
 	// Название компании

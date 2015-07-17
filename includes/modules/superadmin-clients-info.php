@@ -3,7 +3,7 @@
 	$protector->protectPageSetMinAccessLevel('MANAGER');
 	
 	if (!isset($_GET['id_client'])) {
-		die("error");
+		fatalError("DEBUG Error in includes/modules/superadmin-clients-info.php: id_client not set");
 	}
 	
 	$userInfo = $database->getClient($_GET['id_client']);

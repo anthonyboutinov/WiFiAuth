@@ -31,7 +31,7 @@
 					if (msg == undefined || msg == '') {
 						msg = "Не было внесено никаких изменений.";
 					}
-					addNotification(msg, 'success');
+					addNotification(msg, 'info');
 					setTimeout(function() {$(i)[0].className = i_old_class;}, 5000);
                 },
                 error: function(){

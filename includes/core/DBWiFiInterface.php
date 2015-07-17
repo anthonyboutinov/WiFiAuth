@@ -39,7 +39,7 @@
 				// Ничего не делать, база данных подключена.
 				
 			} else {
-				die('DEBUG Error: DBWiFiTinterface constructor received bad parameters');
+				Error::fatalError('DEBUG Error: DBWiFiTinterface constructor received bad parameters');
 			}
 						
 			if($this->is_valid()) {
@@ -186,24 +186,24 @@
 			$sql = 'SELECT ID_DB_USER, IS_ACTIVE, ROUTER_PASSWORD FROM CM$DB_USER WHERE IS_SUPERADMIN=\'F\' AND ROUTER_LOGIN=\''.$router_login.'\'';
 			$result = $this->conn->query($sql);
 			if ($result === false) {
-				die("Error with query $sql");
+				Error::fatalError("Error with query $sql");
 			}
 			
 			if ($result->num_rows == 1) {
 				while($row = $result->fetch_assoc()) {
 					if (password_verify($row['ROUTER_PASSWORD'], $router_password)) {
 						if ($row["IS_ACTIVE"] == 'F') {
-							die("Error #1: Router $router_login is disabled.");
+							Error::fatalError("Ошибка: Обслуживание роутера $router_login приостановлено.");
 						} else {
 							$this->is_router = true;
 							return $row['ID_DB_USER'];
 						}
 					} else {
-						die("Error #2: Credentials for router $router_login are incorrect.");
+						Error::fatalError("Ошибка: Параметры авторизации роутера $router_login неверны.");
 					}
 				}
 			} else {
-				die("Error #2: Credentials for router $router_login are incorrect.");
+				Error::fatalError("Ошибка: Параметры авторизации роутера $router_login неверны.");
 			}
 		}
 
@@ -1515,7 +1515,7 @@
 			} else if ($active === 'F' || $active === false) {
 				$active = 'F';
 			} else {
-				die('DEBUG Error: Передан неверный параметр в setActiveDBUser');
+				Error::fatalError('DEBUG Error: Передан неверный параметр в setActiveDBUser');
 			}
 
 			$sql = 'update  CM$DB_USER set IS_ACTIVE="'.$active.'", ID_DB_USER_MODIFIED='.$this->id_db_user_editor.' where ID_DB_USER='.$id_db_user;

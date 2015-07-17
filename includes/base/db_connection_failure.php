@@ -2,7 +2,7 @@
 <html lang="ru">
 	<head>
 		<?php include 'includes/base/headBootstrapAndBasics.php'; ?>
-		<title>Ошибка</title>
+		<title>Ошибка соединения с базой данных — Re[Spot]</title>
 	</head>
 	<body class="admin-page-login"><div class="background-cover"></div>
 		<div class="container absolute-center-center text-center">

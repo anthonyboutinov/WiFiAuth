@@ -28,8 +28,6 @@
 			За месяц
 		</td>
 		<?php if ($database->meetsAccessLevel('ROOT')) { ?>
-		<td class="hide-on-collapsed-view">Дата создания</td>
-		<td class="hide-on-collapsed-view">Дата изменения</td>
 		<td class="hide-on-collapsed-view">Изменен</td>
 		<?php } ?>
 		<td colspan="2"></td>
@@ -53,8 +51,6 @@
 			<td class="hide-on-collapsed-view text-right"><?=$row['LOGIN_ACT_COUNT_MONTH'];?></td>
 			
 			<?php if ($database->meetsAccessLevel('ROOT')) { ?>
-			<td class="hide-on-collapsed-view text-right"><?=$row['DATE_CREATED'];?></td>
-			<td class="hide-on-collapsed-view text-right"><?=$row['DATE_MODIFIED'];?></td>
 			<td class="hide-on-collapsed-view"><?=$row['DB_USER_MODIFIED'];?></td>
 			<?php } ?>
 

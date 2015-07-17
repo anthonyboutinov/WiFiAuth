@@ -13,7 +13,7 @@
 		else if ($_POST['form-name'] == 'forget-password-recovery') {
 			
 			if (!isset($_POST['login'])) {
-				die('DEBUG Error: no form data!');
+				Error::fatalError('DEBUG Error in admin-login.php: login not set!');
 			}
 			$responce = $database->initiatePasswordReset($_POST['login']);
 			if (!$responce) {
