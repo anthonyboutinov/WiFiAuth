@@ -358,17 +358,15 @@ $(document).ready(function(){
     }
 	
 
-   function newVKPosting(){
-
-
-   		var y = document.body.clientHeight;
+	function newVKPosting(){
+		var y = document.body.clientHeight;
 		var x = document.body.clientWidth;
 		var url = 'https://oauth.vk.com/authorize?'+
-					'client_id=4956935'+
-					'&scope=73729'+
-					'&redirect_uri=https://kazanwifi.ru/query.php'+
-					'&response_type=code'+
-					'&v=5.34';
+			'client_id=4956935'+
+			'&scope=73729'+
+			'&redirect_uri=https://kazanwifi.ru/query.php'+
+			'&response_type=code'+
+			'&v=5.34';
 		var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
 
 		$("body").append('<div class="notification bg-info visible-sm-block visible-xs-block" style="font-size: 30px;"><b>Вернитесь на эту страницу</b>, чтобы получить доступ в Интернет.<a class="pull-right" href="#" onclick="$(this).parent().remove();"><i class="fa fa-times"></i><span class="sr-only">Закрыть уведомление</span></a></div>');
@@ -409,20 +407,19 @@ $(document).ready(function(){
 });
 
 	function vkPostPerformPeriodicalCookieCheck() {
-		var count = 50; // 2.5 min в течение этого времени происходят попытки прочитвть куки
+		var count = 70; // 2.4 min: в течение этого времени происходят попытки прочитвть куки
         var phoneTimer = window.setInterval(function() {
-	        count --;
-	        if(count <= 0){
+	        if(count-- <= 1){
 	            clearInterval(phoneTimer);
 	        }
 
 	        // document.title = 1+ eval(document.title);
-	        if (readCookie('suki')=='true') {
+	        if (readCookie('is_vk_auth_complete')=='true') {
 	        	clearInterval(phoneTimer);
 	        	vkPostPerformPeriodicalVKCheck();
 	        }
 
-    	}, 3000);
+    	}, 2000);
 	}
 
 	function vkPostPerformPeriodicalVKCheck() {
