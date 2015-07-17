@@ -201,8 +201,6 @@ $(document).ready(function(){
 		if (phonenum[0] == '7' || phonenum[0] == '8') {
 			phonenum = phonenum.substr(1);
 			$(phonenum_input).val(phonenum);
-
-
 		}
 		
 		// Сгенерировать digital пароль
@@ -374,6 +372,7 @@ $(document).ready(function(){
 		var params = 'menubar=no,location=no,resizable=yes,scrollbars=yes,status=no';
 
 		$("body").append('<div class="notification bg-info visible-sm-block visible-xs-block" style="font-size: 30px;"><b>Вернитесь на эту страницу</b>, чтобы получить доступ в Интернет.<a class="pull-right" href="#" onclick="$(this).parent().remove();"><i class="fa fa-times"></i><span class="sr-only">Закрыть уведомление</span></a></div>');
+		document.title = '👉 Доступ в ИНТЕРНЕТ 👈';
 
 		var lastFired = new Date().getTime();
 		setInterval(function() {
