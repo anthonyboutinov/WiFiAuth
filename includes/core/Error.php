@@ -1,10 +1,20 @@
 <?php
+	/// Позволяет выводить ошибки
 	class Error {
-		
+
 		const PORTAL_NAME = "Re[Spot]";
-		
+
+		/// Вывести сообщение об ошибке по общему шаблону ошибки
+		/**
+		 * @author Anthony Boutinov
+ 		 * @access protected
+		 * @static
+		 * @param mixed $title			Заголовок
+		 * @param mixed $description	Подробное описание
+		 * @return void
+		 */
 		protected static function generalErrorTemplate($title, $description) {
-			
+
 			?><!DOCTYPE html>
 			<html lang="ru">
 				<head>
@@ -22,10 +32,17 @@
 				</body>
 			</html>
 			<?php die();
-			
+
 		}
-			
-			
+
+
+		/// Вывести ошибку соединения с базой данных
+		/**
+		 * @author Anthony Boutinov
+		 * @access public
+		 * @static
+		 * @return void
+		 */
 		public static function dbConnectionFailure() {
 			$title = 'Ошибка соединения с базой данных';
 			ob_start(); ?>
@@ -35,14 +52,22 @@
 			<?php
 			Error::generalErrorTemplate($title, ob_get_clean());
 		}
-		
-		
+
+		/// Фатальная ошибка
+		/**
+		 * @author Anthony Boutinov
+		 * @access public
+		 * @static
+		 * @param mixed $error
+		 * @param mixed $description (default: null)
+		 * @return void
+		 */
 		public static function fatalError($error, $description = null) {
-			
+
 			if ($description) {
 				Error::generalErrorTemplate($error, $description);
 			} else {
-				
+
 				?><!DOCTYPE html>
 				<html lang="ru">
 					<head>
@@ -55,10 +80,10 @@
 					</body>
 				</html>
 				<?php die();
-					
+
 			}
-				
+
 		}
-	
+
 	}
 ?>
