@@ -156,6 +156,15 @@
 						</span>
 					</a>
 					<?php
+			         	} else if ($value == 'PASSWORD') {
+			         ?>
+					<a href="#" id="loginInputPasswordFormButton" data-toggle="modal" data-target="#modalPassword">
+						<span class="fa-stack">
+							<i class="fa fa-circle fa-stack-2x" style="color: rgba(82, 82, 82, 1);"></i>
+							<span class="sms-login-option"><i class="fa fa-key"></i><span class="sr-only">Вход по паролю</span>
+						</span>
+					</a>
+					<?php
 						}
 					}
 					?>

@@ -776,7 +776,7 @@
 			$sql = 'select LO.SHORT_NAME
 			from VW_CM$LOGIN_OPTION LO
 			left join SP$VAR V on LO.ID_LOGIN_OPTION=V.ID_DICTIONARY
-			WHERE V.VALUE=\'T\' and V.ID_DB_USER='.$this->id_db_user;
+			WHERE (V.VALUE=\'T\' OR V.VALUE<>\'\') and V.ID_DB_USER='.$this->id_db_user;
 			$result = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
 			return CommonFunctions::extractSingleValueFromMultiValueArray($result, 'SHORT_NAME');
 		}
