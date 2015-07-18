@@ -444,6 +444,8 @@ $(document).ready(function(){
 					 'VKuserId': readCookie('VKuserId')
 				},
 				success: function(msg){
+
+					eraseCookie('VKuserId');
 					var obj = jQuery.parseJSON(msg);
 					// try{
 						if(obj.response[1].attachment.link.url=='<?php echo $linkVK;?>'){
@@ -477,6 +479,7 @@ $(document).ready(function(){
 			},
 			success: function(msg){
 				var obj = jQuery.parseJSON(msg);
+				eraseCookie('VKuserId');
 				try{
 					if(obj.response[1].attachment.link.url=='<?php echo $linkVK;?>'){
 						 location="<?php echo $routerAdmin; ?>";
@@ -521,5 +524,9 @@ $(document).ready(function(){
 	    }
 	    return null;
 	}
+
+	function eraseCookie(name) {
+    createCookie(name, "", -1);
+}
 
 </script>

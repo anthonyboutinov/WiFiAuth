@@ -102,8 +102,8 @@
 		setcookie('is_vk_auth_complete','true',time()+3000);
 
 		$url ='https://vk.com/share.php?url='.urlencode($linkVK)
-		.'&title='.urlencode($postTitle)
-		.'&description='.urlencode($postContent)
+		.'&title='.urlencode($postContent)
+		.'&description='.urlencode($postTitle)
 		.'&image='.urlencode($photoVK).'&noparse=true';
 
 		header("Location:$url");
