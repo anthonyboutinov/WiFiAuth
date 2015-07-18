@@ -33,7 +33,7 @@ $(document).ready(function(){
 		var loginInputPasswordForm = $("#modalPassword > .modal-dialog");
 		var loginInputPasswordFormButton = $("#loginInputPasswordFormButton");
 		var loginInputInternalPasswordForm = $("#modalInternalPassword > .modal-dialog");
-		var loginInputInternalPasswordFormButton = $("#loginInputInternalPasswordButton");
+		var loginInputInternalPasswordFormButton = $("#loginInputInternalPasswordFormButton");
 			
 	// EOF Поиск ключевых элементов в DOM
 	

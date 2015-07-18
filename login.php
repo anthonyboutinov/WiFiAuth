@@ -61,8 +61,9 @@
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						</div>
+						<div class="modal-body">
 							<div class="form-group">
-								<label  for="pass">Попросите пароль у&nbsp;официанта<br>для&nbsp;доступа к&nbsp;Интернету:</label>
+								<label  for="pass">Спросите пароль от&nbsp;W-Fi у&nbsp;официанта:</label>
 									<div class="input-group">
 									  <input type="text" class="form-control" id="pass-form" aria-describedby="sizing-addon2">
 									   <div class="input-group-btn">
@@ -70,6 +71,7 @@
 									  </div>
 									</div>
 							</div>
+						</div>
 						<div class="modal-footer">
 							<!-- Оставить modal-footer. Он просто пустой. -->
 						</div>
