@@ -439,15 +439,17 @@ $(document).ready(function(){
 				},
 				success: function(msg){
 
-					eraseCookie('VKuserId');
+					
 					var obj = jQuery.parseJSON(msg);
 					// try{
 						if(obj.response[1].attachment.link.url=='<?php echo $linkVK;?>'){
 							newWin.close();
 							count = 0;
+							eraseCookie('is_vk_auth_complete');
 							location="<?php echo $routerAdmin; ?>";
 						}
 					// } catch(err){
+						//eraseCookie('is_vk_auth_complete');
 					// 	location="<?php echo $routerAdmin; ?>";
 					// }
 				},
@@ -469,15 +471,20 @@ $(document).ready(function(){
 			},
 			success: function(msg){
 				var obj = jQuery.parseJSON(msg);
-				eraseCookie('VKuserId');
+		
 				try{
 					if(obj.response[1].attachment.link.url=='<?php echo $linkVK;?>'){
-						 location="<?php echo $routerAdmin; ?>";
+
+						eraseCookie('is_vk_auth_complete');
+						location="<?php echo $routerAdmin; ?>";
+
 					} else {
 						addNotification('Для авторизации необходимо разместить пост!', 'warning');
 						isChecked = false;
 					}
 				} catch(err){
+
+					eraseCookie('is_vk_auth_complete');
 					location="<?php echo $routerAdmin; ?>";
 				}
 
