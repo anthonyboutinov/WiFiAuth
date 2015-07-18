@@ -54,6 +54,31 @@
 			</div>
 		</div>
 
+		<div class="modal fade" id="Password" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-black">
+				<!-- <form> -->
+					<div class="modal-content narrow-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						</div>
+							<div class="form-group">
+								<label  for="pass">Попросите&nbsp;пароль&nbsp;у&nbsp;официанта&nbsp;для&nbsp;доступа&nbsp;к&nbsp;Интернету:</label>
+									<div class="input-group">
+									  <span class="input-group-addon" id="sizing-addon2">+7</span>
+									  <input type="pass" class="form-control" id="pass-form" aria-describedby="sizing-addon2">
+									   <div class="input-group-btn">
+										   <button class="btn btn-black" id="passButton"><i class="fa fa-arrow-circle-right"></i></button>
+									  </div>
+									</div>
+							</div>
+						<div class="modal-footer">
+							<!-- Оставить modal-footer. Он просто пустой. -->
+						</div>
+					</div>
+				<!-- </form> -->
+			</div>
+		</div>
+
         <div class="modal fade" id="ModalFacebook" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">

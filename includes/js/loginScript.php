@@ -263,6 +263,11 @@ $(document).ready(function(){
 	
 	});
 
+	$("#passButton").click(function() {
+
+		
+
+	});
 
 	$("#password").keyup(function() {
 		var pass_val = $(this).val();
