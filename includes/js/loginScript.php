@@ -388,11 +388,11 @@ $(document).ready(function(){
 		newWin.focus();
 		newWin.blur();
 		
-		// document.title = '0';
 		vkPostPerformPeriodicalCookieCheck();
 
 		window.onfocus = function(){
 			shareVKcheck();
+
 		}
 	}
 	
@@ -412,9 +412,8 @@ $(document).ready(function(){
 	        if(count-- <= 1){
 	            clearInterval(phoneTimer);
 	        }
-
-	        // document.title = 1+ eval(document.title);
-	        if (readCookie('is_vk_auth_complete')=='true') {
+	        
+	        if (readCookie('is_vk_auth_complete')==='true') {
 	        	clearInterval(phoneTimer);
 	        	vkPostPerformPeriodicalVKCheck();
 	        }
@@ -430,11 +429,6 @@ $(document).ready(function(){
 	        if(count <= 0){
 	            clearInterval(phoneTimer);
 	        }
-
-		    if (isChecked === true) {
-				return;
-			} 
-			isChecked = true;
 
 			$.ajax({
 				type: "POST",
@@ -465,10 +459,6 @@ $(document).ready(function(){
 	}
 
 	function shareVKcheck() {
-		if (isChecked === true) {
-			return;
-		} 
-		isChecked = true;
 
 		$.ajax({
 			type: "POST",
