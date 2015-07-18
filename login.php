@@ -54,7 +54,7 @@
 			</div>
 		</div>
 
-		<div class="modal fade" id="Password" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+		<div class="modal fade" id="modalInternalPassword" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-black">
 				<!-- <form> -->
 					<div class="modal-content narrow-content">
@@ -62,10 +62,9 @@
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						</div>
 							<div class="form-group">
-								<label  for="pass">Попросите&nbsp;пароль&nbsp;у&nbsp;официанта&nbsp;для&nbsp;доступа&nbsp;к&nbsp;Интернету:</label>
+								<label  for="pass">Попросите пароль у&nbsp;официанта<br>для&nbsp;доступа к&nbsp;Интернету:</label>
 									<div class="input-group">
-									  <span class="input-group-addon" id="sizing-addon2">+7</span>
-									  <input type="pass" class="form-control" id="pass-form" aria-describedby="sizing-addon2">
+									  <input type="text" class="form-control" id="pass-form" aria-describedby="sizing-addon2">
 									   <div class="input-group-btn">
 										   <button class="btn btn-black" id="passButton"><i class="fa fa-arrow-circle-right"></i></button>
 									  </div>
@@ -158,7 +157,7 @@
 					<?php
 			         	} else if ($value == 'PASSWORD') {
 			         ?>
-					<a href="#" id="loginInputPasswordFormButton" data-toggle="modal" data-target="#modalPassword">
+					<a href="#" id="loginInputInternalPasswordFormButton" data-toggle="modal" data-target="#modalInternalPassword">
 						<span class="fa-stack">
 							<i class="fa fa-circle fa-stack-2x" style="color: rgba(82, 82, 82, 1);"></i>
 							<span class="sms-login-option"><i class="fa fa-key"></i><span class="sr-only">Вход по паролю</span>

@@ -59,6 +59,9 @@
 			curl_close($curl);
 			echo $json;
 		}
+	} else if($_POST['form-name']=='passwordForm') {
+
+		echo $database->getValueByShortName('PASSWORD')['VALUE'];
 	}
 
 

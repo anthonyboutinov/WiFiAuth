@@ -32,6 +32,8 @@ $(document).ready(function(){
 		var footer = $("footer.footer");
 		var loginInputPasswordForm = $("#modalPassword > .modal-dialog");
 		var loginInputPasswordFormButton = $("#loginInputPasswordFormButton");
+		var loginInputInternalPasswordForm = $("#modalInternalPassword > .modal-dialog");
+		var loginInputInternalPasswordFormButton = $("#loginInputInternalPasswordButton");
 			
 	// EOF Поиск ключевых элементов в DOM
 	
@@ -46,11 +48,17 @@ $(document).ready(function(){
 				$(footer).css('position', 'inherit');
 			}	
 			$(loginInputPasswordForm).css('margin-top', ($(window).height() - $(loginInputPasswordForm).outerHeight()) / 2);
+			$(loginInputInternalPasswordForm).css('margin-top', ($(window).height() - $(loginInputInternalPasswordForm).outerHeight()) / 2);
 		}
 						
 		function openLoginInputPasswordForm() {
 			setTimeout(positionVertically, 200);
 			$("#phone-form").focus();
+		}
+
+		function openLoginInputInternalPasswordForm() {
+			setTimeout(positionVertically, 200);
+			$("#pass-form").focus();
 		}
 	
 	// EOF Функции
@@ -58,6 +66,7 @@ $(document).ready(function(){
 	// Привязки к дейсвтиям
 
 		$(loginInputPasswordFormButton).click(openLoginInputPasswordForm);
+		$(loginInputInternalPasswordFormButton).click(openLoginInputInternalPasswordForm);
 		positionVertically();
 		setTimeout(positionVertically, 200);
 		$(window).resize(positionVertically);
@@ -171,6 +180,30 @@ $(document).ready(function(){
 			$(this).val(phonenum.substr(1));
 		}
 	});
+
+	$("#passButton").click(function(e){
+
+		$.ajax({
+				type: "POST",
+				url: "query.php",
+				data: {
+					'form-name': 'passwordForm'
+				},
+			success: function(msg){
+				if($("#pass-form").val()==msg){
+					location="<?php echo $routerAdmin; ?>";
+				} else {
+					addNotification('Неверный пароль, повторите попытку!', 'warning');
+				}
+			},
+			fail: failNotification
+		});
+
+		
+
+	});
+
+	
 	
 	$("#phoneButton").click(function(e) {  //функция входа по паролю
 		e.preventDefault();
@@ -263,11 +296,11 @@ $(document).ready(function(){
 	
 	});
 
-	$("#passButton").click(function() {
+	// $("#passButton").click(function() {
 
-		
+	// 	if()
 
-	});
+	// });
 
 	$("#password").keyup(function() {
 		var pass_val = $(this).val();
