@@ -442,6 +442,9 @@ $(document).ready(function(){
 	$("#VKLoginButton").click(newVKPosting); //  vkLoginInput
 	$(fbPostButton).click(FacebookLoginInput);
 	//$("#internetLogin").click(vkPosting);
+	
+	// включить подсказки
+	$('[data-toggle="tooltip"]').tooltip({'html': true});
 });
 
 	function vkPostPerformPeriodicalCookieCheck() {

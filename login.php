@@ -32,7 +32,7 @@
 						</div>
 						<div class="modal-body">
 							<div class="form-group">
-								<label  for="phone">Введите&nbsp;номер&nbsp;телефона,<br>чтобы&nbsp;получить код&nbsp;для&nbsp;входа:</label>
+								<label  for="phone">Введите&nbsp;номер&nbsp;телефона,<br>чтобы&nbsp;получить<abbr title="Присылаемое сообщение бесплатно" data-toggle="tooltip" data-placement="bottom">*</abbr> код&nbsp;для&nbsp;входа:</label>
 									<div class="input-group">
 									  <span class="input-group-addon" id="sizing-addon2">+7</span>
 									  <input type="phone" class="form-control" id="phone-form" aria-describedby="sizing-addon2">
