@@ -511,6 +511,19 @@ $(document).ready(function(){
 	isChecked = false;
 	newWin = null;
 
+	function createCookie(name, value, days) {
+    var expires;
+
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    } else {
+        expires = "";
+    }
+    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
+}
+
 	function readCookie(name) {
 	    var nameEQ = encodeURIComponent(name) + "=";
 	    var ca = document.cookie.split(';');
