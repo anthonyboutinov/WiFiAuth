@@ -851,6 +851,11 @@
 				    from CM$USER U
 				    left join SP$LOGIN_ACT LA on LA.ID_USER=U.ID_USER
 				    where LA.ID_DB_USER='.$this->id_db_user.'
+				    and ID_LOGIN_OPTION<>(
+				    	select ID_DICTIONARY
+				    	from CM$DICTIONARY
+				    	where SHORT_NAME=\'PASSWORD\'
+				    )
 				)';
 			}
 			$this->loginOptions = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
@@ -1016,6 +1021,11 @@
 			left join VW_CM$LOGIN_OPTION O on U.ID_LOGIN_OPTION = O.ID_LOGIN_OPTION
 			where
 				A.ID_DB_USER='.$this->id_db_user.'
+				and O.ID_LOGIN_OPTION<>(
+			    	select ID_DICTIONARY
+			    	from CM$DICTIONARY
+			    	where SHORT_NAME=\'PASSWORD\'
+			    )
 				and DATE(A.DATE_CREATED) >= DATE_SUB(CURDATE(), INTERVAL '.$num_days.' DAY)
 			group by U.ID_LOGIN_OPTION, A.ID_DB_USER, O.SHORT_NAME, O.NAME
 			order by U.ID_LOGIN_OPTION';
