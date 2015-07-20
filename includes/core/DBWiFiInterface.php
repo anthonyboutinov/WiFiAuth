@@ -1098,7 +1098,7 @@
 			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME="'.$log_opt.'"';
 			$logOption = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
 
-            $sql  = 'select ID_USER from CM$USER where LINK="'.$user_href.'" and ID_DB_USER_MODIFIED ='.$this->id_db_user;
+            $sql  = 'select ID_USER from CM$USER where LINK="'.$user_href.'"';
             $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не выдавать ошибку, если нет результатов в запросе*/);
             if($result == null) {
             	if($log_opt == 'vk'){
