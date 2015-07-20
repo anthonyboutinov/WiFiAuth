@@ -657,7 +657,9 @@
 		public function getLoginActs($from = 0, $to = null) {
 			$this->sanitizeFromTo($from, $to);
 			$sql = 'select * from VW_SP$LOGIN_ACT
-			where ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
+			where
+				NAME<>\'password\'
+				and ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
@@ -696,9 +698,44 @@
 				ID_DB_USER='.$this->id_db_user.'
 				AND ID_USER<>(SELECT ID_USER WHERE NAME=\'password\')
 			LIMIT '.$from.', '.$to;
+			Error::fatalError("DEBUG: Произошел вызов функции GETUSERS. Удалите сообщение об ошибке в коде!");
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
+		public function getCountSocialNetworkUsers() {
+			$sql =
+			'SELECT COUNT(LINK) FROM (SELECT DISTINCT LINK  
+			FROM VW_SP$LOGIN_ACT
+			WHERE
+				ID_DB_USER='.$this->id_db_user.'
+				AND LOGIN_OPTION_SHORT_NAME<>"PASSWORD"
+				AND LOGIN_OPTION_SHORT_NAME<>"mobile") as PostCount';
+			return $this->getQueryFirstRowResultWithErrorNoticing($sql)['COUNT(LINK)'];
+		}
+
+		public function getFriendsSocialNetworkUsers(){
+
+			$sql =
+			'SELECT DISTINCT NUM_FRIENDS 
+			FROM VW_SP$LOGIN_ACT
+			WHERE
+				ID_DB_USER='.$this->id_db_user.'
+				AND LOGIN_OPTION_SHORT_NAME<>"PASSWORD"
+				AND LOGIN_OPTION_SHORT_NAME<>"mobile"';
+
+			$result = $this->getQueryResultWithErrorNoticing($sql);
+			
+			// Итерировать по ним
+			if ($result->num_rows > 0) {
+				while($row = $result->fetch_assoc()) {
+
+					$friendsCount = $friendsCount + $row['NUM_FRIENDS'];
+
+				}
+			}
+
+			return $friendsCount;	
+		}
 		/// Получить дни рождения
 		/**
 		 *	@author Anthony Boutinov
