@@ -550,18 +550,18 @@ table.contains-fas .fa {
 .no-word-wrap {
   white-space: nowrap;
 }
-.superadmin-clients-popover-container .popover {
+.popover-table-container .popover {
   max-width: none;
   font-family: Fontatigo, 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
-.superadmin-clients-popover-container .popover tr > td {
+.popover-table-container .popover tr > td {
   padding-top: 5px;
   padding-bottom: 5px;
 }
-.superadmin-clients-popover-container .popover tr > td:first-child {
+.popover-table-container .popover tr > td:first-child {
   padding-right: 15px;
 }
-.superadmin-clients-popover-container .popover tr > td:last-child {
+.popover-table-container .popover tr > td:last-child {
   font-family: 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 .card-container {
@@ -896,6 +896,10 @@ body.admin-page-login .modal-image {
 .popover .popover-title {
   background: rgba(0, 0, 0, 0.6);
   border-bottom: none;
+}
+.popover .popover-title small {
+  vertical-align: middle;
+  margin-left: 50px;
 }
 .popover > .arrow::after {
   color: rgba(0, 0, 0, 0.6);

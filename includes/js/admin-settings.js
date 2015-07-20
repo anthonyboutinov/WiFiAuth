@@ -142,7 +142,7 @@ $(document).ready(function() {
 					'presentation': 'none'
 				},
 				success: function(msg) {
-					$(_this).attr('title', 'История значений.<br>При выборе из&nbsp;представленного списка изменения <strong>сохраняются автоматически</strong>').attr('data-container', 'body').attr('data-toggle', 'popover').attr('data-placement', 'top').attr('data-content', msg).popover({
+					$(_this).attr('title', 'История значений<span class="pull-right"><small>Изменения сохраняются автоматически</small></span>').attr('data-container', 'body').attr('data-toggle', 'popover').attr('data-placement', 'top').attr('data-content', msg).popover({
 						'html': true,
 						'trigger': 'click'
 					}).popover('show').on('hidden.bs.popover', function() {
