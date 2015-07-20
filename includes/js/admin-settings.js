@@ -129,19 +129,25 @@ $(document).ready(function() {
 	});
 	
 	var history_box_is_open = false;
-	
 	$("[data-id-var]").click(function(e) {
 		e.preventDefault();
+		var _this = $(this);
 		if (history_box_is_open === false) {
 			history_box_is_open = true;
 			$.ajax({
-				type: "POST",
+				type: "GET",
 				url: "includes/modules/history.php",
 				data: {
-					'ID_VAR': $(this).attr("data-id-var")
+					'ID_VAR': $(this).attr("data-id-var"),
+					'presentation': 'none'
 				},
 				success: function(msg) {
-					$(body).append(msg);
+					$(_this).attr('title', 'История значений.<br>При выборе из&nbsp;представленного списка изменения <strong>сохраняются автоматически</strong>').attr('data-container', 'body').attr('data-toggle', 'popover').attr('data-placement', 'top').attr('data-content', msg).popover({
+						'html': true,
+						'trigger': 'click'
+					}).popover('show').on('hidden.bs.popover', function() {
+						history_box_is_open = false;
+					});
 				},
 				fail: failNotification
 			});

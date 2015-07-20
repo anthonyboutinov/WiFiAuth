@@ -101,7 +101,7 @@
 													
 													if (isset($value['BLOB_VALUE'])) { ?>
 													<small>Изображение, которое используется сейчас:</small>
-													<img src="data:image/jpeg;base64,<?=base64_encode($value['BLOB_VALUE']);?>" class="tiny-image-preview">
+													<img src="data:image/jpeg;base64,<?=base64_encode($value['BLOB_VALUE']);?>" class="tiny-image-preview" ata-history-src-receiver="<?=$value['ID_VAR'];?>">
 													<?php } ?>
 													<div class="input-group">
 										                <span class="input-group-btn">
@@ -155,6 +155,7 @@
 														class="form-control"
 														id="<?=$key;?>"
 														name="<?=$key;?>"
+														data-history-receiver="<?=$value['ID_VAR'];?>"
 														<?=( // ЕСЛИ CHECKBOX
 															$value['DATA_TYPE'] == 'checkbox' ? (
 																$value['VALUE'] == 'T' ? 'checked' : ''
@@ -176,7 +177,7 @@
 											<div class="col-sm-1 col-xs-1">
 												<?php if ($value['HISTORY_COUNT'] > 0) { ?>
 												<label class="control-label">
-													<a href="#" data-id-var="<?=$value['ID_VAR'];?>"><i class="fa fa-history"></i></a>
+													<a href="#" title="Показать историю" data-id-var="<?=$value['ID_VAR'];?>"><i class="fa fa-history"></i></a>
 												</label>
 												<?php } ?>
 											</div>

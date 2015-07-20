@@ -556,6 +556,12 @@
 			return $this->keyRowsByColumn($result);
 		}
 		
+		public function getHistory($id_var) {
+			$this->newSanitize($id_var);
+			$sql = "CALL GET_HISTORY($id_var)";
+			return $this->getQueryResultWithErrorNoticing($sql);
+		}
+		
 # ==== КОНЕЦ ПОЛУЧЕНИЕ ДАННЫХ ИЗ СЛОВАРЯ ==== #
 # ============================================================= #
 
@@ -1578,9 +1584,9 @@
 			
 		}
 		
-		public function returnOldVarValue($history_id_var) {
+		public function revertOldVarValue($history_id_var) {
 			$this->newSanitize($history_id_var);
-			$sql = "CALL RETURN_OLD_VAR_VALUE($history_id_var)";
+			$sql = "CALL REVERT_OLD_VAR_VALUE($history_id_var)";
 			$this->getQueryResultWithErrorNoticing($sql);
 		}
 				

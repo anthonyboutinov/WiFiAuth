@@ -9,7 +9,14 @@
 			$_SESSION['main-stats-chart-data-offset'] = $_POST['offset'];
 			$_SESSION['main-stats-chart-data-limit'] = $_POST['limit'];
 		
+		}	
+	} else if (isset($_GET['form-name'])) {
+		
+		if ($_GET['form-name'] == 'revert-history' && isset($_GET['ID_VAR'])) {
+
+			$database->revertOldVarValue($_GET['ID_VAR']);
+
 		}
-	
+
 	}
 ?>
