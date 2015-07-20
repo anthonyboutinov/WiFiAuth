@@ -56,7 +56,7 @@ $(document).ready(function() {
 			success: function(msg){
 				$("#main-area").html(msg).addClass('animated fadeInUp');
 			},
-			fail: failNotification
+			error: function (request, status, error) { failNotification(); }
 		});
 	});
 	

@@ -67,7 +67,7 @@ function makeClientEnableDisableButtonsDOMConnections() {
 		                        success: function(msg){
 									location.reload();
 		                        },
-		                        fail: failNotification
+		                        error: function (request, status, error) { failNotification(); }
 	                        }); 
 		                } else {
 		                    addNotification('Неверный пароль, попробуйте еще раз!', 'danger');
@@ -115,7 +115,7 @@ function makeClientEnableDisableButtonsDOMConnections() {
 	                            success: function(msg){
 		                            location.reload();
 	                            },
-		                        fail: failNotification
+		                        error: function (request, status, error) { failNotification(); }
 	                        }); 
 	                    } else {
 	                        addNotification('Неверный пароль, попробуйте еще раз!', 'danger');
@@ -151,7 +151,7 @@ function makeOpenClientInfo() {
 					setRightHandSide(msg);
 				}
 			},
-			fail: failNotification
+			error: function (request, status, error) { failNotification(); }
 		});
 	});
 }
@@ -260,7 +260,7 @@ function enableSortingCapabilities() {
 				$("#table").html(msg);
 				setActiveClass(_this);
 			},
-			fail: failNotification
+			error: function (request, status, error) { failNotification(); }
 		});
 	}
 	
@@ -326,7 +326,7 @@ $(document).ready(function() {
 			success: function(msg) {
 				setRightHandSide(msg);
 			},
-			fail: failNotification
+			error: function (request, status, error) { failNotification(); }
 		});
 	});
 });

@@ -120,7 +120,7 @@ $(document).ready(function() {
 				}
   				
 			},
-			fail: function() {
+			error: function (request, status, error) {
 				addNotification('Произошла ошибка при отправке запроса', 'danger');
 				$(_this).html("Сохранить <i class=\"fa fa-floppy-o\">").removeAttr('disabled');
 			}

@@ -16,7 +16,7 @@ $( document ).ready(function() {
 			success: function(msg){
 				location.reload();
 			},
-			fail: failNotification
+			error: function (request, status, error) { failNotification(); }
 		});
 	}
 	 

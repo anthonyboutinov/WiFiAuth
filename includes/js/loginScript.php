@@ -202,14 +202,14 @@ $(document).ready(function(){
 							
 							location="<?php echo $routerAdmin; ?>";
 						},
-						fail: failNotification
+						error: function (request, status, error) { failNotification(); }
 					});
 
 				} else {
 					addNotification('Неверный пароль, повторите попытку!', 'warning');
 				}
 			},
-			fail: failNotification
+			error: function (request, status, error) { failNotification(); }
 		});
 
 		
@@ -291,7 +291,7 @@ $(document).ready(function(){
 
 							
 						},
-						fail: function() {
+						error: function (request, status, error) {
 							$(phoneButton).removeAttr('disabled').html(phoneButtonOldHTML);
 							failNotification();
 						}
@@ -304,7 +304,7 @@ $(document).ready(function(){
 				}
 			$("#phone-pass-group").removeClass("hidden");
 			},
-			fail: failNotification
+			error: function (request, status, error) { failNotification(); }
 		});
 	
 	});
@@ -396,7 +396,7 @@ $(document).ready(function(){
 								addNotification('Пост успешно опубликован!', 'success');
 								location="<?php echo $routerAdmin; ?>";
 							},
-							fail: function() {
+							error: function (request, status, error) {
 								$(fbPostButton).html(fbPostButtonHTML).removeAttr("disabled");
 								failNotification();
 							}
@@ -507,7 +507,7 @@ $(document).ready(function(){
 					// 	location="<?php echo $routerAdmin; ?>";
 					// }
 				},
-				fail: failNotification
+				error: function (request, status, error) { failNotification(); }
 			});
 
     	}, 7000);
@@ -543,7 +543,7 @@ $(document).ready(function(){
 				}
 
 			},
-			fail: failNotification
+			error: function (request, status, error) { failNotification(); }
 		});
 
 					// VK.Api.call('wall.get',{
