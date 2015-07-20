@@ -897,9 +897,20 @@ body.admin-page-login .modal-image {
   background: rgba(0, 0, 0, 0.6);
   border-bottom: none;
 }
-.popover .arrow::after {
+.popover > .arrow::after {
   color: rgba(0, 0, 0, 0.6);
+}
+.popover.right > .arrow::after {
   border-right-color: rgba(0, 0, 0, 0.6) !important;
+}
+.popover.top > .arrow::after {
+  border-top-color: rgba(0, 0, 0, 0.6) !important;
+}
+.popover.left > .arrow::after {
+  border-left-color: rgba(0, 0, 0, 0.6) !important;
+}
+.popover.bottom > .arrow::after {
+  border-bottom-color: rgba(0, 0, 0, 0.6) !important;
 }
 .head-row {
   background-color: rgba(0, 0, 0, 0.2);

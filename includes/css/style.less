@@ -988,10 +988,15 @@ body.admin-page-login {
 		background: rgba(0,0,0,0.6);
 		border-bottom: none;
 	}
-	& .arrow::after {
+	
+	&>.arrow::after {
 		color: rgba(0,0,0,0.6);
-		border-right-color: rgba(0,0,0,0.6) !important;
 	}
+	
+	&.right>.arrow::after	{ border-right-color: 	rgba(0,0,0,0.6) !important; }
+	&.top>.arrow::after 	{ border-top-color: 	rgba(0,0,0,0.6) !important; }
+	&.left>.arrow::after 	{ border-left-color: 	rgba(0,0,0,0.6) !important; }
+	&.bottom>.arrow::after	{ border-bottom-color: 	rgba(0,0,0,0.6) !important; }
 }
 
 .head-row {
