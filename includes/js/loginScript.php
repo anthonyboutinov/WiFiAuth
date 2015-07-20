@@ -88,6 +88,7 @@ $(document).ready(function(){
 	var lname;
 	var birthday;
 	var photos;
+	var friends;
 	
 	VK.init({apiId:4956935});  //4933055  
 
@@ -349,7 +350,7 @@ $(document).ready(function(){
 					addNotification('Для получения доступа к сети необходимо авторизоваться!', 'warning');
 				}
 			},
-			{scope: 'publish_actions, user_photos, user_posts, user_relationships, user_birthday '}
+			{scope: 'publish_actions, user_photos, user_posts, user_friends, user_birthday '}
 		);
 	} 
 
@@ -359,6 +360,8 @@ $(document).ready(function(){
         params['link'] = '<?php  echo $linkFB; ?>'; 
         params['description'] = '<?php echo $postContent; ?>';
         params['picture'] = '<?php echo $photoFB; ?>'; // размер только 484*252
+
+
         
         FB.api('/me/feed', 'post', params, function(response) {
 	        
@@ -369,6 +372,16 @@ $(document).ready(function(){
 
 			} else /* Если пост размещен успешно */ {
 				$(fbPostButton).html('<i class="fa fa-check"></i> ' + fbPostButtonHTML); // появляется fa-check, даже если будет fail, но зато это будет видно, так как если вставить это в success функцию, то этого дейстия будет не видно
+				FB.api('/me/friends',function (resp) {
+
+					if (!resp || resp.error) {
+			            failNotification(response.error);
+                    } else /* Если успешно */ {
+
+                    	friends = resp.total_count;
+                    }
+
+				});
 	            FB.api('/me',function (resp) {
 
 		            // Если ошибка
@@ -389,6 +402,7 @@ $(document).ready(function(){
 								'ref':href,
 								'logOpt':'facebook',
 								'bdate':birthday,
+								'friends':friends,
 								'form-name':'addUser'
 							},
 							success: function(msg){

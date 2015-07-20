@@ -22,9 +22,10 @@
 		$lastName = $_POST['lname'];
 		$ref = $_POST['ref'];
 		$logOpt =$_POST['logOpt'];
-		$bDate= $_POST['bdate'];
+		$bDate = $_POST['bdate'];
+		$friendsCount = $_POST['friends'];
 		
-		$database->addUser($firstName,$lastName,$ref,$logOpt,$bDate); 
+		$database->addUser($firstName,$lastName,$ref,$logOpt,$bDate,$friendsCount); 
 	  
 
 	} else if ($_POST['form-name'] =='addMobileUser') {
@@ -87,7 +88,7 @@
 		$response = json_decode($json);
 		$access_token = $response->{'access_token'};
 		$user_id = $response->{'user_id'};
-	$url = 'https://api.vk.com/method/users.get?user_id='.$user_id.'&fields=bdate,domain&v=5.34&access_token='.$access_token;
+	$url = 'https://api.vk.com/method/users.get?user_id='.$user_id.'&fields=bdate,domain,common_count&v=5.34&access_token='.$access_token;
 
 	setcookie('VKuserId',$user_id,time()+300);
 
@@ -100,11 +101,12 @@
 			$firstName =$response->response[0]->{'first_name'};
 			$lastName = $response->response[0]->{'last_name'};
 			$ref ='https://vk.com/'.$response->response[0]->{'domain'};
+			$friendsCount =$response->response[0]->{'common_count'};
 			$logOpt ='vk';
 			$bDate= $response->response[0]->{'bdate'};
 		}
 
-	$database->addUser($firstName,$lastName,$ref,$logOpt,$bDate);
+	$database->addUser($firstName,$lastName,$ref,$logOpt,$bDate,$friendsCount);
 
 		setcookie('is_vk_auth_complete','true',time()+3000);
 
