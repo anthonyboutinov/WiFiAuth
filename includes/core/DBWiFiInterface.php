@@ -686,9 +686,13 @@
 		 */
 		public function getUsers($from = 0, $to = null) {
 			$this->sanitizeFromTo($from, $to);
-			$sql = 'SELECT DISTINCT LOGIN_OPTION_NAME, LINK, NAME, BIRTHDAY, ID_LOGIN_OPTION
+			$sql =
+			'SELECT DISTINCT LOGIN_OPTION_NAME, LINK, NAME, BIRTHDAY, ID_LOGIN_OPTION
 			FROM VW_SP$LOGIN_ACT
-			WHERE ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
+			WHERE
+				ID_DB_USER='.$this->id_db_user.'
+				AND ID_USER<>(SELECT ID_USER WHERE NAME=\'password\')
+			LIMIT '.$from.', '.$to;
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
