@@ -556,12 +556,6 @@
 			return $this->keyRowsByColumn($result);
 		}
 		
-		public function getHistory($id_var) {
-			$this->newSanitize($id_var);
-			$sql = "CALL GET_HISTORY($id_var)";
-			return $this->getQueryResultWithErrorNoticing($sql);
-		}
-		
 # ==== КОНЕЦ ПОЛУЧЕНИЕ ДАННЫХ ИЗ СЛОВАРЯ ==== #
 # ============================================================= #
 
@@ -1583,15 +1577,42 @@
 			return "Новый пароль установлен!";
 			
 		}
-		
+				
+# ==== КОНЕЦ Функции, изменяющие данные в БД ==== #
+# =================================================================== #
+
+
+
+# =================================================== #
+// !Работа с историей
+# =================================================== #
+
+		public function getHistory($id_var) {
+			$this->newSanitize($id_var);
+			$sql = "CALL GET_HISTORY($id_var)";
+			return $this->getQueryResultWithErrorNoticing($sql);
+		}
+
 		public function revertOldVarValue($history_id_var) {
 			$this->newSanitize($history_id_var);
 			$sql = "CALL REVERT_OLD_VAR_VALUE($history_id_var)";
 			$this->getQueryResultWithErrorNoticing($sql);
 		}
-				
-# ==== КОНЕЦ Функции, изменяющие данные в БД ==== #
-# =================================================================== #
+		
+		public function clearHistory() {
+			$sql = 'delete from HS$VAR where ID_DB_USER='.$this->id_db_user;
+			$this->getQueryResultWithErrorNoticing($sql);
+		}
+		
+		public function clearHistoryForDictionary(integer $id_dictionary) {
+			$this->newSanitize($id_dictionary);
+			$sql = 'delete from HS$VAR where ID_DICTIONARY='."$id_dictionary ID_DB_USER=".$this->id_db_user;
+			$this->getQueryResultWithErrorNoticing($sql);
+		}
+		
+		
+# ==== КОНЕЦ Работа с историей ==== #
+# =================================================== #
 
 
 

@@ -21,34 +21,48 @@
 # ============================== #
 //!DEFAULT PRESENTATION
 # ============================== #
-
-		?><table class="table"><?php
 	
+		$is_first = true;
 		$i = 0;
 		if ($rows && $rows->num_rows > 0) {
 			while($row = $rows->fetch_assoc()) {
-				?>
-				<tr>
-					<?php if (isset($row['OLD_BLOB_VALUE'])) { ?>
-						<td class="text-center position-relative">
+				
+				if ($is_first == true) {
+					$is_first = false;
+					if (isset($row['OLD_BLOB_VALUE'])) {
+						echo '<div class="row">';
+					} else {
+						echo '<table class="table">';
+					}
+				}
+				
+				if (isset($row['OLD_BLOB_VALUE'])) { ?>
+					<div class="text-center history-col
+						col-md-<?=($rows->num_rows < 6 ? '12' : '4');?>
+						col-sm-<?=($rows->num_rows < 4 ? '12' : '6');?>">
+						<div class="history-image-and-timestamp-contaner">
 							<a href="#" data-revert-history="<?=$row['ID_VAR'];?>">
-								<img src="data:image/jpeg;base64,<?=base64_encode($row['OLD_BLOB_VALUE']);?>" class="tiny-image-preview" style="max-width: 100%;">
+								<img src="data:image/jpeg;base64,<?=base64_encode($row['OLD_BLOB_VALUE']);?>" class="tiny-image-preview">
 							</a>
-							<span class="history-general-row-timestamp"><?=$row['OLD_DATE_CREATED'];?></span>
-						</td>
-					<?php } else { ?>
+							<span><?=$row['OLD_DATE_CREATED'];?></span>
+						</div>
+					</div>
+				<?php
+					
+				} else {
+					
+				?>
+					<tr>
 						<td>
 							<a href="#" data-revert-history="<?=$row['ID_VAR'];?>"><?=htmlentities($row['OLD_VALUE']);?></a>
 						</td>
-						<td class="text-right" style="min-width: 135px;"><?=$row['OLD_DATE_CREATED'];?></td>
-					<?php } ?>
-				</tr>
-				<?php
+						<td class="text-right"><?=$row['OLD_DATE_CREATED'];?></td>
+					</tr>
+				<?php }
+					
 			}
 		} else {
-			?>
-			<td class="text-center">Пусто</td>
-			<?php
+			?><div class="text-center">Пусто</div><?php
 		}
 		?></table>
 		<script>
@@ -65,7 +79,7 @@
 					success: function(msg) {
 						
 						setTimeout(function() {
-							$("[data-id-var='<?=$_GET['ID_VAR'];?>']").popover('hide');
+							$("[data-id-var='<?=$_GET['ID_VAR'];?>']").popover('destroy');
 						}, 500);
 						
 						if ($(_this).html()==$(_this).text()) {

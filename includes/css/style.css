@@ -16,6 +16,9 @@
 .position-relative {
   position: relative;
 }
+.position-absolute {
+  position: absolute;
+}
 body {
   background-color: #345972;
   font-family: Fontatigo, 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
@@ -1343,12 +1346,28 @@ ul.affix-top > li > a {
 .visible-xxs-inline-block {
   display: none!important;
 }
-.history-general-row-timestamp {
+.history-col {
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+.history-col .history-image-and-timestamp-contaner {
+  position: relative;
+  max-width: 100%;
+  display: inline-block;
+}
+.history-col .history-image-and-timestamp-contaner > a > img {
+  max-width: 100%;
+  max-height: 200px;
+}
+.history-col .history-image-and-timestamp-contaner > a > img.tiny-image-preview {
+  margin: 0;
+}
+.history-col .history-image-and-timestamp-contaner > span {
   position: absolute;
-  bottom: 10px;
-  right: 15px;
+  bottom: 3px;
+  right: 3px;
   text-align: right;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.6);
   padding: 1px 6px;
   border-radius: 10px;
 }
@@ -1582,5 +1601,13 @@ ul.affix-top > li > a {
   input[type='number'] {
     width: 100%;
     display: block;
+  }
+  i.fa-history {
+    font-size: 150%;
+    padding-top: 6px;
+  }
+  .col-xs-1 {
+    padding: 0;
+    margin-left: -13px;
   }
 }

@@ -21,7 +21,10 @@ function addNotification(msg, kind) {
 	
 	if (kind == 'success') {
 		setTimeout(function() {
-			$(".notification.bg-success").removeClass('bounceInDown').addClass('bounceOutUp').wait(1000).remove();
+			$(".notification.bg-success").removeClass('bounceInDown').addClass('bounceOutUp');
+			setTimeout(function() {
+				$(".notification.bg-success").remove();
+			}, 1000);
 		}, 8000);
 	}
 	

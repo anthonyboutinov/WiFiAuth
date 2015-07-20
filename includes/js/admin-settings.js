@@ -145,7 +145,7 @@ $(document).ready(function() {
 			},
 			success: function(msg) {
 
-				$(_this).attr('title', 'История значений<span class="pull-right"><small>Изменения сохраняются автоматически</small></span>').attr('data-container', 'body').attr('data-toggle', 'popover').attr('data-placement', 'top').attr('data-trigger', 'focus').attr('data-content', msg).popover({
+				$(_this).attr('title', 'История<span class="pull-right"><small>Изменения сохраняются автоматически</small></span>').attr('data-container', 'body').attr('data-toggle', 'popover').attr('data-placement', 'bottom').attr('data-trigger', 'focus').attr('data-content', msg).popover({
 					'html': true
 				}).popover('show').attr('title', 'Скрыть историю').on('hidden.bs.popover', function() {
 					history_box_is_open = false;

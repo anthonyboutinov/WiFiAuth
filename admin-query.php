@@ -16,6 +16,12 @@
 
 			$database->revertOldVarValue($_GET['ID_VAR']);
 
+		} else if ($_GET['form-name'] == 'clearHistory') {
+			if (isset($_GET['ID_DICTIONARY'])) {
+				$database->clearHistoryForDictionary($_GET['ID_DICTIONARY']);
+			} else {
+				$database->clearHistory();
+			}
 		}
 
 	}

@@ -57,6 +57,7 @@
 							<input type="hidden" name="form-name" value="admin-settings">
 										
 							<?php
+								$tabindex=0;
 								$prevFieldParent = null;
 								$isFirst = true;
 								foreach ($settings as $key => $value) {
@@ -91,10 +92,17 @@
 									<? } ?>
 									
 										<div class="form-group">
-											<label class="col-sm-4 control-label<?php if ($value['DATA_TYPE'] == 'checkbox') { echo ' col-xs-9'; } ?>" for="<?=$key;?>"><?=$value['NAME'];?></label>
-											<div class="col-sm-7<?php if ($value['DATA_TYPE'] == 'checkbox') { echo ' col-xs-2 col-contains-checkbox'; } ?>">
-												<?php
-													
+											<label class="col-sm-4 control-label<?php
+												if ($value['DATA_TYPE'] == 'checkbox') {
+													echo ' col-xs-9';
+												} ?>" for="<?=$key;?>"><?=$value['NAME'];	
+												?></label>
+											<div class="col-sm-7<?php
+												if ($value['DATA_TYPE'] == 'checkbox') {
+													echo ' col-xs-3 col-contains-checkbox';
+												} else {
+													echo ' col-xs-1'.($value['HISTORY_COUNT'] > 0 ? '1' : '2');
+												} ?>"><?php
 													
 												if ($value['DATA_TYPE'] == 'text&file' || $value['DATA_TYPE'] == 'file') { // ЕСЛИ ФАЙЛ
 													$addFileScript = true;
@@ -112,6 +120,7 @@
 																	type="file"
 																	accept="image/png, image/jpeg, image/gif"
 																	class="form-control"
+																	tabindex="<?=$tabindex++;?>"
 																	name="<?=$key;?>_file"
 																	id="<?=$key;?>_file"
 																	value="<?=$value['VALUE'];?>">
@@ -126,6 +135,7 @@
 													<textarea rows="4"
 														class="form-control"
 														data-history-receiver="<?=$value['ID_VAR'];?>"
+														tabindex="<?=$tabindex++;?>"
 														name="<?=$key;?>"
 														id="<?=$key;?>"><?=$value['VALUE'];?></textarea>
 													<div class="textarea-word-count" id="<?=$key;?>_word_count">≤200</div>
@@ -154,6 +164,7 @@
 													<input
 														type="<?=$value['DATA_TYPE'];?>"
 														class="form-control"
+														tabindex="<?=$tabindex++;?>"
 														id="<?=$key;?>"
 														name="<?=$key;?>"
 														data-history-receiver="<?=$value['ID_VAR'];?>"
@@ -175,13 +186,16 @@
 													<small><?=$value['COMMENT'];?></small>
 												<?php } ?>
 											</div>
+											<?php if ($value['HISTORY_COUNT'] > 0) { ?>
 											<div class="col-sm-1 col-xs-1">
-												<?php if ($value['HISTORY_COUNT'] > 0) { ?>
+												
 												<label class="control-label">
-													<a href="#" title="Показать историю" role="button" tabindex="0" data-id-var="<?=$value['ID_VAR'];?>"><i class="fa fa-history"></i></a>
+													<a href="#" class="hidden-xs" title="Показать историю" role="button" tabindex="<?=$tabindex++;?>" data-id-var="<?=$value['ID_VAR'];?>"><i class="fa fa-history"></i></a>
+													<a href="#" class="visible-xs-inline"><i class="fa fa-history"></i></a>
 												</label>
-												<?php } ?>
+												
 											</div>
+											<?php } ?>
 										</div>
 									
 									<?php
@@ -204,21 +218,21 @@
 								<input type="hidden" name="form-name" value="admin-password">
 						
 								<div class="form-group">
-									<label class="col-sm-4 control-label" for="old-password">Старый пароль</label>
+									<label class="col-sm-4 control-label" for="old-password" tabindex="<?=$tabindex++;?>">Старый пароль</label>
 									<div class="col-sm-8">
 										<input type="password" class="form-control" name="old-password" id="old-password">
 									</div>
 								</div>
 						
 								<div class="form-group">
-									<label class="col-sm-4 control-label" for="password">Новый пароль</label>
+									<label class="col-sm-4 control-label" for="password" tabindex="<?=$tabindex++;?>">Новый пароль</label>
 									<div class="col-sm-8">
 										<input type="password" class="form-control" name="password" id="password">
 									</div>
 								</div>
 								
 								<div class="form-group">
-									<label class="col-sm-4 control-label" for="repeat-password">Повторите пароль</label>
+									<label class="col-sm-4 control-label" for="repeat-password" tabindex="<?=$tabindex++;?>">Повторите пароль</label>
 									<div class="col-sm-8">
 										<input type="password" class="form-control" name="repeat-password" id="repeat-password">
 									</div>
