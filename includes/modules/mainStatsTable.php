@@ -8,7 +8,7 @@
 		<?php foreach ($database->getShortReport() as $key => $value) { ?>
 		<tr><td>Сессий за <?=$key;?></td><td class="text-right"><?=$value;?></td></tr>
 		<?php } ?>
-		<tr><td>Охват целевой аудитории</td><td class="text-right"><?=ceil($database->getFriendsSocialNetworkUsers()*$database->getCountSocialNetworkUsers()*0.7); ?></td>
+		<tr><td>Охват целевой аудитории</td><td class="text-right"><?=ceil($database->getFriendsSocialNetworkUsers()); ?></td>
 	</table>
 
 </div>
