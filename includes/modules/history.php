@@ -54,8 +54,8 @@
 					success: function(msg) {
 						
 						setTimeout(function() {
-							$("[data-id-var='<?=$_GET['ID_VAR'];?>']").popover('close');
-						}, 500)
+							$("[data-id-var='<?=$_GET['ID_VAR'];?>']").popover('hide');
+						}, 500);
 						
 						if ($(_this).html()==$(_this).text()) {
 							$("[data-history-receiver='<?=$_GET['ID_VAR'];?>']").val($(_this).html());
