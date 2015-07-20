@@ -101,7 +101,7 @@
 													
 													if (isset($value['BLOB_VALUE'])) { ?>
 													<small>Изображение, которое используется сейчас:</small>
-													<img src="data:image/jpeg;base64,<?=base64_encode($value['BLOB_VALUE']);?>" class="tiny-image-preview" ata-history-src-receiver="<?=$value['ID_VAR'];?>">
+													<img src="data:image/jpeg;base64,<?=base64_encode($value['BLOB_VALUE']);?>" class="tiny-image-preview" data-history-src-receiver="<?=$value['ID_VAR'];?>">
 													<?php } ?>
 													<div class="input-group">
 										                <span class="input-group-btn">

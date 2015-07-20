@@ -21,7 +21,7 @@
 					<td>
 						<a href="#" data-revert-history="<?=$row['ID_VAR'];?>"><?=htmlentities($row['OLD_VALUE']);?><?php if (isset($row['OLD_BLOB_VALUE'])) { ?>
 							<img src="data:image/jpeg;base64,<?=base64_encode($row['OLD_BLOB_VALUE']);?>" class="tiny-image-preview">
-							<?php } ?></a>
+						<?php } ?></a>
 					</td>
 					<td class="text-right"><?=$row['OLD_DATE_CREATED'];?></td>
 				</tr>
@@ -45,11 +45,17 @@
 						'ID_VAR': $(this).attr('data-revert-history')
 					},
 					success: function(msg) {
+						
+						
+						
 						if ($(_this).html()==$(_this).text()) {
 							$("[data-history-receiver='<?=$_GET['ID_VAR'];?>']").val($(_this).html());
+							addNotification('Изменение сохранено: установлено значение "'+$(_this).html()+'".', 'success');
 						} else {
-							$("[data-history-src-receiver='<?=$_GET['ID_VAR'];?>']").attr('src', $(_this).html().find('img').attr('src'));
+							$("[data-history-src-receiver='<?=$_GET['ID_VAR'];?>']").attr('src', $(_this).find('img').attr('src'));
+							addNotification('Изменение сохранено: задан новый файл.', 'success');
 						}
+						
 					},
 					fail: failNotification
 				});
