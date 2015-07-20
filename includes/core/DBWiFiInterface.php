@@ -506,7 +506,14 @@
 				Y.COMMENT,
 				Y.ID_PARENT,
 				W.NAME AS PARENT_NAME,
-				DT.NAME AS DATA_TYPE
+				DT.NAME AS DATA_TYPE,
+				(
+					SELECT COUNT(H.ID_VAR)
+					FROM HS$VAR H
+					WHERE
+						H.ID_DICTIONARY=V.ID_DICTIONARY
+						AND H.ID_DB_USER=V.ID_DB_USER
+				) AS HISTORY_COUNT
 			FROM SP$VAR V
 			LEFT JOIN CM$DICTIONARY Y ON V.ID_DICTIONARY=Y.ID_DICTIONARY
 			LEFT JOIN CM$DICTIONARY W ON Y.ID_PARENT=W.ID_DICTIONARY
@@ -1569,6 +1576,12 @@
 			
 			return "Новый пароль установлен!";
 			
+		}
+		
+		public function returnOldVarValue($history_id_var) {
+			$this->newSanitize($history_id_var);
+			$sql = "CALL RETURN_OLD_VAR_VALUE($history_id_var)";
+			$this->getQueryResultWithErrorNoticing($sql);
 		}
 				
 # ==== КОНЕЦ Функции, изменяющие данные в БД ==== #

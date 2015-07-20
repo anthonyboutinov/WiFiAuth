@@ -91,8 +91,8 @@
 									<? } ?>
 									
 										<div class="form-group">
-											<label class="col-sm-4 control-label<?php if ($value['DATA_TYPE'] == 'checkbox') { echo ' col-xs-10'; } ?>" for="<?=$key;?>"><?=$value['NAME'];?></label>
-											<div class="col-sm-8<?php if ($value['DATA_TYPE'] == 'checkbox') { echo ' col-xs-2 col-contains-checkbox'; } ?>">
+											<label class="col-sm-4 control-label<?php if ($value['DATA_TYPE'] == 'checkbox') { echo ' col-xs-9'; } ?>" for="<?=$key;?>"><?=$value['NAME'];?></label>
+											<div class="col-sm-7<?php if ($value['DATA_TYPE'] == 'checkbox') { echo ' col-xs-2 col-contains-checkbox'; } ?>">
 												<?php
 													
 													
@@ -171,6 +171,13 @@
 													
 												if ($value['COMMENT']) { ?>
 													<small><?=$value['COMMENT'];?></small>
+												<?php } ?>
+											</div>
+											<div class="col-sm-1 col-xs-1">
+												<?php if ($value['HISTORY_COUNT'] > 0) { ?>
+												<label class="control-label">
+													<a href="#" data-id-var="<?=$value['ID_VAR'];?>"><i class="fa fa-history"></i></a>
+												</label>
 												<?php } ?>
 											</div>
 										</div>

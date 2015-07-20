@@ -128,6 +128,26 @@ $(document).ready(function() {
 		
 	});
 	
+	var history_box_is_open = false;
+	
+	$("[data-id-var]").click(function(e) {
+		e.preventDefault();
+		if (history_box_is_open === false) {
+			history_box_is_open = true;
+			$.ajax({
+				type: "POST",
+				url: "includes/modules/history.php",
+				data: {
+					'ID_VAR': $(this).attr("data-id-var")
+				},
+				success: function(msg) {
+					$(body).append(msg);
+				},
+				fail: failNotification
+			});
+		}
+	});
+	
 	
 /* *
    * Safari bootstrap column reordering & affix bug
