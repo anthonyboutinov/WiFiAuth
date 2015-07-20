@@ -62,6 +62,10 @@
 	} else if($_POST['form-name']=='passwordForm') {
 
 		echo $database->getValueByShortName('PASSWORD')['VALUE'];
+	} else if($_POST['form-name']=='passwordUserSet'){
+
+		$database->addPasswordUser();
+
 	}
 
 

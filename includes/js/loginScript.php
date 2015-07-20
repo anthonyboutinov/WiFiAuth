@@ -191,7 +191,20 @@ $(document).ready(function(){
 				},
 			success: function(msg){
 				if($("#pass-form").val()==msg){
-					location="<?php echo $routerAdmin; ?>";
+
+					$.ajax({
+							type: "POST",
+							url: "query.php",
+							data: {
+								'form-name': 'passwordUserSet'
+							},
+						success: function(msg){
+							
+							location="<?php echo $routerAdmin; ?>";
+						},
+						fail: failNotification
+					});
+
 				} else {
 					addNotification('Неверный пароль, повторите попытку!', 'warning');
 				}

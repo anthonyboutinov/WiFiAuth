@@ -63,7 +63,7 @@
 						</div>
 						<div class="modal-body">
 							<div class="form-group">
-								<label  for="pass">Спросите пароль от&nbsp;W-Fi у&nbsp;официанта:</label>
+								<label  for="pass">Спросите пароль от&nbsp;Wi-Fi у&nbsp;официанта:</label>
 									<div class="input-group">
 									  <input type="text" class="form-control" id="pass-form" aria-describedby="sizing-addon2">
 									   <div class="input-group-btn">
