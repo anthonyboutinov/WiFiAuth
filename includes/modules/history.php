@@ -17,19 +17,26 @@
 			while($row = $rows->fetch_assoc()) {
 				?>
 				<tr>
-					<td class="text-right"><?=++$i;?></td>
-					<td>
-						<a href="#" data-revert-history="<?=$row['ID_VAR'];?>"><?=htmlentities($row['OLD_VALUE']);?><?php if (isset($row['OLD_BLOB_VALUE'])) { ?>
-							<img src="data:image/jpeg;base64,<?=base64_encode($row['OLD_BLOB_VALUE']);?>" class="tiny-image-preview">
-						<?php } ?></a>
-					</td>
-					<td class="text-right"><?=$row['OLD_DATE_CREATED'];?></td>
+					<?php if (isset($row['OLD_BLOB_VALUE'])) { ?>
+						<td class="text-center position-relative">
+							<a href="#" data-revert-history="<?=$row['ID_VAR'];?>">
+								<img src="data:image/jpeg;base64,<?=base64_encode($row['OLD_BLOB_VALUE']);?>" class="tiny-image-preview" style="max-width: 100%;">
+							</a>
+							<span class="history-general-row-timestamp"><?=$row['OLD_DATE_CREATED'];?></span>
+						</td>
+					<?php } else { ?>
+						<td class="text-right"><?=++$i;?></td>
+						<td>
+							<a href="#" data-revert-history="<?=$row['ID_VAR'];?>"><?=htmlentities($row['OLD_VALUE']);?></a>
+						</td>
+						<td class="text-right"><?=$row['OLD_DATE_CREATED'];?></td>
+					<?php } ?>
 				</tr>
 				<?php
 			}
 		} else {
 			?>
-			<td colspan="3">Пусто</td>
+			<td class="text-center">Пусто</td>
 			<?php
 		}
 		?></table>
@@ -46,7 +53,9 @@
 					},
 					success: function(msg) {
 						
-						
+						setTimeout(function() {
+							$("[data-id-var='<?=$_GET['ID_VAR'];?>']").popover('close');
+						}, 500)
 						
 						if ($(_this).html()==$(_this).text()) {
 							$("[data-history-receiver='<?=$_GET['ID_VAR'];?>']").val($(_this).html());

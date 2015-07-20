@@ -1315,6 +1315,15 @@ ul.affix-top > li > a {
 .visible-xxs-inline-block {
   display: none!important;
 }
+.history-general-row-timestamp {
+  position: absolute;
+  bottom: 10px;
+  right: 15px;
+  text-align: right;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1px 4px;
+  border-radius: 10px;
+}
 /* COMBINED (this way it's faster) */
 @media screen and (min-width: 768px) {
   nav.navbar {
