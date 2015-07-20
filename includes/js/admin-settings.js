@@ -128,45 +128,39 @@ $(document).ready(function() {
 		
 	});
 	
-	var history_box_is_open = false;
 	$("[data-id-var]").click(function(e) {
 		e.preventDefault();
-		
+
 		var _this = $(this);
-		
-		if (history_box_is_open === false) {
-			history_box_is_open = true;
-			
-			var _fa = $(this).find('i.fa');
-			$(_fa).addClass('fa-spin-ccw');
-			
-			$.ajax({
-				type: "GET",
-				url: "includes/modules/history.php",
-				data: {
-					'ID_VAR': $(this).attr("data-id-var"),
-					'presentation': 'none'
-				},
-				success: function(msg) {
-					
-					$(_this).attr('title', 'История значений<span class="pull-right"><small>Изменения сохраняются автоматически</small></span>').attr('data-container', 'body').attr('data-toggle', 'popover').attr('data-placement', 'top').attr('data-trigger', 'focus').attr('data-content', msg).popover({
-						'html': true
-					}).popover('show').attr('title', 'Скрыть историю').on('hidden.bs.popover', function() {
-						history_box_is_open = false;
-						$(_this).attr('title', 'Показать историю');
-					});
-					
-					$(_fa).removeClass('fa-spin-ccw');
-					
-				},
-				error: function (request, status, error) {
-					failNotification();
-					$(_fa).removeClass('fa-spin-ccw');
-				}
-			});
-			
-		}
-		
+
+		var _fa = $(this).find('i.fa');
+		$(_fa).addClass('fa-spin-ccw');
+
+		$.ajax({
+			type: "GET",
+			url: "includes/modules/history.php",
+			data: {
+				'ID_VAR': $(this).attr("data-id-var"),
+				'presentation': 'none'
+			},
+			success: function(msg) {
+
+				$(_this).attr('title', 'История значений<span class="pull-right"><small>Изменения сохраняются автоматически</small></span>').attr('data-container', 'body').attr('data-toggle', 'popover').attr('data-placement', 'top').attr('data-trigger', 'focus').attr('data-content', msg).popover({
+					'html': true
+				}).popover('show').attr('title', 'Скрыть историю').on('hidden.bs.popover', function() {
+					history_box_is_open = false;
+					$(_this).attr('title', 'Показать историю');
+				});
+
+				$(_fa).removeClass('fa-spin-ccw');
+
+			},
+			error: function (request, status, error) {
+				failNotification();
+				$(_fa).removeClass('fa-spin-ccw');
+			}
+		});
+				
 	});
 	
 	

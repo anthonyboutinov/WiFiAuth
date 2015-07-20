@@ -125,6 +125,7 @@
 												
 													<textarea rows="4"
 														class="form-control"
+														data-history-receiver="<?=$value['ID_VAR'];?>"
 														name="<?=$key;?>"
 														id="<?=$key;?>"><?=$value['VALUE'];?></textarea>
 													<div class="textarea-word-count" id="<?=$key;?>_word_count">≤200</div>

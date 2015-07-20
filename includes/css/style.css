@@ -168,7 +168,8 @@ input[type="color"],
 input[type="password"],
 input[type="email"],
 input[type="phone"],
-input[type="search"] {
+input[type="search"],
+textarea {
   font-family: 'Helvetica Nueue', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 input[type="text"] {
@@ -1348,7 +1349,7 @@ ul.affix-top > li > a {
   right: 15px;
   text-align: right;
   background: rgba(0, 0, 0, 0.4);
-  padding: 1px 4px;
+  padding: 1px 6px;
   border-radius: 10px;
 }
 /* COMBINED (this way it's faster) */

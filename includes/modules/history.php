@@ -37,11 +37,10 @@
 							<span class="history-general-row-timestamp"><?=$row['OLD_DATE_CREATED'];?></span>
 						</td>
 					<?php } else { ?>
-						<?php if ($rows->num_rows > 1) { ?><td class="text-right"><?=++$i;?></td><?php } ?>
 						<td>
 							<a href="#" data-revert-history="<?=$row['ID_VAR'];?>"><?=htmlentities($row['OLD_VALUE']);?></a>
 						</td>
-						<td class="text-right"><?=$row['OLD_DATE_CREATED'];?></td>
+						<td class="text-right" style="min-width: 135px;"><?=$row['OLD_DATE_CREATED'];?></td>
 					<?php } ?>
 				</tr>
 				<?php
