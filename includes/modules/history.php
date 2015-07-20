@@ -9,7 +9,19 @@
 		fatalError("DEBUG Error in includes/modules/history.php: presentation not set");
 	}
 	
-	function drawTable($rows) {
+	$rows = $database->getHistory($_GET['ID_VAR']);
+	
+	$presentation = $_GET['presentation'];
+	if ($presentation == 'modal') {
+		
+		Error::fatalError('DEBUG Error in includes/modules/history.php: modal presentation неопределен! Если нужен, то сделать.');
+		
+	} else {
+
+# ============================== #
+//!DEFAULT PRESENTATION
+# ============================== #
+
 		?><table class="table"><?php
 	
 		$i = 0;
@@ -25,7 +37,7 @@
 							<span class="history-general-row-timestamp"><?=$row['OLD_DATE_CREATED'];?></span>
 						</td>
 					<?php } else { ?>
-						<td class="text-right"><?=++$i;?></td>
+						<?php if ($rows->num_rows > 1) { ?><td class="text-right"><?=++$i;?></td><?php } ?>
 						<td>
 							<a href="#" data-revert-history="<?=$row['ID_VAR'];?>"><?=htmlentities($row['OLD_VALUE']);?></a>
 						</td>
@@ -66,42 +78,12 @@
 						}
 						
 					},
-					fail: failNotification
+					error: function (request, status, error) { failNotification(); }
 				});
 			});
 		</script>
 		<?php
-	}
-	
-	$rows = $database->getHistory($_GET['ID_VAR']);
-	
-	$presentation = $_GET['presentation'];
-	if ($presentation == 'modal') {
-		Error::fatalError('DEBUG Error in includes/modules/history.php: modal presentation недоделан! Если нужен, то доработать.');
-		?>
-		
-		<div class="modal fade" id="modalHistory" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
-			<div class="modal-dialog modal-black">
-				<!-- <form> -->
-					<div class="modal-content narrow-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						</div>
-						<div class="modal-body"><?php drawTable($rows); ?></div>
-						<div class="modal-footer">
-							<!-- Оставить modal-footer. Он просто пустой. -->
-						</div>
-					</div>
-				<!-- </form> -->
-			</div>
-		</div>
-		<script>
-// 			makeHistoryWindowDOMConnections();
-		</script>
-		
-		<?php
-	} else {
-		drawTable($rows);
-	}
+			
+	} // EOF DEFAULT PRESENTATION
 		
 ?>

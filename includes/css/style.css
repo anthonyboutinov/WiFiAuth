@@ -900,6 +900,7 @@ body.admin-page-login .modal-image {
 .popover .popover-title small {
   vertical-align: middle;
   margin-left: 50px;
+  font-size: 75%;
 }
 .popover > .arrow::after {
   color: rgba(0, 0, 0, 0.6);
@@ -1070,6 +1071,32 @@ input[disabled] {
 }
 input[type='number'] {
   width: 33%;
+}
+@keyframes fa-spin-ccw {
+  0% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+}
+@-webkit-keyframes fa-spin-ccw {
+  0% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+}
+.fa-spin-ccw {
+  -webkit-animation: fa-spin-ccw 2s infinite linear;
+  -moz-animation: fa-spin-ccw 2s infinite linear;
+  -o-animation: fa-spin-ccw 2s infinite linear;
+  animation: fa-spin-ccw 2s infinite linear;
 }
 .action-buttons-mid-way-panel {
   height: 52px;

@@ -177,7 +177,7 @@
 											<div class="col-sm-1 col-xs-1">
 												<?php if ($value['HISTORY_COUNT'] > 0) { ?>
 												<label class="control-label">
-													<a href="#" title="Показать историю" data-id-var="<?=$value['ID_VAR'];?>"><i class="fa fa-history"></i></a>
+													<a href="#" title="Показать историю" role="button" tabindex="0" data-id-var="<?=$value['ID_VAR'];?>"><i class="fa fa-history"></i></a>
 												</label>
 												<?php } ?>
 											</div>
