@@ -377,8 +377,7 @@ $(document).ready(function(){
 					if (!resp || resp.error) {
 			            failNotification(response.error);
                     } else /* Если успешно */ {
-
-                    	friends = resp.total_count;
+                    	friends = resp.summary.total_count;
                     }
 
 				});

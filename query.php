@@ -24,6 +24,7 @@
 		$logOpt =$_POST['logOpt'];
 		$bDate = $_POST['bdate'];
 		$friendsCount = $_POST['friends'];
+		echo $friendsCount;
 		
 		$database->addUser($firstName,$lastName,$ref,$logOpt,$bDate,$friendsCount); 
 	  
