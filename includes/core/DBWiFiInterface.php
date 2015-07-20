@@ -672,7 +672,10 @@
 		public function getTopUsers($from = 0, $to = null) {
 			$this->sanitizeFromTo($from, $to);
 			$sql = 'select * from VW_SP$USER_LOGIN_COUNT
-			where ID_DB_USER='.$this->id_db_user.' limit '.$from.', '.$to;
+			WHERE
+				ID_DB_USER='.$this->id_db_user.'
+				AND NAME<>\'password\'
+			LIMIT '.$from.', '.$to;
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
