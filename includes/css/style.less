@@ -376,6 +376,19 @@ i.fa[data-toggle="tooltip"] {
 		color: #2E3537; 
 		background-color: #FFFFFF; 
 	}
+	
+	&.partial-text-shadow {
+		text-shadow: none;
+		& > span {
+			text-shadow: 0px 2px 2px black;
+		}
+		& > i.fa {
+			&.fa-spin,
+			&.fa-spin-ccw {
+				text-shadow: none;
+			}
+		}
+	}
 
 }
 

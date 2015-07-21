@@ -379,6 +379,20 @@ fieldset[disabled] .btn-red.active {
   color: #2E3537;
   background-color: #FFFFFF;
 }
+.btn-black.partial-text-shadow,
+.btn-red.partial-text-shadow {
+  text-shadow: none;
+}
+.btn-black.partial-text-shadow > span,
+.btn-red.partial-text-shadow > span {
+  text-shadow: 0px 2px 2px black;
+}
+.btn-black.partial-text-shadow > i.fa.fa-spin,
+.btn-red.partial-text-shadow > i.fa.fa-spin,
+.btn-black.partial-text-shadow > i.fa.fa-spin-ccw,
+.btn-red.partial-text-shadow > i.fa.fa-spin-ccw {
+  text-shadow: none;
+}
 .open .dropdown-toggle.btn-black,
 .open .dropdown-toggle.btn-red {
   color: #FFFFFF;

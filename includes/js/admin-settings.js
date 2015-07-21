@@ -31,7 +31,36 @@ $(document).ready(function() {
 	setTimeout(function(){
 		$("i.fa[class^=\"text\"]").remove();
 	}, 8000);
+	
+	$("#clear_history").click(function(e) {
+		e.preventDefault();
+		
+		$("#clear_history_confirm").click(function(e) {
+			e.preventDefault();
+			$("#clear_history").find("i.fa").removeClass('fa-times').addClass('fa-spin-ccw fa-history');
+			$("#clear_history").find("span").text("Очищается...");
+			$.ajax({
+				type: "GET",
+				url: "admin-query.php",
+				data: {
+					'form-name': 'clear-history'
+				},
+				success: function(msg) {
+					$("#clear_history").popover('destroy').attr('title', 'История очищена!');
+					$("#clear_history").find("i.fa").removeClass('fa-spin-ccw fa-history').addClass('fa-check');
+					addNotification('История очищена!', 'success');
+					$("#clear_history").attr('disabled', 'disabled').find("span").text("История очищена");
+				},
+				error: function (request, status, error) {
+					failNotification();
+					$("#clear_history").find("i.fa").addClass('fa-check');
+					$("#clear_history").find("span").text("Очистить историю");
+				}
+			});
+		});
 
+	});
+	
 /* *
    * All submit buttons restrictions and view changes
  */

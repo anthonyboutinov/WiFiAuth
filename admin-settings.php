@@ -185,8 +185,27 @@
 														
 													if ($value['SHORT_NAME'] == 'HISTORY_SIZE') {
 														?>
-														<button id="clear_history" class="btn btn-sm btn-black" style="width: 220px;">Очистить историю <i class="fa fa-times"></i></button>
+														<a href="#"
+														id="clear_history"
+														class="btn btn-sm btn-black partial-text-shadow"
+														style="width: 220px;"
+														tabindex="<?=$tabindex++;?>"
+														title='<div style="max-width: 240px;">Будет удалена вся история вместе с историей конструктора постов</div>'
+														data-toggle="popover"
+														data-container="body"
+														data-placement="top"
+														data-trigger="focus"
+														data-content='<button class="btn btn-red" id="clear_history_confirm">Подтвердить</button>'
+														role="button">
+															<span>Очистить историю</span> <i class="fa fa-times"></i>
+														</a>
 														<?php
+															
+														ob_start(); ?>
+														$("#clear_history").popover({
+															'html': true
+														});
+													<?php $additionalScripts = $additionalScripts.ob_get_clean(); 
 													}
 													
 												} else if ($value['DATA_TYPE'] != 'file') { // ЕСЛИ СТАНДАРТНОЕ
