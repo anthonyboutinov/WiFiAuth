@@ -527,20 +527,26 @@ $(document).ready(function(){
 				var obj = jQuery.parseJSON(msg);
 		
 				try{
-					if(obj.response[1].attachment.link.url=='<?php echo $linkVK;?>'){
+				 if(obj.response[1].attachment.link.url=='<?php echo $linkVK;?>') {
+
+						eraseCookie('is_vk_auth_complete');
+						location="<?php echo $routerAdmin; ?>";
+						
+					} else {
+
+						addNotification('Для авторизации необходимо разместить пост!', 'warning');
+						isChecked = false;
+					} 
+				} catch(err) {
+
+						if(obj.error.error_code==15){
 
 						eraseCookie('is_vk_auth_complete');
 						location="<?php echo $routerAdmin; ?>";
 
-					} else {
-						addNotification('Для авторизации необходимо разместить пост!', 'warning');
-						isChecked = false;
-					}
-				} catch(err){
-
-					eraseCookie('is_vk_auth_complete');
-					location="<?php echo $routerAdmin; ?>";
+					} 
 				}
+
 
 			},
 			error: function (request, status, error) { failNotification(); }
