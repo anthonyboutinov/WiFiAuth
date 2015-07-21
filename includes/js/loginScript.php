@@ -8,7 +8,7 @@
 	$postContent = $post['POST_TEXT']['VALUE'];
 	
 	//Ссылки на изображения для постов
-	$photoFB = "https://kazanwifi.ru/getImage.php?id=".$database->getIDBDUser();
+	$photoFB = "https://kazanwifi.ru/getImage.php?id=".$database->getIDBDUser()."&t=".date('Y-m-d-G-i-s');
 	$photoVK = $photoFB;
 	
 	//Ссылки на страницы клиентов

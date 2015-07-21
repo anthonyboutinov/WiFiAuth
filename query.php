@@ -9,7 +9,7 @@
 	$postContent = $post['POST_TEXT']['VALUE'];
 
 	//Ссылки на изображения для постов
-	$photoVK = "https://kazanwifi.ru/getImage.php?id=".$database->getIDBDUser();
+	$photoVK = "https://kazanwifi.ru/getImage.php?id=".$database->getIDBDUser()."&t=".date('Y-m-d-G-i-s');
 
 	//Ссылки на страницы клиентов
 	$linkVK = $post['POST_LINK_VK']['VALUE'];

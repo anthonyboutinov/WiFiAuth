@@ -1063,7 +1063,9 @@
 			
 		}
 		
-		public function getPostImage($id_db_user) {
+		public function getPostImage($id_db_user, $timestamp = NULL) {
+			#TODO: Временной штамп учитывать!
+			// timestamp передается текстом в формате 'YYYY-MM-DD-hh-mm-ss'
 			$this->newSanitize($id_db_user);
 			$sql = 'select BLOB_VALUE from SP$VAR
 			where ID_DB_USER='.$id_db_user.'
