@@ -178,9 +178,26 @@ textarea {
 input[type="text"] {
   box-shadow: none;
 }
-select.all-but-safari {
+h1 select.all-but-safari {
   background-color: #315a78;
   border: none;
+}
+/*
+#admin-settings-f/*
+orm select.all-but-safari {
+	background-color: #ffffff;
+	border-width: 1px;
+	color: #555;
+	height: 34px;	
+}
+*/
+#admin-settings-form select {
+  background-color: #ffffff;
+  border-width: 1px;
+  color: #555;
+  height: 34px;
+  position: relative;
+  top: -1px;
 }
 .textarea-word-count {
   margin-top: -25px;
@@ -1252,26 +1269,36 @@ body.admin-page.simple-page .chart-wrapper {
   height: 30px;
   background: rgba(0, 0, 0, 0.6);
 }
+/*
 .month-picker-input-group {
-  background: rgba(0, 0, 0, 0.2);
-  padding: 10px;
-  width: 70%;
-  display: inline-block;
+	background: rgba(0,0,0,0.2);
+	padding: 10px;
+	width: 70%;
+	display: inline-block;
 }
+
 .month-picker-input-group .glyphicon {
-  margin-right: 20px;
-  top: 2px;
+	margin-right: 20px;
+	top: 2px;
 }
+
 .month-picker-input-group .fa {
-  margin-right: 20px;
+	margin-right: 20px;
 }
+
 .month-picker-input-group select {
-  background: none;
-  border: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-left: 10px;
-  padding-right: 10px;
+	background: none;
+	border: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+*/
+#admin-settings-form select {
+  width: 20%;
+  margin-right: 2em;
+  margin-left: 2em;
 }
 /* DASHBOARD */
 body.dashboard .dashboard-more-info {

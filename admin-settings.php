@@ -155,6 +155,40 @@
 														
 														
 														
+												} else if (CommonFunctions::startsWith('options', $value['DATA_TYPE'])) {
+													
+													$options = substr($value['DATA_TYPE'], 8); //size('options:') = 8
+													$options = explode(',', $options);
+													
+													?><select
+														tabindex="<?=$tabindex++;?>"
+														data-history-receiver="<?=$value['ID_VAR'];?>"
+														name="<?=$key;?>"
+														id="<?=$key;?>"><?php
+															
+													$found_value = false;
+													
+													foreach ($options as $option) { ?>
+														<option value="<?=$option;?>"<?php
+															if ($value['NUMBER_VALUE'] == $option) {
+																echo ' selected';
+																$found_value = true;
+															}
+														?>><?=$option;?></option><?php
+													}
+														
+													if (!$found_value) { ?>
+														<option value="<?=$value['NUMBER_VALUE'];?>" selected><?=$value['NUMBER_VALUE'];?></option><?php
+													}
+														
+													?></select><?php
+														
+													if ($value['SHORT_NAME'] == 'HISTORY_SIZE') {
+														?>
+														<button id="clear_history" class="btn btn-sm btn-black" style="width: 220px;">Очистить историю <i class="fa fa-times"></i></button>
+														<?php
+													}
+													
 												} else if ($value['DATA_TYPE'] != 'file') { // ЕСЛИ СТАНДАРТНОЕ
 													
 													if ($value['DATA_TYPE'] == 'checkbox') { // ЕСЛИ CHECKBOX
