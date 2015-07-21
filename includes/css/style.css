@@ -1379,9 +1379,11 @@ ul.affix-top > li > a {
   padding-top: 5px;
   display: block;
 }
+/*
 .col-contains-checkbox {
-  margin-top: -6px;
+	margin-top: -6px;
 }
+*/
 .visible-xxs-inline,
 .visible-xxs-block,
 .visible-xxs-inline-block {
