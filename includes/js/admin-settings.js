@@ -147,7 +147,7 @@ $(document).ready(function() {
 
 				$(_this).attr('title', 'История<span class="pull-right"><small>Изменения сохраняются автоматически</small></span>').attr('data-container', 'body').attr('data-toggle', 'popover').attr('data-placement', 'bottom').attr('data-trigger', 'focus').attr('data-content', msg).popover({
 					'html': true
-				}).popover('show').attr('title', 'Скрыть историю').on('hidden.bs.popover', function() {
+				}).popover('show').attr('title', 'Показать историю').on('hidden.bs.popover', function() {
 					history_box_is_open = false;
 					$(_this).attr('title', 'Показать историю');
 				});

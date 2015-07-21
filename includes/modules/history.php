@@ -22,6 +22,8 @@
 //!DEFAULT PRESENTATION
 # ============================== #
 	
+		$is_blob = false;
+		
 		$is_first = true;
 		$i = 0;
 		if ($rows && $rows->num_rows > 0) {
@@ -31,6 +33,7 @@
 					$is_first = false;
 					if (isset($row['OLD_BLOB_VALUE'])) {
 						echo '<div class="row">';
+						$is_blob = true;
 					} else {
 						echo '<table class="table">';
 					}
@@ -54,7 +57,7 @@
 				?>
 					<tr>
 						<td>
-							<a href="#" data-revert-history="<?=$row['ID_VAR'];?>"><?=htmlentities($row['OLD_VALUE']);?></a>
+							<a href="#" data-revert-history="<?=$row['ID_VAR'];?>"><?=$row['OLD_VALUE'];?></a>
 						</td>
 						<td class="text-right"><?=$row['OLD_DATE_CREATED'];?></td>
 					</tr>
@@ -82,13 +85,13 @@
 							$("[data-id-var='<?=$_GET['ID_VAR'];?>']").popover('destroy');
 						}, 500);
 						
-						if ($(_this).html()==$(_this).text()) {
+						<?php if ($is_blob == false) { ?>
 							$("[data-history-receiver='<?=$_GET['ID_VAR'];?>']").val($(_this).html());
 							addNotification('Изменение сохранено: установлено значение "'+$(_this).html()+'".', 'success');
-						} else {
+						<?php } else { ?>
 							$("[data-history-src-receiver='<?=$_GET['ID_VAR'];?>']").attr('src', $(_this).find('img').attr('src'));
 							addNotification('Изменение сохранено: задан новый файл.', 'success');
-						}
+						<?php } ?>
 						
 					},
 					error: function (request, status, error) { failNotification(); }
