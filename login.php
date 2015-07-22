@@ -147,7 +147,16 @@
 						</span>
 					</a>
 					<?php
-			         	} else if ($value == 'mobile') {
+			         	} else if ($value == 'instagram') {
+			         ?>
+					<a href="#" id="InstagramLoginButton" >
+						<span class="fa-stack">
+							<i class="fa fa-circle fa-stack-2x" style="color: #5596c9;"></i>
+							<i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
+						</span>
+					</a>
+					<?php
+						} else if ($value == 'mobile') {
 			         ?>
 					<a href="#" id="loginInputPasswordFormButton" data-toggle="modal" data-target="#modalPassword">
 						<span class="fa-stack">
@@ -166,7 +175,7 @@
 						</span>
 					</a>
 					<?php
-						}
+						} 
 					}
 					?>
 				</div>

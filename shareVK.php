@@ -8,19 +8,8 @@
 </head>
 <body>
 <script type="text/javascript">
-  VK.init(
-  	{apiId: 4933055}
-  	);
+  alert("\u041c\u0438\u0445\u0430\u0438\u043b");
 </script>
-<script type="text/javascript">
 
-VK.Api.call('wall.get',{
-						count:1,
-						filter:'owner'
-					}, function (r){
-						console.log(r);
-						alert(r.response[1].attachment.link.url);
-					});
-</script>
 </body>
 </html>

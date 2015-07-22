@@ -164,7 +164,7 @@ $(document).ready(function(){
 	// 		} // eof function(r)
 			
 	// 	); // eof VK.Api.call
- //   }
+	 //   }
    
 	// function vkLoginInput() {  //функция авторизации
 	//     VK.Auth.login(authInfo,8193);
@@ -595,7 +595,7 @@ $(document).ready(function(){
         expires = "";
     }
     document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
-}
+	}
 
 	function readCookie(name) {
 	    var nameEQ = encodeURIComponent(name) + "=";
@@ -610,6 +610,17 @@ $(document).ready(function(){
 
 	function eraseCookie(name) {
     createCookie(name, "", -1);
-}
+	}
 
+	function SetInstagramRelationships(){
+
+		var y = document.body.clientHeight;
+		var x = document.body.clientWidth;
+		var url = 'https://instagram.com/oauth/authorize/?'+
+			'client_id=bcab832844b44036afeb274d69ddbf8c'+
+			'&scope=relationships'+
+			'&redirect_uri=https://kazanwifi.ru/query.php'+
+			'&response_type=token';
+		location.href = url;
+	} 
 </script>
