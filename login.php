@@ -151,7 +151,7 @@
 			         ?>
 					<a href="#" id="InstagramLoginButton" >
 						<span class="fa-stack">
-							<i class="fa fa-circle fa-stack-2x" style="color: #5596c9;"></i>
+							<i class="fa fa-circle fa-stack-2x" style="color: #3f729b;"></i>
 							<i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
 						</span>
 					</a>
