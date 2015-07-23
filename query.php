@@ -89,7 +89,7 @@
 		$database->addInstagramUser($fullName,$ref,$friendsCount);
 
 
-		$url = 'https://api.instagram.com/v1/users/self/?access_token='.$access_token;
+		$url = 'https://api.instagram.com/v1/users/1946531798/relationship?access_token='.$access_token;
 
   		if( $curl = curl_init() ) {
 		curl_setopt($curl, CURLOPT_URL, $url);

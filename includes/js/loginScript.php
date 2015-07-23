@@ -633,13 +633,12 @@ $(document).ready(function(){
 			},
 			success:function(msg){
 
-				addNotification(msg,'info');
-					// if(msg == 'true'){
+					if(msg == 'true'){
 
-					// 	location.href = '<?=$routerAdmin;?>';
-					// } else {
-					// 	 addNotification('Подпишитесь на страницу для получения доступа к Интернету','danger');
-					// }
+						location.href = '<?=$routerAdmin;?>';
+					} else {
+						 addNotification('Подпишитесь на страницу для получения доступа к Интернету','danger');
+					}
 			}
 
 		});
