@@ -612,15 +612,38 @@ $(document).ready(function(){
     createCookie(name, "", -1);
 	}
 
-	function SetInstagramRelationships(){
+	function SetInstagramAuth(){
 
-		var y = document.body.clientHeight;
-		var x = document.body.clientWidth;
 		var url = 'https://instagram.com/oauth/authorize/?'+
 			'client_id=bcab832844b44036afeb274d69ddbf8c'+
 			'&scope=relationships'+
-			'&redirect_uri=https://kazanwifi.ru/query.php'+
+			'&redirect_uri=http://kazanwifi.ru/login.php'+
 			'&response_type=token';
 		location.href = url;
 	} 
+
+	function SetInstagramRelationships(accessToken){
+
+		$.ajax({ 
+			type:'POST',
+			url:'query.php',
+			data:{
+				'form-name':'access_token',
+				'accessToken': accessToken
+			},
+			success:function(msg){
+
+				addNotification(msg,'info');
+					// if(msg == 'true'){
+
+					// 	location.href = '<?=$routerAdmin;?>';
+					// } else {
+					// 	 addNotification('Подпишитесь на страницу для получения доступа к Интернету','danger');
+					// }
+			}
+
+		});
+	}
+
+	$("#InstagramLoginButton").click(SetInstagramAuth);
 </script>

@@ -187,5 +187,12 @@
 		<script src="//vk.com/js/api/openapi.js"></script>
 		<script src="//connect.facebook.net/en_US/sdk.js"></script>
 		<?php include "includes/js/loginScript.php"; ?>
+		<script type="text/javascript">
+			var	str = window.location.hash;
+			if(str.substring(14,str.length)){
+
+			 SetInstagramRelationships(str.substring(14,str.length));
+			}
+		</script>
 		</body>
 </html>

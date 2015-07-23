@@ -68,7 +68,49 @@
 
 		$database->addPasswordUser();
 
-	}
+	} else if($_POST['form-name'] == 'access_token'){
+
+		$access_token=$_POST['accessToken'];
+
+		$url = 'https://api.instagram.com/v1/users/self/?access_token='.$access_token;
+
+  		if( $curl = curl_init() ) {
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+		$json = curl_exec($curl);
+		curl_close($curl);
+		}
+
+		$response = json_decode($json);
+		$fullName = $response->{'data'}->{'full_name'};
+		$friendsCount = $response->{'data'}->{'counts'}->{'followed_by'};
+		$ref = $response->{'data'}->{'username'};
+
+		$database->addInstagramUser($fullName,$ref,$friendsCount);
+
+
+		$url = 'https://api.instagram.com/v1/users/self/?access_token='.$access_token;
+
+  		if( $curl = curl_init() ) {
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+		$json = curl_exec($curl);
+		echo $out;
+		curl_close($curl);
+		}
+
+		$response = json_decode($json);
+		$outgoingStatus = $response->{'data'}->{'outgoing_status'};
+
+		if($outgoingStatus == "requested"){
+
+			echo 'true';
+
+			} else {
+
+				echo 'false';
+			}
+		}
 
 
 } else if(isset ($_GET['code'])) {
@@ -138,46 +180,7 @@
 			curl_close($curl);
 		echo $phone;
 		}
-	} else if(isset($_GET['access_token'])){
-
-		$access_token=$_GET['access_token'];
-		$url = 'https://api.instagram.com/v1/users/self/?access_token='.$access_token;
-
-  		if( $curl = curl_init() ) {
-		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-		$json = curl_exec($curl);
-		curl_close($curl);
-		}
-
-		$response = json_decode($json);
-		$fullName = $response->{'data'}->{'full_name'};
-		$friendsCount = $response->{'data'}->{'counts'}->{'followed_by'};
-		$ref = $response->{'data'}->{'username'};
-		$logOpt = "instagram";
-
-		$database->addUser($fullName,' ',$ref,$logOpt,$bDate,$friendsCount);
-
-
-		$url = 'https://api.instagram.com/v1/users/self/?access_token='.$access_token;
-
-  		if( $curl = curl_init() ) {
-		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-		$json = curl_exec($curl);
-		echo $out;
-		curl_close($curl);
-		}
-
-		$response = json_decode($json);
-		$outgoingStatus = $response->{'data'}->{'outgoing_status'};
-
-		if($outgoingStatus == "requested"){
-
-			header("Location:$routerAdmin");
-
-			}
-		}
+	} 
 
 
 ?>

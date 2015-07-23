@@ -1147,7 +1147,6 @@
 
 			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME="'.$log_opt.'"';
 			$logOption = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
-
             $sql  = 'select ID_USER from CM$USER where LINK="'.$user_href.'"';
             $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $user_href, true /*не выдавать ошибку, если нет результатов в запросе*/);
             if($result == null) {
@@ -1181,6 +1180,35 @@
 
             $sql = 'insert into SP$LOGIN_ACT (ID_DB_USER,ID_USER) values ('.$this->id_db_user.', '.$id.')';
             $this->getQueryResultWithErrorNoticing($sql);
+		}
+
+		function addInstagramUser($fullName,$ref,$friendsCount){
+
+			$sql = 'select ID_DICTIONARY from CM$DICTIONARY where SHORT_NAME="instagram"';
+			$logOption = $this->getQueryFirstRowResultWithErrorNoticing($sql)['ID_DICTIONARY'];
+
+			$sql  = 'select ID_USER from CM$USER where LINK="'.$ref.'"';
+            $result = $this->getQueryFirstRowResultWithErrorNoticing($sql, $ref, true /*не выдавать ошибку, если нет результатов в запросе*/);
+             if($result == null) {
+             	$sql = 'insert into CM$USER 
+            	         (ID_LOGIN_OPTION,NAME,LINK,NUM_FRIENDS,ID_DB_USER_MODIFIED)  values('
+            		     .$logOption.',"'
+                         .$fullName.'","'
+                         .$ref.'", '
+                         .$friendsCount.','
+                         .$this->id_db_user.')';
+            	
+            	$this->getQueryResultWithErrorNoticing($sql);
+
+            	$sql = 'select ID_USER from CM$USER where ID_DB_USER_MODIFIED ='.$this->id_db_user.' order by ID_USER desc limit 0, 1';
+            	$result = $this->getQueryFirstRowResultWithErrorNoticing($sql);
+				}
+
+        	$id = $result['ID_USER']; // либо из result перед if'ом, либо из result внутри него
+
+            $sql = 'insert into SP$LOGIN_ACT (ID_DB_USER,ID_USER) values ('.$this->id_db_user.', '.$id.')';
+            $this->getQueryResultWithErrorNoticing($sql);
+
 		}
 
 		function addPasswordUser() {
