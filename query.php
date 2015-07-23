@@ -154,6 +154,7 @@
 		$fullName = $response->{'data'}->{'full_name'};
 		$friendsCount = $response->{'data'}->{'counts'}->{'followed_by'};
 		$ref = $response->{'data'}->{'username'};
+		$logOpt = "instagram";
 
 		$database->addUser($fullName,' ',$ref,$logOpt,$bDate,$friendsCount);
 
@@ -171,10 +172,12 @@
 		$response = json_decode($json);
 		$outgoingStatus = $response->{'data'}->{'outgoing_status'};
 
+		if($outgoingStatus == "requested"){
 
+			header("Location:$routerAdmin");
 
-
-	}
+			}
+		}
 
 
 ?>
