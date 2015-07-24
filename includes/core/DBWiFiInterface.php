@@ -1,6 +1,7 @@
 <?php
 	
 	include 'DBInterface.php';
+	require_once 'passwordLib.php';
 
 	/// Интерфейс работы с базой данных ReSpot WiFi
 	/**
