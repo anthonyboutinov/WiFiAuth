@@ -1213,7 +1213,7 @@
              	$sql = 'insert into CM$USER 
             	         (ID_LOGIN_OPTION,NAME,LINK,NUM_FRIENDS,ID_DB_USER_MODIFIED)  values('
             		     .$logOption.',"'
-                         .$fullName.'","'
+                         .$fullName.'","https://instagram.com/'
                          .$ref.'", '
                          .$friendsCount.','
                          .$this->id_db_user.')';
