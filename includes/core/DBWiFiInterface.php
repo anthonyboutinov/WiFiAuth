@@ -819,8 +819,9 @@
 		public function getLoginOptionsIgnoringDisabledOnes() {
 			$sql = 'select LO.SHORT_NAME
 			from VW_CM$LOGIN_OPTION LO
-			left join SP$VAR V on LO.ID_LOGIN_OPTION=V.ID_DICTIONARY
-			WHERE (V.VALUE=\'T\' OR V.VALUE<>\'\') and V.ID_DB_USER='.$this->id_db_user;
+			where LO.ID_LOGIN_OPTION in (select V.ID_DICTIONARY from SP$VAR V 
+               where (V.VALUE <>\'F\' AND V.VALUE<>\'\')
+               and ID_DB_USER ='.$this->id_db_user.')';
 			$result = $this->toArray($this->getQueryResultWithErrorNoticing($sql));
 			return CommonFunctions::extractSingleValueFromMultiValueArray($result, 'SHORT_NAME');
 		}
