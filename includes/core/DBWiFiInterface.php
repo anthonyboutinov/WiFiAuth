@@ -703,6 +703,13 @@
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
 		
+				/// Получить количество пользователей соцсетей
+		/**
+		 *	@author Mikhail Poluybay
+		 *	
+		 *	
+		 *	@retval mysqli_result
+		 */
 		public function getCountSocialNetworkUsers() {
 			$sql =
 			'SELECT COUNT(LINK) FROM (SELECT DISTINCT LINK  
@@ -714,6 +721,13 @@
 			return $this->getQueryFirstRowResultWithErrorNoticing($sql)['COUNT(LINK)'];
 		}
 
+				/// Получить количество друзей всех пользователей
+		/**
+		 *	@author Mikhail Poluybay
+		 *	
+		 *	
+		 *	@retval mysqli_result
+		 */
 		public function getFriendsSocialNetworkUsers(){
 
 			$sql =
