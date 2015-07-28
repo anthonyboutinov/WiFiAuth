@@ -825,6 +825,8 @@
 			}
 			return $this->getQueryResultWithErrorNoticing($sql);
 		}
+
+
 		
 		/// Получить список опций входа кроме тех, которые отключены
 		/**
@@ -1728,7 +1730,36 @@
 # ==== КОНЕЦ Функции, изменяющие данные в БД ==== #
 # =================================================================== #
 
+# =================================================== #
+// !ФУНКЦИЯ АВТОПОСТА
+# =================================================== #
 
+	public function getAccessTokenForVKMessage(){
+		
+		$sql = 'select V.VALUE as TOKEN, B.VALUE as MESSAGE, B.ID_DB_USER as ID_USER from SP$VAR V , SP$VAR B 
+		where V.ID_DICTIONARY = 68
+		AND B.ID_DICTIONARY = 67
+		AND V.ID_DB_USER = B.ID_DB_USER
+		AND V.VALUE<>\'\'';
+		return $this->getQueryResultWithErrorNoticing($sql);
+
+	}
+
+	public function getVKBirthdayUsers($idDBUser){
+
+		$this->sanitize($idDBUser);
+
+		$sql = 'select V.LINK from VW_SP$LOGIN_ACT V where
+		DAYOFMONTH(V.BIRTHDAY) = DAYOFMONTH(curdate())
+		and MONTH(V.BIRTHDAY) = MONTH(curdate())
+		and V.ID_DB_USER_MODIFIED ='.$idDBUser.'
+		and V.ID_LOGIN_OPTION = (select ID_DICTIONARY from CM$DICTIONARY 
+			where SHORT_NAME = \'vk\')';
+		return $this->getQueryResultWithErrorNoticing($sql);
+	}
+
+# ==== КОНЕЦ Функция автопоста ==== #
+# =================================================================== #		
 
 # =================================================== #
 // !ВОССТАНОВЛЕНИЕ ПАРОЛЯ
