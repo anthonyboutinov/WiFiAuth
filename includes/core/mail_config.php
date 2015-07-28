@@ -13,5 +13,5 @@
 	
 	$mail->From = 'noreply@kazanwifi.ru';
 	$mail->FromName = 'Re[Spot]';
-	
+
 ?>
