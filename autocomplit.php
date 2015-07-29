@@ -2,8 +2,8 @@
 	require 'includes/core/db_config.php';
 	require 'includes/core/DBWiFiInterface.php';
 
- $database = new DBWiFiInterface($servername, $username, $password, $dbname,'','','','','');
- $tokens = $database->getAccessTokenForVKMessage();
+ 	$database = new DBWiFiInterface($servername, $username, $password, $dbname,'','','','','');
+ 	$tokens = $database->getAccessTokenForVKMessage();
  	if ($tokens->num_rows > 0) {
 		while($row = $tokens->fetch_assoc()) {
 			$birthday = $database->getVKBirthdayUsers($row['ID_USER']);
@@ -26,4 +26,28 @@
 			}
 		}
 	}
+
+	$tokens = $database->getMobileParametersForSend();
+		 	if ($tokens->num_rows > 0) {
+				while($row = $tokens->fetch_assoc()) {
+					$phones = $database ->getMobileUsers($row['ID_USER']);
+						if($phones->num_rows > 0){
+							while($rows = $phones->fetch_assoc()) {
+								$url = 'http://sms.ru/sms/send?api_id=
+								699b26d8-aa69-53d4-1dfe-d5105fbe37e5&to='
+								.$rows['NAME'].'&text='.urlencode($row['MESSAGE']);
+								echo '<br>'.$url;
+						  		if( $curl = curl_init() ) {
+									curl_setopt($curl, CURLOPT_URL, $url);
+									curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+									$out = curl_exec($curl);
+									echo $out;
+									
+								}
+
+							}
+						}
+				}
+			}
+			curl_close($curl);
 ?>

@@ -1731,7 +1731,7 @@
 # =================================================================== #
 
 # =================================================== #
-// !ФУНКЦИЯ АВТОПОСТА
+// !ФУНКЦИИ АВТОПОСТА
 # =================================================== #
 
 	public function getAccessTokenForVKMessage(){
@@ -1749,7 +1749,7 @@
 
 		$this->sanitize($idDBUser);
 
-		$sql = 'select V.LINK from VW_SP$LOGIN_ACT V where
+		$sql = 'select DISTINCT V.LINK from VW_SP$LOGIN_ACT V where
 		DAYOFMONTH(V.BIRTHDAY) = DAYOFMONTH(curdate())
 		and MONTH(V.BIRTHDAY) = MONTH(curdate())
 		and V.ID_DB_USER_MODIFIED ='.$idDBUser.'
@@ -1758,6 +1758,27 @@
 		return $this->getQueryResultWithErrorNoticing($sql);
 	}
 
+	public function getMobileParametersForSend(){
+
+		$sql = 'select V.VALUE as MESSAGE,B.ID_DB_USER as ID_USER
+		from SP$VAR V, SP$VAR B 
+		where V.ID_DICTIONARY = 69
+		and B.ID_DICTIONARY = 70
+		and B.VALUE = curdate()
+		and B.ID_DB_USER  = V.ID_DB_USER';
+
+		return $this->getQueryResultWithErrorNoticing($sql);
+
+	}
+
+	public function getMobileUsers($idDBUser){
+
+		$sql = 'select DISTINCT V.NAME from VW_SP$LOGIN_ACT V 
+		where V.LOGIN_OPTION_SHORT_NAME = \'mobile\'
+		and V.ID_DB_USER_MODIFIED ='.$idDBUser;
+
+		return $this->getQueryResultWithErrorNoticing($sql);
+	}
 # ==== КОНЕЦ Функция автопоста ==== #
 # =================================================================== #		
 
