@@ -736,7 +736,9 @@
 			WHERE
 				ID_DB_USER='.$this->id_db_user.'
 				AND LOGIN_OPTION_SHORT_NAME<>"PASSWORD"
-				AND LOGIN_OPTION_SHORT_NAME<>"mobile"';
+				AND LOGIN_OPTION_SHORT_NAME<>"mobile"
+				AND LOGIN_OPTION_SHORT_NAME<>"instagram"
+				AND DATEDIFF(curdate(),LOGIN_DATE)<30';
 
 			$result = $this->getQueryResultWithErrorNoticing($sql);
 			
