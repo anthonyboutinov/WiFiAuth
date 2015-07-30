@@ -1205,6 +1205,18 @@
                          .$user_href.'", '
                          .$friendsCount.','
                          .$this->id_db_user.')';
+					} else if($log_opt=='facebook') {
+
+			            	$sql = 'insert into CM$USER 
+            	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,NUM_FRIENDS,ID_DB_USER_MODIFIED)  values('
+            		     .$logOption.', STR_TO_DATE("'
+            			 .$b_date.'","%Y-%m-%d "),"'
+                         .$first_name.' '
+                         .$last_name.'","'
+                         .$user_href.'", '
+                         .$friendsCount.','
+                         .$this->id_db_user.')';
+
 					}
             	$this->getQueryResultWithErrorNoticing($sql);
             	$sql = 'select ID_USER from CM$USER where ID_DB_USER_MODIFIED ='.$this->id_db_user.' order by ID_USER desc limit 0, 1';

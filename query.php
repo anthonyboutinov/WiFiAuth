@@ -95,7 +95,6 @@
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
 		$json = curl_exec($curl);
-		echo $out;
 		curl_close($curl);
 		}
 
@@ -110,10 +109,90 @@
 
 				echo 'false';
 			}
+		} 
+	}else if(isset($_GET['form-name'])&&$_GET['form-name']=='OkAuth'){
+
+			if(isset ($_GET['code'])){
+
+			$client_id = '1147986176'; // Application ID
+			$public_key = 'CBACONGFEBABABABA'; // Публичный ключ приложения
+			$client_secret = '32E051BFEC4876CF9C82DA8B'; // Секретный ключ приложения
+			$redirect_uri = 'https://kazanwifi.ru/query.php?form-name=OkAuth'; // Ссылка на приложение
+
+			$url = 'https://api.odnoklassniki.ru/oauth/token.do';
+
+			if( $curl = curl_init() ) {
+			curl_setopt($curl, CURLOPT_URL, $url);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+			curl_setopt($curl, CURLOPT_POST, true);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, 'code='.$_GET['code'].'&client_id='.$client_id.'&client_secret='.urlencode($client_secret).'&redirect_uri='.$redirect_uri.'&grant_type=authorization_code');
+			$json = curl_exec($curl);
+			curl_close($curl);
+			}
+			$response = json_decode($json);
+
+			$access_token = $response->{'access_token'};
+
+
+			$sign = md5("application_key={$public_key}format=jsonmethod=users.getCurrentUser" . md5("{$access_token}{$client_secret}"));
+
+				    $params = array(
+	        'method'          => 'users.getCurrentUser',
+	        'access_token'    => $access_token,
+	        'application_key' => $public_key,
+	        'format'          => 'json',
+	        'sig'             => $sign
+
+			    );
+
+
+		    $url = 'http://api.odnoklassniki.ru/fb.do' . '?' . urldecode(http_build_query($params));
+	  		if( $curl = curl_init() ) {
+			curl_setopt($curl, CURLOPT_URL, $url);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+			$json = curl_exec($curl);
+			curl_close($curl);
+			}
+
+			$response = json_decode($json);
+
+			$userId = $response->{'uid'};
+			$firstName = $response->{'first_name'};
+			$lastName = $response->{'last_name'};
+			$ref = 'http://ok.ru/profile/'.$userId;
+			$logOpt = 'odnoklassniki';
+			$bDate = $response->{'birthday'};
+			$database->addUser($firstName,$lastName,$ref,$logOpt,$bDate,0);
+
+			$attachments = json_encode(array('place_id'=>$userId, 'media'=>array(
+			array('type'=>'text','text'=>'Hello!'))));
+			$redirect_uri = 'https://kazanwifi.ru/query.php';
+			$signature = md5('st.attachment='.$attachments.'st.return='.$redirect_uri.'32E051BFEC4876CF9C82DA8B'); 
+			$urle= 'http://connect.ok.ru/dk?st.cmd=WidgetMediatopicPost&st.app=1147986176&st.attachment='
+			.urlencode($attachments).'&st.signature='.$signature.'&st.return='.urlencode($redirect_uri).'&st.popup=on';
+
+			?>
+			<script type="text/javascript">
+			location.href = '<?=$urle;?>';
+			</script>
+			<?php
+
+			}
+		
+
+	} else if(isset($_GET['result'])){
+
+		$result = urldecode($_GET['result']);
+		
+		$response = json_decode($result);
+
+		if($response->{'type'}=='success'){
+
+			header("Location:$routerAdmin");
 		}
 
 
-} else if(isset ($_GET['code'])) {
+	} else if(isset ($_GET['code'])) {
 
 	$code = $_GET['code'];
 	$app_id = 4956935 ; //4933055

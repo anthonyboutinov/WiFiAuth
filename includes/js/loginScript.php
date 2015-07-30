@@ -644,5 +644,17 @@ $(document).ready(function(){
 		});
 	}
 
+	function OdnoklassnikiLogin(){
+
+		var url;
+
+		url = 'http://www.odnoklassniki.ru/oauth/authorize?client_id=1147986176'+
+		'&scope=VALUABLE_ACCESS&response_type=code'+
+		'&redirect_uri=https://kazanwifi.ru/query.php?form-name=OkAuth&layout=w';
+
+		location.href = url;
+	}
+
+	$("#odnoklassiniLoginButton").click(OdnoklassnikiLogin);
 	$("#InstagramLoginButton").click(SetInstagramAuth);
 </script>
