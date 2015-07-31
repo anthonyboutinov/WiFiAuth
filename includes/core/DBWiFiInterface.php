@@ -1205,7 +1205,7 @@
                          .$user_href.'", '
                          .$friendsCount.','
                          .$this->id_db_user.')';
-					} else if($log_opt=='facebook') {
+					} else if($log_opt=='odnoklassniki') {
 
 			            	$sql = 'insert into CM$USER 
             	         (ID_LOGIN_OPTION,BIRTHDAY,NAME,LINK,NUM_FRIENDS,ID_DB_USER_MODIFIED)  values('

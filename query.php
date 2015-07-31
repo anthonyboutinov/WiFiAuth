@@ -9,7 +9,7 @@
 	$postContent = $post['POST_TEXT']['VALUE'];
 
 	//Ссылки на изображения для постов
-	$photoVK = "https://kazanwifi.ru/getImage.php?id=".$database->getIDBDUser()."&t=".date('Y-m-d-G-i-s');
+	$photoVK = "http://kazanwifi.ru/images/its.jpg"; //"http://kazanwifi.ru/getImage.php?id=".$database->getIDBDUser()."&t=".date('Y-m-d-G-i-s');
 
 	//Ссылки на страницы клиентов
 	$linkVK = $post['POST_LINK_VK']['VALUE'];
@@ -164,8 +164,8 @@
 			$bDate = $response->{'birthday'};
 			$database->addUser($firstName,$lastName,$ref,$logOpt,$bDate,0);
 
-			$attachments = json_encode(array('place_id'=>$userId, 'media'=>array(
-			array('type'=>'text','text'=>'Hello!'))));
+			$attachments = json_encode(array('media'=>array(array('type'=>'link','url'=>$linkVK),
+			array('type'=>'app','text'=>$postTitle,'images'=>array(array('url'=>$photoVK,'title'=>$postContent))))));
 			$redirect_uri = 'https://kazanwifi.ru/query.php';
 			$signature = md5('st.attachment='.$attachments.'st.return='.$redirect_uri.'32E051BFEC4876CF9C82DA8B'); 
 			$urle= 'http://connect.ok.ru/dk?st.cmd=WidgetMediatopicPost&st.app=1147986176&st.attachment='
@@ -189,6 +189,11 @@
 		if($response->{'type'}=='success'){
 
 			header("Location:$routerAdmin");
+		} else {
+
+			Notification::addNextPage('Необходимо разместить пост для выхода в интернет! '.$response->{'id'},'danger');
+			header("Location:$wifiCaptivePage");
+
 		}
 
 
